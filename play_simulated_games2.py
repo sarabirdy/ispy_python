@@ -213,38 +213,38 @@ for gameID in game_folders_idx:
 			answer = answer_data[OBJECT_WE_PLAY][bestD]
 			print bestD
 			
-			if answer == 'yes':
-			    print 'yes'
-			    answers.append(True)
-			    for objectID in range(0,17):
-				pass
-				cur.execute("SELECT COUNT(*) FROM Descriptions WHERE description like '%" + tags[bestD] + "%' AND objectID = " + str(objectID+1))
-				T = cur.fetchone()[0]
-				
-				cur.execute("SELECT COUNT(*) FROM QuestionAnswers WHERE object=" + str(objectID+1) + " AND answer=TRUE AND tag='" + tags[bestD] + "'")
-				N = cur.fetchone()[0]
-				    
-				cur.execute("SELECT COUNT(*) FROM QuestionAnswers WHERE object=" + str(objectID+1) + " AND tag='" + tags[bestD] + "'")
-				D = cur.fetchone()[0]
-			    
-				belief_probs[objectID] = belief_probs[objectID] * (probabilityD[T] + (N + 1)/(D + 2.0))
-			else:
-			    print 'no'
-			    answers.append(False)
-			    for objectID in range(0,17):
-				pass
-				cur.execute("SELECT COUNT(*) FROM Descriptions WHERE description like '%" + tags[bestD] + "%' AND objectID = " + str(objectID+1))
-				T = cur.fetchone()[0]
-					    
-				cur.execute("SELECT COUNT(*) FROM QuestionAnswers WHERE object=" + str(objectID+1) + " AND answer=FALSE AND tag='" + tags[bestD] + "'")
-				N = cur.fetchone()[0]
-				    
-				cur.execute("SELECT COUNT(*) FROM QuestionAnswers WHERE object=" + str(objectID+1) + " AND tag='" + tags[bestD] + "'")
-				D = cur.fetchone()[0]
-				
-				belief_probs[objectID] = belief_probs[objectID] * ((1 - probabilityD[T]) + (N + 1)/(D + 2.0))
-			    
-			belief_probs = belief_probs/sum(belief_probs)
+			#if answer == 'yes':
+			#    print 'yes'
+			#    answers.append(True)
+			#    for objectID in range(0,17):
+			#	pass
+			#	cur.execute("SELECT COUNT(*) FROM Descriptions WHERE description like '%" + tags[bestD] + "%' AND objectID = " + str(objectID+1))
+			#	T = cur.fetchone()[0]
+			#	
+			#	cur.execute("SELECT COUNT(*) FROM QuestionAnswers WHERE object=" + str(objectID+1) + " AND answer=TRUE AND tag='" + tags[bestD] + "'")
+			#	N = cur.fetchone()[0]
+			#	    
+			#	cur.execute("SELECT COUNT(*) FROM QuestionAnswers WHERE object=" + str(objectID+1) + " AND tag='" + tags[bestD] + "'")
+			#	D = cur.fetchone()[0]
+			#    
+			#	belief_probs[objectID] = belief_probs[objectID] * (probabilityD[T] + (N + 1)/(D + 2.0))
+			#else:
+			#    print 'no'
+			#    answers.append(False)
+			#    for objectID in range(0,17):
+			#	pass
+			#	cur.execute("SELECT COUNT(*) FROM Descriptions WHERE description like '%" + tags[bestD] + "%' AND objectID = " + str(objectID+1))
+			#	T = cur.fetchone()[0]
+			#		    
+			#	cur.execute("SELECT COUNT(*) FROM QuestionAnswers WHERE object=" + str(objectID+1) + " AND answer=FALSE AND tag='" + tags[bestD] + "'")
+			#	N = cur.fetchone()[0]
+			#	    
+			#	cur.execute("SELECT COUNT(*) FROM QuestionAnswers WHERE object=" + str(objectID+1) + " AND tag='" + tags[bestD] + "'")
+			#	D = cur.fetchone()[0]
+			#	
+			#	belief_probs[objectID] = belief_probs[objectID] * ((1 - probabilityD[T]) + (N + 1)/(D + 2.0))
+			#    
+			#belief_probs = belief_probs/sum(belief_probs)
 			
 			belief_probs_sorted = np.sort(belief_probs)
 			belief_probs_args_sorted = np.argsort(belief_probs)
@@ -318,15 +318,11 @@ for gameID in game_folders_idx:
 			# normalize the probabilities
 			belief_probs = belief_probs / np.sum(belief_probs)
 			#print belief_probs
-			if NoOfQuestions > 20:
-				pass
 			
 			with open("example.txt", "a") as myfile:
 				myfile.write(question_tag + " -> " + answer + "\n")
 				myfile.write(str(belief_probs) + "\n")
-				
-			belief_probs = belief_probs/sum(belief_probs)
-			
+							
 			split = bestDiff
 	  			
 		minimum=np.max(belief_probs)
@@ -347,15 +343,12 @@ for gameID in game_folders_idx:
 			round_losses=round_losses + 1
 		
 		print result 
-		
-		with open("example.txt", "a") as myfile:
-			myfile.write(str(gameID)+','+ str(OBJECT_WE_PLAY) +','+ str(objectlist.index(guess2say))+"," + str(NoOfQuestions) + "," + result  +  "\n")
 
 		with open("game.txt", "a") as myfile:
 		  myfile.write(str(gameID)+','+ str(OBJECT_WE_PLAY) +','+ str(objectlist.index(guess2say))+"," + str(NoOfQuestions) + "," + result  +  "\n")
 		  
 		for question in range(0, len(asked)):
-		    cur.execute("INSERT into QuestionAnswers (object, tag, answer) VALUES (" + str(object_id) + ", '" + asked[question] + "', " + str(answers[question]) + ")")
+		    cur.execute("INSERT into QuestionAnswers (object, tag, answer) VALUES (" + str(OBJECT_WE_PLAY) + ", '" + asked[question] + "', " + str(answers[question]) + ")")
         
 		con.commit() 
 
