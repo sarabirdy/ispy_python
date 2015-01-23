@@ -1,0 +1,6 @@
+This is a hardcover book titled, "The Elements of Statistical Learning."
+This is a book. It is rectangular in shape. The cover is yellow, orangish, tan, and brown. The title is "The Elements of Statistical Learning". It is a textbook.
+This is a hardcover book titled, 'The Elements of Statistical Learning.' It is bound in yellow material and the dust jacket is shades of yellow and brown.
+This is a book.  The title of the book is "The Elements of Statistical Learning".
+This is a textbook. It is yellow. It is a textbook on statistics.
+This book is on the subject of statistics.  It also has an orange/yellow binding and appears to be hardcover.
