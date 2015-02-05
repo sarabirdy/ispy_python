@@ -86,6 +86,7 @@ def build_model(cursor, tags, con):
 	    
     print count
 
+
 def get_t(object_id, question_id, cursor):
 
     tag = get_tag(question_id, cursor)
@@ -169,6 +170,7 @@ def test_images(cursor):
 	for j in range(0,289):
 	    print i, get_tag(j+1, cursor), Pi[i][j]
 	print max(Pi[i]), min(Pi[i])
+
 
 def score_tag_for_object(game_id, tag, object_id):
     image_path = folder + '/Game' + str(game_id) + '/obj' + str(object_id) + '.jpg'
@@ -459,23 +461,39 @@ def get_descriptions(oid, cursor):
     return descriptions
 
 
-def record_object_results(cursor, object_id, answers, questions, con):
+def record_object_results(cursor, object_id, answers, questions, con, guess2say, result, gameID):
     
     for i in range(0, len(questions)):
+	T = get_t(object_id, questions[i], cursor)
+	
+	if answers[i] == True:
+	    cursor.execute("SELECT yes_answers FROM Pqd where t_value = %s", T)
+	    yes_count = cursor.fetchone()[0]
+	    cursor.execute("UPDATE Pqd SET yes_answers = %s WHERE t_value = %s", (yes_count + 1, T))
+	    
+	cursor.execute("SELECT total_answers FROM Pqd where t_value = %s", T)
+	total_count = cursor.fetchone()[0]
+	cursor.execute("UPDATE Pqd SET total_answers = %s WHERE t_value = %s", (total_count + 1, T))
+	
 	cursor.execute("INSERT INTO answers (oid, qid, answer) VALUES (%s, %s, %s)", (object_id, questions[i], answers[i]))
-    
-    con.commit()
+	    
+	con.commit()
 
+    if result == 0:
+	result = 'lose'
+    else:
+	result = 'win'
 
-def record_round_results(cursor):
     with open("game.txt", "a") as myfile:
-      myfile.write(str(gameID)+','+ str(OBJECT_WE_PLAY) +','+ str(objectlist.index(guess2say))+"," + str(NoOfQuestions) + "," + result  +  "\n")
+	  myfile.write(str(gameID)+','+ str(object_id) +','+ str(objectlist.index(guess2say))+"," + str(len(questions)) + "," + result  +  "\n")
+    
+
+def record_round_results(gameID, round_wins, round_losses):
     
     with open("game.txt", "a") as myfile:
 	myfile.write("Round " + str(gameID) + ": ")	  
 	myfile.write("Wins=" + str(round_wins) + ', Losses='+str(round_losses))
 	myfile.write(" Accuracy: " + str(round_wins/float(17)) + "\n")
-	myfile.write("Training time: " + str(training_time) + " second\n")   
 
 
 def guess_object(pO, object_guess, object_list):
@@ -527,7 +545,7 @@ def play_object(cursor, object_id, tags, gameID, all_games, objectlist, con, Pi)
     
     result = guess_object(pO, objectlist[object_id-1][0], objectlist)
 
-    record_object_results(cursor, object_id, answers, askedQuestions, con)
+    record_object_results(cursor, object_id, answers, askedQuestions, con, objectlist[object_id-1][0], result, gameID)
     
     return result
 
@@ -547,6 +565,8 @@ def play_round(cursor, tags, gameID, all_games, objectlist, con):
 	    round_losses = round_losses + 1
 	else:
 	    round_wins = round_wins + 1
+	    
+    record_round_results(gameID, round_wins, round_losses)
     
 
 def play_game(cursor, con):
@@ -559,7 +579,7 @@ def play_game(cursor, con):
     objectlist = build_object_list(cursor)
     tags = get_tags(cursor)
 
-    for gameID in range(1,31):
+    for gameID in range(15,31):
 	   play_round(cursor, tags, gameID, all_games, objectlist, con)
     
     with open("game.txt", "a") as myfile:
