@@ -546,9 +546,6 @@ def play_object(cursor, object_id, tags, gameID, all_games, objectlist, con, Pi)
     
     result = guess_object(pO, objectlist[object_id-1][0], guess2say)
 
-    pO_sorted = np.argsort(pO)
-    pO_sorted.
-
     record_object_results(cursor, object_id, answers, askedQuestions, con, guess2say, result, gameID)
     
     return result
