@@ -496,12 +496,7 @@ def record_round_results(gameID, round_wins, round_losses):
 	myfile.write(" Accuracy: " + str(round_wins/float(17)) + "\n")
 
 
-def guess_object(pO, object_guess, object_list):
-    minimum=np.max(pO)
-    itemindexes =[i for i,x in enumerate(pO) if x==minimum]
-    A = np.asarray(object_list)
-    guess = A[itemindexes]
-    guess2say =  guess[0][0]
+def guess_object(pO, object_guess, guess2say):
 
     print guess2say
     print object_guess
@@ -543,9 +538,18 @@ def play_object(cursor, object_id, tags, gameID, all_games, objectlist, con, Pi)
         pO, answers = ask_question(cursor, answer_data, object_id, best_question, answers, pO, tags, game_folder, objectlist, objects, Pi)
 	split = get_subset_split(pO)
     
-    result = guess_object(pO, objectlist[object_id-1][0], objectlist)
+    minimum=np.max(pO)
+    itemindexes =[i for i,x in enumerate(pO) if x==minimum]
+    A = np.asarray(object_list)
+    guess = A[itemindexes]
+    guess2say =  guess[0][0]
+    
+    result = guess_object(pO, objectlist[object_id-1][0], guess2say)
 
-    record_object_results(cursor, object_id, answers, askedQuestions, con, objectlist[object_id-1][0], result, gameID)
+    pO_sorted = np.argsort(pO)
+    pO_sorted.
+
+    record_object_results(cursor, object_id, answers, askedQuestions, con, guess2say, result, gameID)
     
     return result
 
