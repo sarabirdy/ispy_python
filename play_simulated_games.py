@@ -485,7 +485,7 @@ def record_object_results(cursor, object_id, answers, questions, con, guess2say,
 	result = 'win'
 
     with open("game.txt", "a") as myfile:
-	  myfile.write(str(gameID)+','+ str(object_id) +','+ str(objectlist.index(guess2say))+"," + str(len(questions)) + "," + result  +  "\n")
+	  myfile.write(str(gameID)+','+ str(object_id) +','+ str(guess2say)+"," + str(len(questions)) + "," + result  +  "\n")
     
 
 def record_round_results(gameID, round_wins, round_losses):
