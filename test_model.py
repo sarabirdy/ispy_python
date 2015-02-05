@@ -8,8 +8,6 @@ import matplotlib as mpl
 from sklearn import mixture
 from sklearn.externals import joblib
 
-
-
 def test(feature_vector, model_name):
 
 	tags = []
@@ -26,7 +24,9 @@ def test(feature_vector, model_name):
 			
 			tags.append(model)
         		probabilities.append(prob[0])	
+			print model + " -> " + str(prob[0]/1000000)
 			
+
 	probabilities=np.asarray(probabilities)  
       	ind=np.argpartition(probabilities,-10)[-10:] 	#get the indexes of the 10 most possible tags
       

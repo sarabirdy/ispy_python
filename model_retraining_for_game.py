@@ -37,7 +37,7 @@ def Model_Retrain(stopping_point, con):
 				feat.FeatureUpdate(con,img,str(objID))
 	con.commit()
 
-	train.CreateFeatureTable(cur,stopping_point)	
+	#train.CreateFeatureTable(cur,stopping_point)	
 		
 		
 	

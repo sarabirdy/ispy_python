@@ -5,6 +5,8 @@ import cv2
 from matplotlib import pyplot as plt
 import math
 
+
+
 def normalize(v):
     norm=np.linalg.norm(v)
     if norm==0: 

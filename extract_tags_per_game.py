@@ -8,8 +8,6 @@ import numpy as np
 folder = os.getcwd()+"/GAMES"
 Games = os.listdir(folder)
 
-
-
 def Extract_Tags(gameID):
 	tags_per_game = []
 	game_folder = folder + '/Game' + str(gameID)
@@ -38,4 +36,5 @@ def Extract_Tags(gameID):
 	
 	print game_folder 
 	
-		
+
+#Extract_Tags(1)

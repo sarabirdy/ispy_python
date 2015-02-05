@@ -15,8 +15,13 @@ import LBP_extraction as lbp
 import rgbs_extraction as col
 import HOG_extraction as hog
 
+import matplotlib
+
+matplotlib.use('Agg')
+
 import matplotlib.pyplot as plt
 import insert_db as ins
+
 
 
 # UPDATE ALL FEATURES OF AN OBJECT
