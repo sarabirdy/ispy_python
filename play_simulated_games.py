@@ -540,7 +540,7 @@ def play_object(cursor, object_id, tags, gameID, all_games, objectlist, con, Pi)
     
     minimum=np.max(pO)
     itemindexes =[i for i,x in enumerate(pO) if x==minimum]
-    A = np.asarray(object_list)
+    A = np.asarray(objectlist)
     guess = A[itemindexes]
     guess2say =  guess[0][0]
     
