@@ -617,7 +617,7 @@ def play_game(cursor, con):
 	   number_of_questions = number_of_questions + round_questions
     
     with open("game.txt", "a") as myfile:
-       myfile.write("Wins=" + str(wins) + ', Losses='+str(losses) + ', Average number of questions=' + str(number_of_questions/float(wins+losses))
+       myfile.write("Wins=" + str(wins) + ', Losses='+str(losses) + ', Average number of questions=' + str(number_of_questions/float(wins+losses)))
 
 
 def main():
