@@ -21,7 +21,49 @@ import model_retraining_for_game as retrain
 import object_learning_for_game as first
 import extract_tags_per_game as extract
 
+def build_pqd(cursor, con, tags):
+    probabilityD = [0,0,0,0,0,0,0]
+    denominator = [0,0,0,0,0,0,0]
+            
+    for objectID in range(1,18):
+        print objectID
+        for tag in range(0, 289):
+            cursor.execute("SELECT * FROM Descriptions WHERE description like '%" + tags[tag] + "%' AND objectID = " + str(objectID))
+            T = len(cursor.fetchall())
+        
+	    #T is a based on a tag and an object description. T is how many times a tag is used in an object's description. It can be 0-6
+	    
+            cursor.execute("SELECT * FROM QuestionAnswers WHERE tag = '" + tags[tag] + "' AND object = " + str(objectID) + " AND answer = TRUE")
+            count = len(cursor.fetchall())
+            
+	    #count is the number of times someone answered yes to a tag/object pair
+	    
+            cursor.execute("SELECT * FROM QuestionAnswers WHERE tag = '" + tags[tag] + "' AND object = " + str(objectID))
+            D = len(cursor.fetchall())
+	    
+	    #D is the total number of times a tag/object pair has been asked (yesses and nos)
+            
+            probabilityD[T] = probabilityD[T] + count
+            denominator[T] = denominator[T] + D
+	    #For the T value based on the specific tag/object pair, update the probability of all tag/object pairs with the same T value
+	        
+    for freq in range(0,7):
+        #This puts the sum of the yes answers and the total answers into the row that corresponds with the T value
+        cursor.execute("INSERT INTO Pqd (t_value, yes_answers, total_answers) VALUES (%s, %s, %s)", (freq, probabilityD[freq], denominator[freq]))
+        con.commit()
+        print probabilityD[freq]
 
+
+def copy_into_answers(cursor, tags):
+    cursor.execute("SELECT tag, answer, object from QuestionAnswers")
+    results = cursor.fetchall()
+    
+    for result in results:
+	cursor.execute("SELECT id from Tags where tag = %s", (result[0]))
+	qid = cursor.fetchone()[0]
+	cursor.execute("INSERT INTO answers (qid, oid, answer) VALUES (%s, %s, %s)", (qid, result[2], result[1]))
+   
+   
 def RetrieveFeatureVector(feature_info,start,end):
 
     feature_vector=[]
@@ -109,17 +151,7 @@ def get_tval(cursor):
         tvals.append(float(r[0]))
 
     return tvals
-
-
-def copy_into_answers(cursor, tags):
-    cursor.execute("SELECT tag, answer, object from QuestionAnswers")
-    results = cursor.fetchall()
-    
-    for result in results:
-	cursor.execute("SELECT id from Tags where tag = %s", (result[0]))
-	qid = cursor.fetchone()[0]
-	cursor.execute("INSERT INTO answers (qid, oid, answer) VALUES (%s, %s, %s)", (qid, result[2], result[1]))
-    
+ 
     
 def get_questions_answers(object_id, cursor):
     cursor.execute('SELECT qid, oid, answer from answers where oid = %s', (object_id))
@@ -170,16 +202,6 @@ def test_images(cursor):
 	for j in range(0,289):
 	    print i, get_tag(j+1, cursor), Pi[i][j]
 	print max(Pi[i]), min(Pi[i])
-
-
-def score_tag_for_object(game_id, tag, object_id):
-    image_path = folder + '/Game' + str(game_id) + '/obj' + str(object_id) + '.jpg'
-    model = 'GMM_model_' + str(game_id)
-
-    image = cv2.imread(image_path)
-    feature_vector = test_ft.FeatureExtraction(image)
-
-    return test_model.score_tag(feature_vector, model, tag)
 
 
 def score_tag(feature_vector, model):
@@ -318,10 +340,11 @@ def get_subset_split(pO):
 
 def ask_question(cursor, answer_data, OBJECT_WE_PLAY, bestD, answers, pO, tags, game_folder, objectlist, objects, Pi):
     probabilityD = get_tval(cursor)
-    question_tag = tags[bestD]		
+    question_tag = tags[bestD-1]
+    print question_tag, bestD
     #answer = raw_input("Is it " + tags[bestD] + "? (yes/no) ")
     #answer = answer.lower()
-    answer = answer_data[OBJECT_WE_PLAY-1][bestD]
+    answer = answer_data[OBJECT_WE_PLAY-1][bestD-1]
     print game_folder, OBJECT_WE_PLAY,objectlist[OBJECT_WE_PLAY-1][0],'qt->'+question_tag+' ' ,'ans->'+answer 
 
     if not (answer):
@@ -448,7 +471,7 @@ def get_tags(cursor):
     
     for tag in tags:
 	tags_list.append(tag[0])
-    
+        
     return tags_list
 
 
@@ -465,14 +488,16 @@ def record_object_results(cursor, object_id, answers, questions, con, guess2say,
     
     for i in range(0, len(questions)):
 	T = get_t(object_id, questions[i], cursor)
-	
+	print object_id, questions[i], answers[i]
 	if answers[i] == True:
 	    cursor.execute("SELECT yes_answers FROM Pqd where t_value = %s", T)
 	    yes_count = cursor.fetchone()[0]
+	    #print yes_count, 'yes'
 	    cursor.execute("UPDATE Pqd SET yes_answers = %s WHERE t_value = %s", (yes_count + 1, T))
 	    
-	cursor.execute("SELECT total_answers FROM Pqd where t_value = %s", T)
+	cursor.execute("SELECT total_answers FROM Pqd where t_value = %s", (T))
 	total_count = cursor.fetchone()[0]
+	#print total_count
 	cursor.execute("UPDATE Pqd SET total_answers = %s WHERE t_value = %s", (total_count + 1, T))
 	
 	cursor.execute("INSERT INTO answers (oid, qid, answer) VALUES (%s, %s, %s)", (object_id, questions[i], answers[i]))
@@ -488,12 +513,13 @@ def record_object_results(cursor, object_id, answers, questions, con, guess2say,
 	  myfile.write(str(gameID)+','+ str(object_id) +','+ str(guess2say)+"," + str(len(questions)) + "," + result  +  "\n")
     
 
-def record_round_results(gameID, round_wins, round_losses):
+def record_round_results(gameID, round_wins, round_losses, number_of_questions):
     
     with open("game.txt", "a") as myfile:
 	myfile.write("Round " + str(gameID) + ": ")	  
 	myfile.write("Wins=" + str(round_wins) + ', Losses='+str(round_losses))
 	myfile.write(" Accuracy: " + str(round_wins/float(17)) + "\n")
+	myfile.write("Average number of questions: " + str(number_of_questions/float(17)) + "\n")
 
 
 def guess_object(pO, object_guess, guess2say):
@@ -548,7 +574,7 @@ def play_object(cursor, object_id, tags, gameID, all_games, objectlist, con, Pi)
 
     record_object_results(cursor, object_id, answers, askedQuestions, con, guess2say, result, gameID)
     
-    return result
+    return result, len(askedQuestions)
 
 
 def play_round(cursor, tags, gameID, all_games, objectlist, con):
@@ -561,30 +587,37 @@ def play_round(cursor, tags, gameID, all_games, objectlist, con):
     round_losses = 0
     
     for OBJECT_WE_PLAY in obj_ids:
-        result = play_object(cursor, OBJECT_WE_PLAY, tags, gameID, all_games, objectlist, con, Pi)
+        result, number_of_questions = play_object(cursor, OBJECT_WE_PLAY, tags, gameID, all_games, objectlist, con, Pi)
 	if result == 0:
 	    round_losses = round_losses + 1
 	else:
 	    round_wins = round_wins + 1
+	NoOfQuestions = number_of_questions + NoOfQuestions
 	    
-    record_round_results(gameID, round_wins, round_losses)
+    record_round_results(gameID, round_wins, round_losses, NoOfQuestions)
+    
+    return round_wins, round_losses, NoOfQuestions
     
 
 def play_game(cursor, con):
     wins=0
     losses=0
-
+    number_of_questions = 0
+    
     folder =  os.getcwd()
     all_games = folder + '/Human_Games'
     
     objectlist = build_object_list(cursor)
     tags = get_tags(cursor)
 
-    for gameID in range(15,31):
-	   play_round(cursor, tags, gameID, all_games, objectlist, con)
+    for gameID in range(16,31):
+	   round_wins, round_losses, round_questions = play_round(cursor, tags, gameID, all_games, objectlist, con)
+	   wins = wins + round_wins
+	   losses = losses + round_losses
+	   number_of_questions = number_of_questions + round_questions
     
     with open("game.txt", "a") as myfile:
-       myfile.write("Wins=" + str(wins) + ', Losses='+str(losses))
+       myfile.write("Wins=" + str(wins) + ', Losses='+str(losses) + ', Average number of questions=' + str(number_of_questions/float(wins+losses))
 
 
 def main():
@@ -599,6 +632,7 @@ def main():
     play_game(cursor, con)
     #copy_into_answers(cursor, get_tags(cursor))
     #con.commit()
+    #build_pqd(cursor, con, get_tags(cursor))
 
   
 		      
