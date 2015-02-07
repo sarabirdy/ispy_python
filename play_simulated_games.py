@@ -689,12 +689,12 @@ def main():
 	cursor = con.cursor()
 
     #test_images(cursor)
-    get_p_tag(cursor)
+    #get_p_tag(cursor)
     #build_model(cursor, con, 1)
     
     #test_unknown_image(cursor, get_tags(cursor))
     
-    #play_game(cursor, con)
+    play_game(cursor, con)
     #copy_into_answers(cursor, get_tags(cursor))
     #con.commit()
     #build_pqd(cursor, con, get_tags(cursor))
