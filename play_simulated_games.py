@@ -187,7 +187,7 @@ def get_p_tag(cursor):
 	cursor.execute("SELECT COUNT(*) FROM answers WHERE qid = %s and answer = FALSE", tag)
 	answers[0] = cursor.fetchone()[0]
 	p_tags.append(answers)
-	print tags[tag] + " prob yes: " + str(p_tags[tag-1][1]/ (float(p_tags[tag-1][0] + p_tags[tag-1][1]))) + " prob no: " +  str(p_tags[tag-1][0]/ (float(p_tags[tag-1][0] + p_tags[tag-1][1])))
+	print tags[tag-1] + " prob yes: " + str(p_tags[tag-1][1]/ (float(p_tags[tag-1][0] + p_tags[tag-1][1]))) + " prob no: " +  str(p_tags[tag-1][0]/ (float(p_tags[tag-1][0] + p_tags[tag-1][1])))
 	
     return p_tags
     
@@ -330,11 +330,11 @@ def get_best_question(objects, asked_questions, pO, start, cursor, game_id, Pi, 
                 length = len(objects[i][j])
 	    		
 		if Pi[i-1][j-1] == -1:
-		    probabilities_yes[i-1] = pO[i-1] * (tvals[T] + (num_yes + 1.0)/(length + 2.0))/(p_tags[j-1][1] / float(p_tags[j-1][1] + p_tags[j-1][0]))
-		    probabilities_no[i-1] = pO[i-1] * ((1 - tvals[T]) + (length - num_yes + 1.0)/(length + 2.0))/(p_tags[j-1][0] / float(p_tags[j-1][1] + p_tags[j-1][0]))
+		    probabilities_yes[i-1] = pO[i-1] * (tvals[T] + (num_yes + 1.0)/(length + 2.0))/((p_tags[j-1][1] + 1) / float(p_tags[j-1][1] + p_tags[j-1][0] + 2))
+		    probabilities_no[i-1] = pO[i-1] * ((1 - tvals[T]) + (length - num_yes + 1.0)/(length + 2.0))/((p_tags[j-1][0] + 1) / float(p_tags[j-1][1] + p_tags[j-1][0] + 2))
 		else:
-		    probabilities_yes[i-1] = pO[i-1] * (tvals[T] + (num_yes + 1.0)/(length + 2.0) + Pi[i-1][j-1])/(p_tags[j-1][1] / float(p_tags[j-1][1] + p_tags[j-1][0]))
-		    probabilities_no[i-1] = pO[i-1] * ((1 - tvals[T]) + (length - num_yes + 1.0)/(length + 2.0) + 1 - Pi[i-1][j-1])/(p_tags[j-1][0] / float(p_tags[j-1][1] + p_tags[j-1][0]))
+		    probabilities_yes[i-1] = pO[i-1] * (tvals[T] + (num_yes + 1.0)/(length + 2.0) + Pi[i-1][j-1])/((p_tags[j-1][1] + 1) / float(p_tags[j-1][1] + p_tags[j-1][0] + 2))
+		    probabilities_no[i-1] = pO[i-1] * ((1 - tvals[T]) + (length - num_yes + 1.0)/(length + 2.0) + 1 - Pi[i-1][j-1])/((p_tags[j-1][0] + 1) / float(p_tags[j-1][1] + p_tags[j-1][0] + 2))
                 probabilities_yes.sort()
                 probabilities_yes.reverse()
 		
@@ -408,14 +408,14 @@ def ask_question(cursor, answer_data, OBJECT_WE_PLAY, bestD, answers, pO, tags, 
 		    T = get_t(objectID+1, bestD, cursor)
 		    N = sum(objects[objectID+1][bestD])
 		    D = len(objects[objectID+1][bestD])
-		    pO[objectID] = pO[objectID] * (probabilityD[T] + (N + 1)/(D + 2.0))/(p_tags[bestD-1][1] / float(p_tags[bestD-1][1] + p_tags[bestD-1][0]))	
+		    pO[objectID] = pO[objectID] * (probabilityD[T] + (N + 1)/(D + 2.0))/((p_tags[bestD-1][1] + 1) / float(p_tags[bestD-1][1] + p_tags[bestD-1][0] + 2))	
 	    else:
 		for objectID in range(0,17):
 		    print Pi[objectID][bestD-1]
 		    T = get_t(objectID+1, bestD, cursor)
 		    N = sum(objects[objectID+1][bestD])
 		    D = len(objects[objectID+1][bestD])
-		    pO[objectID] = pO[objectID] * ((probabilityD[T] + (N + 1)/(D + 2.0) + Pi[objectID][bestD-1]))/(p_tags[bestD-1][1] / float(p_tags[bestD-1][1] + p_tags[bestD-1][0]))
+		    pO[objectID] = pO[objectID] * ((probabilityD[T] + (N + 1)/(D + 2.0) + Pi[objectID][bestD-1]))/((p_tags[bestD-1][1] + 1) / float(p_tags[bestD-1][1] + p_tags[bestD-1][0] + 2))
 
     else:
 	    if answer =='no' or answer is 'no':
@@ -425,14 +425,14 @@ def ask_question(cursor, answer_data, OBJECT_WE_PLAY, bestD, answers, pO, tags, 
 				T = get_t(objectID+1, bestD, cursor)
 				N = sum(objects[objectID+1][bestD])
 				D = len(objects[objectID+1][bestD])
-				pO[objectID] = pO[objectID] * ((1 - probabilityD[T]) + (D - N + 1)/(D + 2.0))/(p_tags[bestD-1][1] / float(p_tags[bestD-1][0] + p_tags[bestD-1][0]))	    
+				pO[objectID] = pO[objectID] * ((1 - probabilityD[T]) + (D - N + 1)/(D + 2.0))/((p_tags[bestD-1][1] + 1) / float(p_tags[bestD-1][0] + p_tags[bestD-1][0] + 2))	    
 			else:
 			    for objectID in range(0,17):
 				print Pi[objectID][bestD-1]
 				T = get_t(objectID+1, bestD, cursor)
 				N = sum(objects[objectID+1][bestD])
 				D = len(objects[objectID+1][bestD])
-				pO[objectID] = pO[objectID] * (((1 - probabilityD[T]) + (D - N + 1)/(D + 2.0) + 1 - Pi[objectID][bestD-1]))/(p_tags[bestD-1][0] / float(p_tags[bestD-1][1] + p_tags[bestD-1][0]))
+				pO[objectID] = pO[objectID] * (((1 - probabilityD[T]) + (D - N + 1)/(D + 2.0) + 1 - Pi[objectID][bestD-1]))/((p_tags[bestD-1][0] + 1) / float(p_tags[bestD-1][1] + p_tags[bestD-1][0] + 2))
 				    
     pO = pO / np.sum(pO)
     
