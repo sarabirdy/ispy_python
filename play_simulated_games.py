@@ -7,6 +7,7 @@ import MySQLdb as mdb
 import numpy as np 
 import random
 import sys
+import operator
 
 import matplotlib
 matplotlib.use('Agg')
@@ -73,9 +74,9 @@ def RetrieveFeatureVector(feature_info,start,end):
     return feature_vector
 
 
-def build_model(cursor, tags, con):
-    for i in range(2,17):
-	retrain.Model_Retrain(i,con)
+def build_model(cursor, con, gameID, stopping_point):
+    for i in range(gameID, stopping_point):
+	retrain.Model_Retrain(i+1,con)
     
     np.set_printoptions(threshold='nan')
     
@@ -176,6 +177,21 @@ def get_tag(question_id, cursor):
     return cursor.fetchone()[0]
 
 
+def get_p_tag(cursor):    
+    p_tags = []
+    
+    for tag in range(1,290):
+	answers = {}
+	cursor.execute("SELECT COUNT(*) FROM answers WHERE qid = %s and answer = TRUE", tag)
+	answers[1] = cursor.fetchone()[0]
+	cursor.execute("SELECT COUNT(*) FROM answers WHERE qid = %s and answer = FALSE", tag)
+	answers[0] = cursor.fetchone()[0]
+	p_tags.append(answers)
+	print p_tags[tag-1][0], p_tags[tag-1][1]
+	
+    return p_tags
+    
+
 def get_t(object_id, question_id, cursor):
     tag = get_tag(question_id, cursor)
 
@@ -207,6 +223,39 @@ def test_images(cursor):
 def score_tag(feature_vector, model):
     prob = model.score([feature_vector])
     return math.e ** (prob[0] / 100000.0)
+
+
+def test_unknown_image(cursor, tags):
+    image_path = os.getcwd() + '/test_images/1.jpg'
+    image = cv2.imread(image_path)
+    feature_vector = test_ft.FeatureExtraction(image)
+    
+    models = {}
+    model_folder = os.getcwd()+'/GMM_model_777'
+    listing = os.listdir(model_folder)
+    
+    for model in listing:
+	if model.endswith('.pkl'):
+	    model_clone = joblib.load(model_folder + '/' + model)
+	    T = model.split('_', 1)[0]
+	    T = T.lower()
+	    cursor.execute("SELECT id FROM Tags WHERE tag = %s", (T))
+	    qid = cursor.fetchone()[0]
+	    models[qid] = model_clone
+    
+    probability = []
+    for j in range(1, 290):
+	if j in models:
+	    probability.append(score_tag(feature_vector, models[j]))
+	else:
+	    probability.append(0)
+
+    best = np.array(probability)
+    
+    best = best.argsort()[-10:][::-1]
+	
+    for i in best:
+	    print i, tags[i]
 
 
 def get_model_info(cursor, game_id):
@@ -259,7 +308,7 @@ def gen_image_probabilities(game_id, cursor):
     return probabilities
 
 
-def get_best_question(objects, asked_questions, pO, start, cursor, game_id, Pi):
+def get_best_question(objects, asked_questions, pO, start, cursor, game_id, Pi, p_tags):
     tvals = get_tval(cursor)
     probabilities_yes = []
     probabilities_no = []
@@ -281,11 +330,11 @@ def get_best_question(objects, asked_questions, pO, start, cursor, game_id, Pi):
                 length = len(objects[i][j])
 	    		
 		if Pi[i-1][j-1] == -1:
-		    probabilities_yes[i-1] = pO[i-1] * (tvals[T] + (num_yes + 1.0)/(length + 2.0))
-		    probabilities_no[i-1] = pO[i-1] * ((1 - tvals[T]) + (length - num_yes + 1.0)/(length + 2.0))
+		    probabilities_yes[i-1] = pO[i-1] * (tvals[T] + (num_yes + 1.0)/(length + 2.0))/(p_tags[j-1][1] / float(p_tags[j-1][1] + p_tags[j-1][0]))
+		    probabilities_no[i-1] = pO[i-1] * ((1 - tvals[T]) + (length - num_yes + 1.0)/(length + 2.0))/(p_tags[j-1][0] / float(p_tags[j-1][1] + p_tags[j-1][0]))
 		else:
-		    probabilities_yes[i-1] = pO[i-1] * (tvals[T] + (num_yes + 1.0)/(length + 2.0) + Pi[i-1][j-1])
-		    probabilities_no[i-1] = pO[i-1] * ((1 - tvals[T]) + (length - num_yes + 1.0)/(length + 2.0) + 1 - Pi[i-1][j-1])
+		    probabilities_yes[i-1] = pO[i-1] * (tvals[T] + (num_yes + 1.0)/(length + 2.0) + Pi[i-1][j-1])/(p_tags[j-1][1] / float(p_tags[j-1][1] + p_tags[j-1][0]))
+		    probabilities_no[i-1] = pO[i-1] * ((1 - tvals[T]) + (length - num_yes + 1.0)/(length + 2.0) + 1 - Pi[i-1][j-1])/(p_tags[j-1][0] / float(p_tags[j-1][1] + p_tags[j-1][0]))
                 probabilities_yes.sort()
                 probabilities_yes.reverse()
 		
@@ -338,7 +387,7 @@ def get_subset_split(pO):
     return bestDiff
 
 
-def ask_question(cursor, answer_data, OBJECT_WE_PLAY, bestD, answers, pO, tags, game_folder, objectlist, objects, Pi):
+def ask_question(cursor, answer_data, OBJECT_WE_PLAY, bestD, answers, pO, tags, game_folder, objectlist, objects, Pi, p_tags):
     probabilityD = get_tval(cursor)
     question_tag = tags[bestD-1]
     print question_tag, bestD
@@ -359,14 +408,14 @@ def ask_question(cursor, answer_data, OBJECT_WE_PLAY, bestD, answers, pO, tags, 
 		    T = get_t(objectID+1, bestD, cursor)
 		    N = sum(objects[objectID+1][bestD])
 		    D = len(objects[objectID+1][bestD])
-		    pO[objectID] = pO[objectID] * (probabilityD[T] + (N + 1)/(D + 2.0))		
+		    pO[objectID] = pO[objectID] * (probabilityD[T] + (N + 1)/(D + 2.0))/(p_tags[bestD-1][1] / float(p_tags[bestD-1][1] + p_tags[bestD-1][0]))	
 	    else:
 		for objectID in range(0,17):
 		    print Pi[objectID][bestD-1]
 		    T = get_t(objectID+1, bestD, cursor)
 		    N = sum(objects[objectID+1][bestD])
 		    D = len(objects[objectID+1][bestD])
-		    pO[objectID] = pO[objectID] * ((probabilityD[T] + (N + 1)/(D + 2.0) + Pi[objectID][bestD-1]))
+		    pO[objectID] = pO[objectID] * ((probabilityD[T] + (N + 1)/(D + 2.0) + Pi[objectID][bestD-1]))/(p_tags[bestD-1][1] / float(p_tags[bestD-1][1] + p_tags[bestD-1][0]))
 
     else:
 	    if answer =='no' or answer is 'no':
@@ -376,14 +425,14 @@ def ask_question(cursor, answer_data, OBJECT_WE_PLAY, bestD, answers, pO, tags, 
 				T = get_t(objectID+1, bestD, cursor)
 				N = sum(objects[objectID+1][bestD])
 				D = len(objects[objectID+1][bestD])
-				pO[objectID] = pO[objectID] * ((1 - probabilityD[T]) + (D - N + 1)/(D + 2.0))		    
+				pO[objectID] = pO[objectID] * ((1 - probabilityD[T]) + (D - N + 1)/(D + 2.0))/(p_tags[bestD-1][1] / float(p_tags[bestD-1][0] + p_tags[bestD-1][0]))	    
 			else:
 			    for objectID in range(0,17):
 				print Pi[objectID][bestD-1]
 				T = get_t(objectID+1, bestD, cursor)
 				N = sum(objects[objectID+1][bestD])
 				D = len(objects[objectID+1][bestD])
-				pO[objectID] = pO[objectID] * (((1 - probabilityD[T]) + (D - N + 1)/(D + 2.0) + 1 - Pi[objectID][bestD-1]))
+				pO[objectID] = pO[objectID] * (((1 - probabilityD[T]) + (D - N + 1)/(D + 2.0) + 1 - Pi[objectID][bestD-1]))/(p_tags[bestD-1][0] / float(p_tags[bestD-1][1] + p_tags[bestD-1][0]))
 				    
     pO = pO / np.sum(pO)
     
@@ -538,6 +587,8 @@ def play_object(cursor, object_id, tags, gameID, all_games, objectlist, con, Pi)
     objects = gen_init_prob(cursor)
     folder =  os.getcwd()    
     
+    p_tags = get_p_tag(cursor)
+    
     answer_data = np.genfromtxt(folder+'/Answers/Game'+str(gameID)+'.csv',dtype=str, delimiter='\t')
     NoOfQuestions = 0
     pO = []
@@ -559,9 +610,9 @@ def play_object(cursor, object_id, tags, gameID, all_games, objectlist, con, Pi)
     answer_data = np.genfromtxt('/local2/awh0047/iSpy/ISPY_PY/Answers/Game' + str(gameID) + '.csv',dtype=str, delimiter='\t')
 
     while np.sort(pO)[pO.size - 1] - np.sort(pO)[pO.size - 2] < 0.1:
-	best_question = get_best_question(objects, askedQuestions, pO, split, cursor, gameID, Pi)
+	best_question = get_best_question(objects, askedQuestions, pO, split, cursor, gameID, Pi, p_tags)
 	askedQuestions.append(best_question)
-        pO, answers = ask_question(cursor, answer_data, object_id, best_question, answers, pO, tags, game_folder, objectlist, objects, Pi)
+        pO, answers = ask_question(cursor, answer_data, object_id, best_question, answers, pO, tags, game_folder, objectlist, objects, Pi, p_tag)
 	split = get_subset_split(pO)
     
     minimum=np.max(pO)
@@ -585,24 +636,32 @@ def play_round(cursor, tags, gameID, all_games, objectlist, con):
     NoOfQuestions = 0
     round_wins = 0
     round_losses = 0
+    avg_win = 0
+    avg_lose = 0
     
     for OBJECT_WE_PLAY in obj_ids:
         result, number_of_questions = play_object(cursor, OBJECT_WE_PLAY, tags, gameID, all_games, objectlist, con, Pi)
 	if result == 0:
 	    round_losses = round_losses + 1
+	    avg_lose = avg_lose + number_of_questions
 	else:
 	    round_wins = round_wins + 1
+	    avg_win = avg_win + number_of_questions
 	NoOfQuestions = number_of_questions + NoOfQuestions
 	    
     record_round_results(gameID, round_wins, round_losses, NoOfQuestions)
     
-    return round_wins, round_losses, NoOfQuestions
+    return round_wins, round_losses, NoOfQuestions, avg_win, avg_lose
     
 
 def play_game(cursor, con):
     wins=0
     losses=0
     number_of_questions = 0
+    avg_win = 0
+    avg_lose = 0
+    
+    build_model(cursor, con, 1, 16)
     
     folder =  os.getcwd()
     all_games = folder + '/Human_Games'
@@ -611,13 +670,17 @@ def play_game(cursor, con):
     tags = get_tags(cursor)
 
     for gameID in range(16,31):
-	   round_wins, round_losses, round_questions = play_round(cursor, tags, gameID, all_games, objectlist, con)
+	   round_wins, round_losses, round_questions, avg_for_win, avg_for_lose = play_round(cursor, tags, gameID, all_games, objectlist, con)
+	   build_model(cursor, con, gameID, gameID+1)
 	   wins = wins + round_wins
 	   losses = losses + round_losses
 	   number_of_questions = number_of_questions + round_questions
+	   avg_win = avg_for_win + avg_win
+	   avg_lose = avg_for_lose + avg_lose
     
     with open("game.txt", "a") as myfile:
        myfile.write("Wins=" + str(wins) + ', Losses='+str(losses) + ', Average number of questions=' + str(number_of_questions/float(wins+losses)))
+       myfile.write("Average questions for a win: " + str(avg_win/float(wins)) + " Average questions for a loss: " + str(avg_lose/float(losses)))
 
 
 def main():
@@ -626,9 +689,11 @@ def main():
 	cursor = con.cursor()
 
     #test_images(cursor)
-
-    #build_model(cursor, get_tags(cursor), con)
-
+    #get_p_tag(cursor)
+    #build_model(cursor, con, 1)
+    
+    #test_unknown_image(cursor, get_tags(cursor))
+    
     play_game(cursor, con)
     #copy_into_answers(cursor, get_tags(cursor))
     #con.commit()
