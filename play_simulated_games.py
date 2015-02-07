@@ -179,7 +179,7 @@ def get_tag(question_id, cursor):
 
 def get_p_tag(cursor):    
     p_tags = []
-    
+    tags = get_tags(cursor)
     for tag in range(1,290):
 	answers = {}
 	cursor.execute("SELECT COUNT(*) FROM answers WHERE qid = %s and answer = TRUE", tag)
@@ -187,7 +187,7 @@ def get_p_tag(cursor):
 	cursor.execute("SELECT COUNT(*) FROM answers WHERE qid = %s and answer = FALSE", tag)
 	answers[0] = cursor.fetchone()[0]
 	p_tags.append(answers)
-	print p_tags[tag-1][0], p_tags[tag-1][1]
+	print tags[tag] + " prob yes: " + str(p_tags[tag-1][1]/ (float(p_tags[tag-1][0] + p_tags[tag-1][1]))) + " prob no: " +  str(p_tags[tag-1][0]/ (float(p_tags[tag-1][0] + p_tags[tag-1][1])))
 	
     return p_tags
     
@@ -689,12 +689,12 @@ def main():
 	cursor = con.cursor()
 
     #test_images(cursor)
-    #get_p_tag(cursor)
+    get_p_tag(cursor)
     #build_model(cursor, con, 1)
     
     #test_unknown_image(cursor, get_tags(cursor))
     
-    play_game(cursor, con)
+    #play_game(cursor, con)
     #copy_into_answers(cursor, get_tags(cursor))
     #con.commit()
     #build_pqd(cursor, con, get_tags(cursor))
