@@ -612,7 +612,7 @@ def play_object(cursor, object_id, tags, gameID, all_games, objectlist, con, Pi)
     while np.sort(pO)[pO.size - 1] - np.sort(pO)[pO.size - 2] < 0.1:
 	best_question = get_best_question(objects, askedQuestions, pO, split, cursor, gameID, Pi, p_tags)
 	askedQuestions.append(best_question)
-        pO, answers = ask_question(cursor, answer_data, object_id, best_question, answers, pO, tags, game_folder, objectlist, objects, Pi, p_tag)
+        pO, answers = ask_question(cursor, answer_data, object_id, best_question, answers, pO, tags, game_folder, objectlist, objects, Pi, p_tags)
 	split = get_subset_split(pO)
     
     minimum=np.max(pO)
