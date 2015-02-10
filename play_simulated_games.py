@@ -686,6 +686,7 @@ def play_game(cursor, con):
 	   number_of_questions = number_of_questions + round_questions
 	   avg_win = avg_for_win + avg_win
 	   avg_lose = avg_for_lose + avg_lose
+       add_answerset(cursor, gameID, con)
     
     with open("game.txt", "a") as myfile:
        myfile.write("Wins=" + str(wins) + ', Losses='+str(losses) + ', Average number of questions=' + str(number_of_questions/float(wins+losses)))
@@ -702,13 +703,13 @@ def main():
     #build_model(cursor, con, 1)
     
     #test_unknown_image(cursor, get_tags(cursor))
-    add_answerset(cursor, 16, con)
+    #add_answerset(cursor, 16, con)
     
     
     #play_game(cursor, con)
-    #copy_into_answers(cursor, get_tags(cursor))
-    #con.commit()
-    #build_pqd(cursor, con, get_tags(cursor))
+    copy_into_answers(cursor, get_tags(cursor))
+    con.commit()
+    build_pqd(cursor, con, get_tags(cursor))
 
   
 		      
