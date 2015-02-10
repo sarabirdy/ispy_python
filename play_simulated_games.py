@@ -55,6 +55,15 @@ def build_pqd(cursor, con, tags):
         print probabilityD[freq]
 
 
+def add_answerset(cursor, gameID, con):
+    for objectID in range(1,18):
+	cursor.execute("SELECT answer FROM Answers WHERE objectID = %s AND answerSet = %s", (objectID, gameID))
+	answers = cursor.fetchall()
+	for qid in range(1,290):
+	    cursor.execute("INSERT INTO answers (qid, oid, answer) VALUES (%s, %s, %s)", (qid, objectID, answers[qid-1][0]))
+    con.commit()
+
+
 def copy_into_answers(cursor, tags):
     cursor.execute("SELECT tag, answer, object from QuestionAnswers")
     results = cursor.fetchall()
@@ -693,8 +702,10 @@ def main():
     #build_model(cursor, con, 1)
     
     #test_unknown_image(cursor, get_tags(cursor))
+    add_answerset(cursor, 16, con)
     
-    play_game(cursor, con)
+    
+    #play_game(cursor, con)
     #copy_into_answers(cursor, get_tags(cursor))
     #con.commit()
     #build_pqd(cursor, con, get_tags(cursor))
