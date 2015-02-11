@@ -235,7 +235,7 @@ def score_tag(feature_vector, model):
 
 
 def test_unknown_image(cursor, tags, gameID):
-    image_path = os.getcwd() + '/GAMES/Game' + str(gameID) + 'obj1.jpg'
+    image_path = os.getcwd() + '/GAMES/Game' + str(gameID) + '/obj1.jpg'
     image = cv2.imread(image_path)
     feature_vector = test_ft.FeatureExtraction(image)
     
