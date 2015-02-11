@@ -262,7 +262,9 @@ def test_unknown_image(cursor, tags, gameID):
 
         agreement = {}
         for i in range(0,289):
-            cursor.execute("SELECT answer FROM answers WHERE oid = 1 AND qid = %s", i+1)
+            cursor.execute("SELECT tag from Tags WHERE id = %s", i+1)
+            tag = cursor.fetchone()[0]
+            cursor.execute("SELECT answer FROM Answers WHERE objectID = %s AND tag = %s AND answerSet = %s", (img, tag, gameID))
             answer = cursor.fetchone()[0]
         	if probability[i] > 0.50:
                 if answer == True:
@@ -728,14 +730,14 @@ def main():
     #get_p_tag(cursor)
     #build_model(cursor, con, 1)
     
-    #test_unknown_image(cursor, get_tags(cursor), 16)
+    test_unknown_image(cursor, get_tags(cursor), 16)
     #add_answerset(cursor, 16, con)
     
     
     #play_game(cursor, con)
-    copy_into_answers(cursor, get_tags(cursor))
-    con.commit()
-    build_pqd(cursor, con, get_tags(cursor))
+    #copy_into_answers(cursor, get_tags(cursor))
+    #con.commit()
+    #build_pqd(cursor, con, get_tags(cursor))
 
   
 		      
