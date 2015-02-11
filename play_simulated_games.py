@@ -264,20 +264,20 @@ def test_unknown_image(cursor, tags, gameID):
         for i in range(0,289):
             cursor.execute("SELECT answer FROM answers WHERE oid = 1 AND qid = %s", i+1)
             answer = cursor.fetchone()[0]
-        	if probability[i] > 0.50:
+            if probability[i] > 0.50:
                 if answer == True:
                     agreement[i] = 1
                 else:
                     agreement[i] = 0
-        	    print tags[i] + " yes " + str(probability[i])
-        	elif probability[i] == 0:
+        	    #print tags[i] + " yes " + str(probability[i])
+            elif probability[i] == 0:
         	    pass
-        	else:
+            else:
                 if answer == False:
                     agreement[i] = 1
                 else:
                     agreement[i] = 0
-        	    print tags[i] + " no " + str(probability[i])
+        	    #print tags[i] + " no " + str(probability[i])
 
         total = 0
         for i in agreement:
