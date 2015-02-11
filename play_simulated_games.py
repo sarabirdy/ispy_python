@@ -707,11 +707,7 @@ def play_game(cursor, con):
     for gameID in range(16,31):
 	   round_wins, round_losses, round_questions, avg_for_win, avg_for_lose = play_round(cursor, tags, gameID, all_games, objectlist, con)
 	   build_model(cursor, con, gameID, gameID+1)
-<<<<<<< HEAD
-       	   test_unknown_image(cursor, tags, gameID)
-=======
-       test_unknown_image(cursor, tags, gameID, tags)
->>>>>>> 3e73eaa146110b557ebc74647aa13b3dfcf2d159
+           test_unknown_image(cursor, tags, gameID, tags)
 	   wins = wins + round_wins
 	   losses = losses + round_losses
 	   number_of_questions = number_of_questions + round_questions
