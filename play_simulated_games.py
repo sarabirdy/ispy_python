@@ -235,7 +235,7 @@ def score_tag(feature_vector, model):
 
 
 def test_unknown_image(cursor, tags, gameID):
-    image_path = os.getcwd() + '/GAMES/Game' + str(gameID) + '/obj1.jpg'
+    image_path = os.getcwd() + '/GAMES/Game' + str(gameID) + '/obj3.jpg'
     image = cv2.imread(image_path)
     feature_vector = test_ft.FeatureExtraction(image)
     
@@ -283,7 +283,7 @@ def test_unknown_image(cursor, tags, gameID):
         print tags[i], agreement[i]
         total = total + agreement[i]
 
-    print "Agreed " + str(float(total/len(agreement))) + " of the time"
+    print "Agreed " + str(total/float(len(agreement))) + " of the time"
 
 #    best = np.array(probability)
 #    
