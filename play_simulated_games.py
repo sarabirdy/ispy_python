@@ -235,62 +235,56 @@ def score_tag(feature_vector, model):
 
 
 def test_unknown_image(cursor, tags, gameID):
-    image_path = os.getcwd() + '/GAMES/Game' + str(gameID) + '/obj3.jpg'
-    image = cv2.imread(image_path)
-    feature_vector = test_ft.FeatureExtraction(image)
-    
-    models = {}
-    model_folder = os.getcwd()+'/GMM_model_777'
-    listing = os.listdir(model_folder)
-    
-    for model in listing:
-    	if model.endswith('.pkl'):
-    	    model_clone = joblib.load(model_folder + '/' + model)
-    	    T = model.split('_', 1)[0]
-    	    T = T.lower()
-    	    cursor.execute("SELECT id FROM Tags WHERE tag = %s", (T))
-    	    qid = cursor.fetchone()[0]
-    	    models[qid] = model_clone
-    
-    probability = []
-    for j in range(1, 290):
-    	if j in models:
-    	    probability.append(score_tag(feature_vector, models[j]))
-    	else:
-    	    probability.append(0)
+    for img in range(1,18):
+        image_path = os.getcwd() + '/GAMES/Game' + str(gameID) + '/obj' + str(img) + '.jpg'
+        image = cv2.imread(image_path)
+        feature_vector = test_ft.FeatureExtraction(image)
+        
+        models = {}
+        model_folder = os.getcwd()+'/GMM_model_777'
+        listing = os.listdir(model_folder)
+        
+        for model in listing:
+        	if model.endswith('.pkl'):
+        	    model_clone = joblib.load(model_folder + '/' + model)
+        	    T = model.split('_', 1)[0]
+        	    T = T.lower()
+        	    cursor.execute("SELECT id FROM Tags WHERE tag = %s", (T))
+        	    qid = cursor.fetchone()[0]
+        	    models[qid] = model_clone
+        
+        probability = []
+        for j in range(1, 290):
+        	if j in models:
+        	    probability.append(score_tag(feature_vector, models[j]))
+        	else:
+        	    probability.append(0)
 
-    agreement = {}
-    for i in range(0,289):
-        cursor.execute("SELECT answer FROM answers WHERE oid = 1 AND qid = %s", i+1)
-        answer = cursor.fetchone()[0]
-    	if probability[i] > 0.50:
-            if answer == True:
-                agreement[i] = 1
-            else:
-                agreement[i] = 0
-    	    print tags[i] + " yes " + str(probability[i])
-    	elif probability[i] == 0:
-    	    pass
-    	else:
-            if answer == False:
-                agreement[i] = 1
-            else:
-                agreement[i] = 0
-    	    print tags[i] + " no " + str(probability[i])
+        agreement = {}
+        for i in range(0,289):
+            cursor.execute("SELECT answer FROM answers WHERE oid = 1 AND qid = %s", i+1)
+            answer = cursor.fetchone()[0]
+        	if probability[i] > 0.50:
+                if answer == True:
+                    agreement[i] = 1
+                else:
+                    agreement[i] = 0
+        	    print tags[i] + " yes " + str(probability[i])
+        	elif probability[i] == 0:
+        	    pass
+        	else:
+                if answer == False:
+                    agreement[i] = 1
+                else:
+                    agreement[i] = 0
+        	    print tags[i] + " no " + str(probability[i])
 
-    total = 0
-    for i in agreement:
-        print tags[i], agreement[i]
-        total = total + agreement[i]
+        total = 0
+        for i in agreement:
+            #print tags[i], agreement[i]
+            total = total + agreement[i]
 
-    print "Agreed " + str(total/float(len(agreement))) + " of the time"
-
-#    best = np.array(probability)
-#    
-#    best = best.argsort()[-10:][::-1]
-#	
-#    for i in best:
-#	    print i, tags[i]
+        print "Agreed " + str(total/float(len(agreement))) + " of the time on object " + str(img)
 
 
 def get_model_info(cursor, game_id):
