@@ -234,7 +234,7 @@ def score_tag(feature_vector, model):
     return math.e ** (prob[0] / 100000.0)
 
 
-def test_unknown_image(cursor, tags, gameID, tags):
+def test_unknown_image(cursor, tags, gameID):
     for img in range(1,18):
         image_path = os.getcwd() + '/GAMES/Game' + str(gameID) + '/obj' + str(img) + '.jpg'
         image = cv2.imread(image_path)
@@ -707,7 +707,11 @@ def play_game(cursor, con):
     for gameID in range(16,31):
 	   round_wins, round_losses, round_questions, avg_for_win, avg_for_lose = play_round(cursor, tags, gameID, all_games, objectlist, con)
 	   build_model(cursor, con, gameID, gameID+1)
+<<<<<<< HEAD
            test_unknown_image(cursor, tags, gameID, tags)
+=======
+       test_unknown_image(cursor, tags, gameID)
+>>>>>>> 535f8bff7f55399c9dc6890d7516a80f6a2c811c
 	   wins = wins + round_wins
 	   losses = losses + round_losses
 	   number_of_questions = number_of_questions + round_questions
@@ -728,7 +732,7 @@ def main():
     #get_p_tag(cursor)
     #build_model(cursor, con, 1)
     
-    test_unknown_image(cursor, get_tags(cursor), 16, get_tags(cursor))
+    test_unknown_image(cursor, get_tags(cursor), 16)
     #add_answerset(cursor, 16, con)
     
     
