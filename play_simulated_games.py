@@ -734,11 +734,8 @@ def main():
     #add_answerset(cursor, 16, con)
     
     
-<<<<<<< HEAD
-    play_game(cursor, con)
-=======
     #play_game(cursor, con)
->>>>>>> 3df210394053ad2774b1f962f44218343fcd57f4
+    #play_game(cursor, con)
     #copy_into_answers(cursor, get_tags(cursor))
     #con.commit()
     #build_pqd(cursor, con, get_tags(cursor))
