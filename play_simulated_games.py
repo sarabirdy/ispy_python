@@ -287,9 +287,9 @@ def test_unknown_image(cursor, tags, gameID):
         print "Agreed " + str(total/float(len(agreement))) + " of the time on object " + str(img)
 
         with open("agreement.txt", "a") as myfile:
-            myfile.write(gameID + "\n")
+            myfile.write(str(gameID) + "\n")
             for i in agreement:
-                myfile.write(tags[i] + " " + agreement[i] + " " + probability[i] + "\n")
+                myfile.write(tags[i] + " " + str(agreement[i]) + " " + str(probability[i]) + "\n")
             myfile.write("Agreed " + str(total/float(len(agreement))) + " of the time on object " + str(img))
 
 
