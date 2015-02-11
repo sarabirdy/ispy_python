@@ -234,7 +234,7 @@ def score_tag(feature_vector, model):
     return math.e ** (prob[0] / 100000.0)
 
 
-def test_unknown_image(cursor, tags, gameID):
+def test_unknown_image(cursor, tags, gameID, tags):
     for img in range(1,18):
         image_path = os.getcwd() + '/GAMES/Game' + str(gameID) + '/obj' + str(img) + '.jpg'
         image = cv2.imread(image_path)
@@ -262,9 +262,7 @@ def test_unknown_image(cursor, tags, gameID):
 
         agreement = {}
         for i in range(0,289):
-            cursor.execute("SELECT tag from Tags WHERE id = %s", i+1)
-            tag = cursor.fetchone()[0]
-            cursor.execute("SELECT answer FROM Answers WHERE objectID = %s AND tag = %s AND answerSet = %s", (img, tag, gameID))
+            cursor.execute("SELECT answer FROM Answers WHERE objectID = %s AND tag = %s AND answerSet = %s", (img, tags[i+1], gameID))
             answer = cursor.fetchone()[0]
             if probability[i] > 0.50:
                 if answer == True:
@@ -709,7 +707,11 @@ def play_game(cursor, con):
     for gameID in range(16,31):
 	   round_wins, round_losses, round_questions, avg_for_win, avg_for_lose = play_round(cursor, tags, gameID, all_games, objectlist, con)
 	   build_model(cursor, con, gameID, gameID+1)
+<<<<<<< HEAD
        	   test_unknown_image(cursor, tags, gameID)
+=======
+       test_unknown_image(cursor, tags, gameID, tags)
+>>>>>>> 3e73eaa146110b557ebc74647aa13b3dfcf2d159
 	   wins = wins + round_wins
 	   losses = losses + round_losses
 	   number_of_questions = number_of_questions + round_questions
@@ -730,7 +732,7 @@ def main():
     #get_p_tag(cursor)
     #build_model(cursor, con, 1)
     
-    test_unknown_image(cursor, get_tags(cursor), 16)
+    test_unknown_image(cursor, get_tags(cursor), 16, get_tags(cursor))
     #add_answerset(cursor, 16, con)
     
     
