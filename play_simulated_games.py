@@ -290,7 +290,7 @@ def test_unknown_image(cursor, tags, gameID):
             myfile.write(str(gameID) + "\n")
             for i in agreement:
                 myfile.write(tags[i] + " " + str(agreement[i]) + " " + str(probability[i]) + "\n")
-            myfile.write("Agreed " + str(total/float(len(agreement))) + " of the time on object " + str(img))
+            myfile.write("Agreed " + str(total/float(len(agreement))) + " of the time on object " + str(img) + "\n")
 
 
 def get_model_info(cursor, game_id):
