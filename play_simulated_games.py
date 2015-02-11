@@ -259,12 +259,21 @@ def test_unknown_image(cursor, tags):
 	else:
 	    probability.append(0)
 
-    best = np.array(probability)
-    
-    best = best.argsort()[-10:][::-1]
-	
-    for i in best:
-	    print i, tags[i]
+    for i in range(0,289):
+	if probability[i] > 0.50:
+	    print tags[i] + " yes " + str(probability[i])
+	elif probability[i] == 0:
+	    pass
+	else:
+	    print tags[i] + " no " + str(probability[i])
+
+
+#    best = np.array(probability)
+#    
+#    best = best.argsort()[-10:][::-1]
+#	
+#    for i in best:
+#	    print i, tags[i]
 
 
 def get_model_info(cursor, game_id):
@@ -686,7 +695,6 @@ def play_game(cursor, con):
 	   number_of_questions = number_of_questions + round_questions
 	   avg_win = avg_for_win + avg_win
 	   avg_lose = avg_for_lose + avg_lose
-       add_answerset(cursor, gameID, con)
     
     with open("game.txt", "a") as myfile:
        myfile.write("Wins=" + str(wins) + ', Losses='+str(losses) + ', Average number of questions=' + str(number_of_questions/float(wins+losses)))
@@ -698,7 +706,7 @@ def main():
     with con:
 	cursor = con.cursor()
 
-    #test_images(cursor)
+    test_images(cursor)
     #get_p_tag(cursor)
     #build_model(cursor, con, 1)
     
@@ -707,9 +715,9 @@ def main():
     
     
     #play_game(cursor, con)
-    copy_into_answers(cursor, get_tags(cursor))
-    con.commit()
-    build_pqd(cursor, con, get_tags(cursor))
+    #copy_into_answers(cursor, get_tags(cursor))
+    #con.commit()
+    #build_pqd(cursor, con, get_tags(cursor))
 
   
 		      
