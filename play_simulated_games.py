@@ -234,8 +234,8 @@ def score_tag(feature_vector, model):
     return math.e ** (prob[0] / 100000.0)
 
 
-def test_unknown_image(cursor, tags):
-    image_path = os.getcwd() + '/test_images/1.jpg'
+def test_unknown_image(cursor, tags, gameID):
+    image_path = os.getcwd() + '/GAMES/Game' + str(gameID) + 'obj1.jpg'
     image = cv2.imread(image_path)
     feature_vector = test_ft.FeatureExtraction(image)
     
@@ -244,29 +244,46 @@ def test_unknown_image(cursor, tags):
     listing = os.listdir(model_folder)
     
     for model in listing:
-	if model.endswith('.pkl'):
-	    model_clone = joblib.load(model_folder + '/' + model)
-	    T = model.split('_', 1)[0]
-	    T = T.lower()
-	    cursor.execute("SELECT id FROM Tags WHERE tag = %s", (T))
-	    qid = cursor.fetchone()[0]
-	    models[qid] = model_clone
+    	if model.endswith('.pkl'):
+    	    model_clone = joblib.load(model_folder + '/' + model)
+    	    T = model.split('_', 1)[0]
+    	    T = T.lower()
+    	    cursor.execute("SELECT id FROM Tags WHERE tag = %s", (T))
+    	    qid = cursor.fetchone()[0]
+    	    models[qid] = model_clone
     
     probability = []
     for j in range(1, 290):
-	if j in models:
-	    probability.append(score_tag(feature_vector, models[j]))
-	else:
-	    probability.append(0)
+    	if j in models:
+    	    probability.append(score_tag(feature_vector, models[j]))
+    	else:
+    	    probability.append(0)
 
+    agreement = {}
     for i in range(0,289):
-	if probability[i] > 0.50:
-	    print tags[i] + " yes " + str(probability[i])
-	elif probability[i] == 0:
-	    pass
-	else:
-	    print tags[i] + " no " + str(probability[i])
+        cursor.execute("SELECT answer FROM answers WHERE oid = 1 AND qid = %s", i)
+        answer = cursor.fetchone()[0]
+    	if probability[i] > 0.50:
+            if answer == True:
+                agreement[i] = 1
+            else:
+                agreement[i] = 0
+    	    print tags[i] + " yes " + str(probability[i])
+    	elif probability[i] == 0:
+    	    pass
+    	else:
+            if answer == False:
+                agreement[i] = 1
+            else:
+                agreement[i] = 0
+    	    print tags[i] + " no " + str(probability[i])
 
+    total = 0
+    for i in agreement:
+        print tags[i], agreement[i]
+        total = total + agreement[i]
+
+    print "Agreed " + str(float(total/len(agreement))) + " of the time"
 
 #    best = np.array(probability)
 #    
@@ -706,11 +723,11 @@ def main():
     with con:
 	cursor = con.cursor()
 
-    test_images(cursor)
+    #test_images(cursor)
     #get_p_tag(cursor)
     #build_model(cursor, con, 1)
     
-    #test_unknown_image(cursor, get_tags(cursor))
+    test_unknown_image(cursor, get_tags(cursor), 16)
     #add_answerset(cursor, 16, con)
     
     
