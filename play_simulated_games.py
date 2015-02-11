@@ -261,7 +261,7 @@ def test_unknown_image(cursor, tags, gameID):
 
     agreement = {}
     for i in range(0,289):
-        cursor.execute("SELECT answer FROM answers WHERE oid = 1 AND qid = %s", i)
+        cursor.execute("SELECT answer FROM answers WHERE oid = 1 AND qid = %s", i+1)
         answer = cursor.fetchone()[0]
     	if probability[i] > 0.50:
             if answer == True:
