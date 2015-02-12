@@ -1,6 +1,0 @@
-This is a book. It has a black cover and includes pages made of paper. It is a rectangle shape.
-This is a hardbound book. The cover is blue, and the pages are white. There is no identifying information on the cover. A dark spot on the edge of its pages is the only identifying mark visible.
-This is a book. It has a blue hard cover and white pages.
-This is an image of a book. It has a hard cover with no writing visible on the outside, and contains pages on the inside.
-This is a hardcover book with a blue cover
-This is a book. It is hard, dark blue, and has paper inside.
