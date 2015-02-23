@@ -179,12 +179,6 @@ def get_questions_answers(object_id, cursor):
     return questions_answers
 
 
-def get_tag(question_id, cursor):
-    cursor.execute('SELECT tag from Tags where id = %s', (question_id))
-
-    return cursor.fetchone()[0]
-
-
 def get_p_tag(cursor):    
     p_tags = []
     tags = get_tags(cursor)
