@@ -8,6 +8,8 @@ import numpy as np
 import random
 import sys
 import operator
+from nolearn.dbn import DBN
+from sklearn.metrics import classification_report
 
 import matplotlib
 matplotlib.use('Agg')
@@ -16,6 +18,7 @@ import cv2
 import test_features_extraction as test_ft
 from sklearn.externals import joblib
 import gmm_training as model
+from sklearn import mixture
 
 import model_retraining_for_game as retrain
 import object_learning_for_game as first
@@ -82,9 +85,77 @@ def RetrieveFeatureVector(feature_info,start,end):
     return feature_vector
 
 
+def build_object_classifiers(cursor, con):
+    
+    for id in range(4,5):
+	feature_matrix = []
+	feature_matrix_labels = []
+	count = 0
+	for obs_id in range(1,18):
+	    object_matrix = []
+	    cursor.execute("SELECT COUNT(*) FROM FeatureInfo WHERE feature_id='0' AND observation_id='{0}'".format(obs_id))
+	    num_of_images_per_observation=cursor.fetchone()[0]
+	    
+	    cursor.execute("SELECT feature_id,feature_value FROM FeatureInfo WHERE observation_id='{0}'".format(obs_id))
+	    feature_info=cursor.fetchall()
+	    
+	    vv_seperator=len(feature_info)/num_of_images_per_observation
+	    
+	    new_fv=0 #flag to show when a feature vector given a capture starts (index in feature_info tuple)
+	    end_of_fv=vv_seperator#flag to show when a feature vector given a capture ends (index in feature_info tuple)
+     
+	    for capture_id in xrange(0,num_of_images_per_observation): 
+		feature_vector=RetrieveFeatureVector(feature_info,new_fv,end_of_fv) #create a feature vector given a capture 
+		new_fv=new_fv+vv_seperator #update starting index of the vector
+		end_of_fv=end_of_fv+vv_seperator #update ending index of the vector
+		feature_matrix.append(feature_vector) #insert feature vectors into a matrix for each tag
+		if id == obs_id:
+		    feature_matrix_labels.append(1)
+		else:
+		    feature_matrix_labels.append(0)
+		    
+	feature_matrix=np.asarray(feature_matrix)
+	feature_matrix_labels = np.asarray(feature_matrix_labels)
+	
+	dbn = DBN([feature_matrix.shape[1], 300, 2], learn_rates = 0.3, learn_rate_decays = 0.9, epochs = 100, verbose = 0)
+	dbn.fit(feature_matrix, feature_matrix_labels)
+	
+	image_path = os.getcwd() + '/test_images/basketball.jpg'
+	image = cv2.imread(image_path)
+	image_path = os.getcwd() + '/test_images/test.jpg'
+	image2 = cv2.imread(image_path)
+	image_path = os.getcwd() + '/test_images/1.jpg'
+	image3 = cv2.imread(image_path)
+	image_path = os.getcwd() + '/test_images/wilson.jpg'
+	image4 = cv2.imread(image_path)
+	image_path = os.getcwd() + '/test_images/spalding.jpg'
+	image5 = cv2.imread(image_path)
+	image_path = os.getcwd() + '/test_images/vague.jpg'
+	image6 = cv2.imread(image_path)
+	feature_vector = []
+	feature_vector.append(test_ft.FeatureExtraction(image))
+	feature_vector.append(test_ft.FeatureExtraction(image2))
+	feature_vector.append(test_ft.FeatureExtraction(image3))
+	feature_vector.append(test_ft.FeatureExtraction(image4))
+	feature_vector.append(test_ft.FeatureExtraction(image5))
+	feature_vector.append(test_ft.FeatureExtraction(image6))
+	feature_vector = np.asarray(feature_vector)
+	
+	preds = dbn.predict(np.atleast_2d(feature_vector))
+	print classification_report([1,0,0,1,1,1], preds)
+
+	g = mixture.GMM(n_components=2, covariance_type = 'tied')
+	g.fit(feature_matrix)
+	#joblib.dump(g, 'object_classifiers/'+ str(id) +'_classifier.pkl') #NAME OF FOLDER TO SAVE THE NEW RETRAINED MODELS
+	
+	feature_matrix_labels = np.array(feature_matrix_labels)
+	y_train_pred = g.predict(feature_vector)
+	print classification_report([1,0,0,1,1,1], y_train_pred)
+
+
 def build_model(cursor, con, gameID, stopping_point):
-    for i in range(gameID, stopping_point):
-	retrain.Model_Retrain(i+1,con)
+#    for i in range(gameID, stopping_point):
+#	retrain.Model_Retrain(i+1,con)
     
     np.set_printoptions(threshold='nan')
     
@@ -101,6 +172,7 @@ def build_model(cursor, con, gameID, stopping_point):
     #for each tag we select all the observation_ids that are related to it
     for tag in tags: 
 	feature_matrix=[]#initialize feature matrix for each different tag
+	feature_matrix_labels = [] # Labels to indicate if the example is positive or negative
 	cursor.execute("SELECT DISTINCT(observation_id) FROM TagInfoBk WHERE tag=%s",(tag))
 	tag_obs_ids=cursor.fetchall()
 	cursor.execute('SELECT id FROM Tags WHERE tag = %s', (tag))
@@ -109,8 +181,10 @@ def build_model(cursor, con, gameID, stopping_point):
 	should_train = False
 	#for every observation/object of this spesific tag
 	for obs_id in tag_obs_ids:
+	    print obs_id[0]
+	    object_matrix = []
 	    T = get_t(obs_id[0], qid, cursor)
-	    if T > 3:
+	    if T >= 3:
 		should_train = True
 		count = count + 1
 		cursor.execute("SELECT COUNT(*) FROM FeatureInfo WHERE feature_id='0' AND observation_id='{0}'".format(obs_id[0]))
@@ -126,14 +200,51 @@ def build_model(cursor, con, gameID, stopping_point):
 	 
 		for capture_id in xrange(0,num_of_images_per_oservation[0][0]): 
 		    feature_vector=RetrieveFeatureVector(feature_info,new_fv,end_of_fv) #create a feature vector given a capture 
-		   
+		    #print len(feature_vector)
 		    new_fv=new_fv+vv_seperator #update starting index of the vector
 		    end_of_fv=end_of_fv+vv_seperator #update ending index of the vector
-		    feature_matrix.append(feature_vector) #insert feature vectors into a matrix for each tag
-	
+		    object_matrix.append(feature_vector) #insert feature vectors into a matrix for each tag
+		
+		feature_matrix.append(object_matrix)
+		feature_matrix_labels.append(1)
+		
+	    elif T == 0:
+		should_train = True
+		count = count + 1
+		cursor.execute("SELECT COUNT(*) FROM FeatureInfo WHERE feature_id='0' AND observation_id='{0}'".format(obs_id[0]))
+		num_of_images_per_oservation=cursor.fetchall()
+		
+		cursor.execute("SELECT feature_id,feature_value FROM FeatureInfo WHERE observation_id='{0}'".format(obs_id[0]))
+		feature_info=cursor.fetchall()
+		
+		vv_seperator=len(feature_info)/num_of_images_per_oservation[0][0]
+		
+		new_fv=0 #flag to show when a feature vector given a capture starts (index in feature_info tuple)
+		end_of_fv=vv_seperator#flag to show when a feature vector given a capture ends (index in feature_info tuple)
+	 
+		for capture_id in xrange(0,num_of_images_per_oservation[0][0]): 
+		    feature_vector=RetrieveFeatureVector(feature_info,new_fv,end_of_fv) #create a feature vector given a capture 
+		    #print len(feature_vector)
+		    new_fv=new_fv+vv_seperator #update starting index of the vector
+		    end_of_fv=end_of_fv+vv_seperator #update ending index of the vector
+		    object_matrix.append(feature_vector) #insert feature vectors into a matrix for each tag
+		
+		feature_matrix.append(object_matrix)
+		feature_matrix_labels.append(0)
+		    
 	if should_train:
 	    feature_matrix=np.asarray(feature_matrix)
 	    model.ModelTraining(tag, feature_matrix, 777) #training the model
+	    
+	    model_file = os.getcwd()+'/GMM_model_777/' + tag + '_model.pkl'
+	    model_clone = joblib.load(model_file)
+
+	    feature_matrix_labels = np.array(feature_matrix_labels)
+            y_train_pred = model_clone.predict(feature_matrix)
+	    y_train_score = model_clone.score(feature_matrix)
+	    train_accuracy = np.mean(y_train_pred.ravel() == feature_matrix_labels.ravel()) * 100
+	    print "Training accuracy for " + tag + ": " + str(train_accuracy)
+	    print y_train_score
 	    
     print count
 
@@ -143,9 +254,9 @@ def get_t(object_id, question_id, cursor):
     tag = get_tag(question_id, cursor)
 
     cursor.execute('SELECT COUNT(*) \
-                    FROM descriptions \
+                    FROM Descriptions \
                     WHERE description like %s \
-                    AND oid = %s', ('%{0}%'.format(tag), object_id))
+                    AND objectID = %s', ('%{0}%'.format(tag), object_id))
 
     return cursor.fetchone()[0]
 
@@ -179,6 +290,12 @@ def get_questions_answers(object_id, cursor):
     return questions_answers
 
 
+def get_tag(question_id, cursor):
+    cursor.execute('SELECT tag from Tags where id = %s', (question_id))
+
+    return cursor.fetchone()[0]
+
+
 def get_p_tag(cursor):    
     p_tags = []
     tags = get_tags(cursor)
@@ -192,17 +309,6 @@ def get_p_tag(cursor):
 	print tags[tag-1] + " prob yes: " + str(p_tags[tag-1][1]/ (float(p_tags[tag-1][0] + p_tags[tag-1][1]))) + " prob no: " +  str(p_tags[tag-1][0]/ (float(p_tags[tag-1][0] + p_tags[tag-1][1])))
 	
     return p_tags
-    
-
-def get_t(object_id, question_id, cursor):
-    tag = get_tag(question_id, cursor)
-
-    cursor.execute('SELECT COUNT(*) \
-                    FROM Descriptions \
-                    WHERE description like %s \
-                    AND objectID = %s', ('%{0}%'.format(tag), object_id))
-
-    return cursor.fetchone()[0]
 
 
 def gen_init_prob(cursor):
@@ -719,12 +825,13 @@ def main():
 
     #test_images(cursor)
     #get_p_tag(cursor)
-    #build_model(cursor, con, 1)
+    #build_model(cursor, con, 1, 2)
+    build_object_classifiers(cursor,con)
     
     #test_unknown_image(cursor, get_tags(cursor), 16)
     #add_answerset(cursor, 16, con)
     
-    play_game(cursor, con)
+    #play_game(cursor, con)
     #copy_into_answers(cursor, get_tags(cursor))
     #con.commit()
     #build_pqd(cursor, con, get_tags(cursor))

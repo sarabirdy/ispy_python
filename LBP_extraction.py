@@ -15,7 +15,7 @@ def normalize(v):
 
 def bilinear_interpolation(x, y, img):
     x1, y1 = int(x), int(y)
-    x2, y2 = math.ceil(x), math.ceil(y)
+    x2, y2 = int(math.ceil(x)), int(math.ceil(y))
 
     r1 = (x2 - x) / (x2 - x1) * get_pixel_else_0(img, x1, y1) + (x - x1) / (x2 - x1) * get_pixel_else_0(img, x2, y1)
     r2 = (x2 - x) / (x2 - x1) * get_pixel_else_0(img, x1, y2) + (x - x1) / (x2 - x1) * get_pixel_else_0(img, x2, y2)

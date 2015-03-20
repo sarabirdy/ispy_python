@@ -75,7 +75,7 @@ def CreateFeatureTable(cur,gameID):
    for capture_id in xrange(0,num_of_images_per_oservation[0][0]): 
    
     feature_vector=RetrieveFeatureVector(cur,obs_id[0],feature_info,new_fv,end_of_fv) #create a feature vector given a capture 
-   
+    print feature_vector
     new_fv=new_fv+vv_seperator #update starting index of the vector
     end_of_fv=end_of_fv+vv_seperator #update ending index of the vector
     #print tag[0],new_fv,end_of_fv
