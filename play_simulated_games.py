@@ -8,7 +8,7 @@ import numpy as np
 import random
 import sys
 import operator
-from nolearn.dbn import DBN
+#from nolearn.dbn import DBN
 from sklearn.metrics import classification_report
 
 import matplotlib
@@ -23,6 +23,8 @@ from sklearn import mixture
 import model_retraining_for_game as retrain
 import object_learning_for_game as first
 import extract_tags_per_game as extract
+import warnings
+    
 
 def build_pqd(cursor, con, tags):
     probabilityD = [0,0,0,0,0,0,0]
@@ -85,73 +87,123 @@ def RetrieveFeatureVector(feature_info,start,end):
     return feature_vector
 
 
+def test_object_classifiers():
+    for x in range(1,6):
+	image_path = os.getcwd() + '/test_images/' + str(x) + '/1.jpg'
+	image = cv2.imread(image_path)
+	image_path = '/local2/awh0047/iSpy/ispy_python_old/cropped_ims/obj' + str(x) + '/5.jpg'
+	image = cv2.imread(image_path)
+	image_path = os.getcwd() + '/test_images/' + str(x) + '/2.jpg'
+	image2 = cv2.imread(image_path)
+	image_path = os.getcwd() + '/test_images/' + str(x) + '/3.jpg'
+	image3 = cv2.imread(image_path)
+	image_path = os.getcwd() + '/test_images/' + str(x) + '/4.jpg'
+	image4 = cv2.imread(image_path)
+	image_path = os.getcwd() + '/test_images/' + str(x) + '/5.jpg'
+	image5 = cv2.imread(image_path)
+
+	feature_vector = []
+	feature_vector.append(test_ft.FeatureExtraction(image))
+	#feature_vector.append(test_ft.FeatureExtraction(image2))
+	#feature_vector.append(test_ft.FeatureExtraction(image3))
+	#feature_vector.append(test_ft.FeatureExtraction(image4))
+	#feature_vector.append(test_ft.FeatureExtraction(image5))
+	#feature_vector = np.asarray(feature_vector)
+	#
+	#model_folder = os.getcwd() + '/object_classifiers/' + str(x+1) + '_classifier.pkl'
+	#model_clone = joblib.load(model_folder)
+	#
+	##dbn_folder = os.getcwd() + '/object_classifiers/' + str(x) + '_dbn_classifier.pkl'
+	##dbn_clone = joblib.load(dbn_folder)
+	#
+	#preds = model_clone.predict(feature_vector)
+	#dbn_preds = dbn_clone.predict(np.atleast_2d(feature_vector))
+	
+	#with open("results.txt", "a") as myfile:
+	#    myfile.write("Object " + str(x) + ": \n")
+	#    myfile.write("GMM\n")
+	#    myfile.write(classification_report([1,1,0,0,1], preds))
+	#    #myfile.write("\n")
+	#    #myfile.write("DBN\n")
+	#    #myfile.write(classification_report([1,1,0,0,1], dbn_preds))
+	#    myfile.write("\n\n")
+	print identify_objects(feature_vector)
+
+
+def identify_objects(feature_vector):
+    answers = []
+    models = []
+    
+    for objectID in range(1,18):
+	model_folder = os.getcwd() + '/object_classifiers/' + str(objectID) + '_classifier.pkl'
+	model_clone = joblib.load(model_folder)
+	models.append(model_clone)
+	
+	answers.append(model_clone.predict(feature_vector))
+    
+    bestGuess = 0
+    bestPred = -100000000
+    
+    answers = np.asarray(answers)
+    if sum(answers) > 1:
+	for objectID in range(1,18):
+	    if answers[objectID-1][0] == 1:
+		score = models[objectID-1].score(feature_vector)
+		if score[0] > bestPred:
+		    bestGuess = objectID
+		    bestPred = score[0]
+	return bestGuess
+    elif sum(answers) == 0:
+	return -1
+    else:
+	for objectID in range(1,18):
+	    if answers[objectID-1] == 1:
+		return objectID
+
+
 def build_object_classifiers(cursor, con):
     
-    for id in range(4,5):
+    for id in range(1,18):
 	feature_matrix = []
 	feature_matrix_labels = []
 	count = 0
-	for obs_id in range(1,18):
-	    object_matrix = []
-	    cursor.execute("SELECT COUNT(*) FROM FeatureInfo WHERE feature_id='0' AND observation_id='{0}'".format(obs_id))
-	    num_of_images_per_observation=cursor.fetchone()[0]
-	    
-	    cursor.execute("SELECT feature_id,feature_value FROM FeatureInfo WHERE observation_id='{0}'".format(obs_id))
-	    feature_info=cursor.fetchall()
-	    
-	    vv_seperator=len(feature_info)/num_of_images_per_observation
-	    
-	    new_fv=0 #flag to show when a feature vector given a capture starts (index in feature_info tuple)
-	    end_of_fv=vv_seperator#flag to show when a feature vector given a capture ends (index in feature_info tuple)
-     
-	    for capture_id in xrange(0,num_of_images_per_observation): 
-		feature_vector=RetrieveFeatureVector(feature_info,new_fv,end_of_fv) #create a feature vector given a capture 
-		new_fv=new_fv+vv_seperator #update starting index of the vector
-		end_of_fv=end_of_fv+vv_seperator #update ending index of the vector
-		feature_matrix.append(feature_vector) #insert feature vectors into a matrix for each tag
-		if id == obs_id:
-		    feature_matrix_labels.append(1)
-		else:
-		    feature_matrix_labels.append(0)
+	#for obs_id in range(1,18):
+	object_matrix = []
+	cursor.execute("SELECT COUNT(*) FROM FeatureInfo WHERE feature_id='0' AND observation_id='{0}'".format(id))
+	num_of_images_per_observation=cursor.fetchone()[0]
+	
+	cursor.execute("SELECT feature_id,feature_value FROM FeatureInfo WHERE observation_id='{0}'".format(id))
+	feature_info=cursor.fetchall()
+	
+	vv_seperator=len(feature_info)/num_of_images_per_observation
+	
+	new_fv=0 #flag to show when a feature vector given a capture starts (index in feature_info tuple)
+	end_of_fv=vv_seperator#flag to show when a feature vector given a capture ends (index in feature_info tuple)
+ 
+	for capture_id in xrange(0,num_of_images_per_observation): 
+	    feature_vector=RetrieveFeatureVector(feature_info,new_fv,end_of_fv) #create a feature vector given a capture 
+	    new_fv=new_fv+vv_seperator #update starting index of the vector
+	    end_of_fv=end_of_fv+vv_seperator #update ending index of the vector
+	    feature_matrix.append(feature_vector) #insert feature vectors into a matrix for each tag
+	    #if id == obs_id:
+	    feature_matrix_labels.append(1)
+	#    else:
+	#	feature_matrix_labels.append(0)
 		    
 	feature_matrix=np.asarray(feature_matrix)
 	feature_matrix_labels = np.asarray(feature_matrix_labels)
 	
-	dbn = DBN([feature_matrix.shape[1], 300, 2], learn_rates = 0.3, learn_rate_decays = 0.9, epochs = 100, verbose = 0)
-	dbn.fit(feature_matrix, feature_matrix_labels)
+	#dbn = DBN([feature_matrix.shape[1], 300, 2], learn_rates = 0.3, learn_rate_decays = 0.9, epochs = 100, verbose = 0)
+	#dbn.fit(feature_matrix, feature_matrix_labels)
+	#joblib.dump(dbn, 'object_classifiers/' + str(id) + '_dbn_classifier.pkl')
 	
-	image_path = os.getcwd() + '/test_images/basketball.jpg'
-	image = cv2.imread(image_path)
-	image_path = os.getcwd() + '/test_images/test.jpg'
-	image2 = cv2.imread(image_path)
-	image_path = os.getcwd() + '/test_images/1.jpg'
-	image3 = cv2.imread(image_path)
-	image_path = os.getcwd() + '/test_images/wilson.jpg'
-	image4 = cv2.imread(image_path)
-	image_path = os.getcwd() + '/test_images/spalding.jpg'
-	image5 = cv2.imread(image_path)
-	image_path = os.getcwd() + '/test_images/vague.jpg'
-	image6 = cv2.imread(image_path)
-	feature_vector = []
-	feature_vector.append(test_ft.FeatureExtraction(image))
-	feature_vector.append(test_ft.FeatureExtraction(image2))
-	feature_vector.append(test_ft.FeatureExtraction(image3))
-	feature_vector.append(test_ft.FeatureExtraction(image4))
-	feature_vector.append(test_ft.FeatureExtraction(image5))
-	feature_vector.append(test_ft.FeatureExtraction(image6))
-	feature_vector = np.asarray(feature_vector)
-	
-	preds = dbn.predict(np.atleast_2d(feature_vector))
-	print classification_report([1,0,0,1,1,1], preds)
-
 	g = mixture.GMM(n_components=2, covariance_type = 'tied')
 	g.fit(feature_matrix)
-	#joblib.dump(g, 'object_classifiers/'+ str(id) +'_classifier.pkl') #NAME OF FOLDER TO SAVE THE NEW RETRAINED MODELS
+	joblib.dump(g, 'object_classifiers/' + str(id) +'_classifier.pkl') #NAME OF FOLDER TO SAVE THE NEW RETRAINED MODELS		
 	
-	feature_matrix_labels = np.array(feature_matrix_labels)
-	y_train_pred = g.predict(feature_vector)
-	print classification_report([1,0,0,1,1,1], y_train_pred)
-
+	#feature_matrix_labels = np.array(feature_matrix_labels)
+	#y_train_pred = g.predict(feature_vector)
+	#print classification_report([1,0,0,1,1,1], y_train_pred)
 
 def build_model(cursor, con, gameID, stopping_point):
 #    for i in range(gameID, stopping_point):
@@ -181,7 +233,7 @@ def build_model(cursor, con, gameID, stopping_point):
 	should_train = False
 	#for every observation/object of this spesific tag
 	for obs_id in tag_obs_ids:
-	    print obs_id[0]
+	    
 	    object_matrix = []
 	    T = get_t(obs_id[0], qid, cursor)
 	    if T >= 3:
@@ -203,48 +255,48 @@ def build_model(cursor, con, gameID, stopping_point):
 		    #print len(feature_vector)
 		    new_fv=new_fv+vv_seperator #update starting index of the vector
 		    end_of_fv=end_of_fv+vv_seperator #update ending index of the vector
-		    object_matrix.append(feature_vector) #insert feature vectors into a matrix for each tag
+		    feature_matrix.append(feature_vector) #insert feature vectors into a matrix for each tag
 		
-		feature_matrix.append(object_matrix)
 		feature_matrix_labels.append(1)
 		
-	    elif T == 0:
-		should_train = True
-		count = count + 1
-		cursor.execute("SELECT COUNT(*) FROM FeatureInfo WHERE feature_id='0' AND observation_id='{0}'".format(obs_id[0]))
-		num_of_images_per_oservation=cursor.fetchall()
-		
-		cursor.execute("SELECT feature_id,feature_value FROM FeatureInfo WHERE observation_id='{0}'".format(obs_id[0]))
-		feature_info=cursor.fetchall()
-		
-		vv_seperator=len(feature_info)/num_of_images_per_oservation[0][0]
-		
-		new_fv=0 #flag to show when a feature vector given a capture starts (index in feature_info tuple)
-		end_of_fv=vv_seperator#flag to show when a feature vector given a capture ends (index in feature_info tuple)
-	 
-		for capture_id in xrange(0,num_of_images_per_oservation[0][0]): 
-		    feature_vector=RetrieveFeatureVector(feature_info,new_fv,end_of_fv) #create a feature vector given a capture 
-		    #print len(feature_vector)
-		    new_fv=new_fv+vv_seperator #update starting index of the vector
-		    end_of_fv=end_of_fv+vv_seperator #update ending index of the vector
-		    object_matrix.append(feature_vector) #insert feature vectors into a matrix for each tag
-		
-		feature_matrix.append(object_matrix)
-		feature_matrix_labels.append(0)
+	#    elif T == 0:
+	#	print tag, 'False'
+	#	should_train = True
+	#	count = count + 1
+	#	cursor.execute("SELECT COUNT(*) FROM FeatureInfo WHERE feature_id='0' AND observation_id='{0}'".format(obs_id[0]))
+	#	num_of_images_per_oservation=cursor.fetchall()
+	#	
+	#	cursor.execute("SELECT feature_id,feature_value FROM FeatureInfo WHERE observation_id='{0}'".format(obs_id[0]))
+	#	feature_info=cursor.fetchall()
+	#	
+	#	vv_seperator=len(feature_info)/num_of_images_per_oservation[0][0]
+	#	
+	#	new_fv=0 #flag to show when a feature vector given a capture starts (index in feature_info tuple)
+	#	end_of_fv=vv_seperator#flag to show when a feature vector given a capture ends (index in feature_info tuple)
+	# 
+	#	for capture_id in xrange(0,num_of_images_per_oservation[0][0]): 
+	#	    feature_vector=RetrieveFeatureVector(feature_info,new_fv,end_of_fv) #create a feature vector given a capture 
+	#	    #print len(feature_vector)
+	#	    new_fv=new_fv+vv_seperator #update starting index of the vector
+	#	    end_of_fv=end_of_fv+vv_seperator #update ending index of the vector
+	#	    object_matrix.append(feature_vector) #insert feature vectors into a matrix for each tag
+	#	
+	#	feature_matrix.append(object_matrix)
+	#	feature_matrix_labels.append(0)
 		    
 	if should_train:
 	    feature_matrix=np.asarray(feature_matrix)
 	    model.ModelTraining(tag, feature_matrix, 777) #training the model
 	    
-	    model_file = os.getcwd()+'/GMM_model_777/' + tag + '_model.pkl'
-	    model_clone = joblib.load(model_file)
-
-	    feature_matrix_labels = np.array(feature_matrix_labels)
-            y_train_pred = model_clone.predict(feature_matrix)
-	    y_train_score = model_clone.score(feature_matrix)
-	    train_accuracy = np.mean(y_train_pred.ravel() == feature_matrix_labels.ravel()) * 100
-	    print "Training accuracy for " + tag + ": " + str(train_accuracy)
-	    print y_train_score
+#	    model_file = os.getcwd()+'/GMM_model_777/' + tag + '_model.pkl'
+#	    model_clone = joblib.load(model_file)
+#
+#	    feature_matrix_labels = np.array(feature_matrix_labels)
+#            y_train_pred = model_clone.predict(feature_matrix)
+#	    y_train_score = model_clone.score(feature_matrix)
+#	    train_accuracy = np.mean(y_train_pred.ravel() == feature_matrix_labels.ravel()) * 100
+#	    print "Training accuracy for " + tag + ": " + str(train_accuracy)
+#	    print y_train_score
 	    
     print count
 
@@ -306,7 +358,7 @@ def get_p_tag(cursor):
 	cursor.execute("SELECT COUNT(*) FROM answers WHERE qid = %s and answer = FALSE", tag)
 	answers[0] = cursor.fetchone()[0]
 	p_tags.append(answers)
-	print tags[tag-1] + " prob yes: " + str(p_tags[tag-1][1]/ (float(p_tags[tag-1][0] + p_tags[tag-1][1]))) + " prob no: " +  str(p_tags[tag-1][0]/ (float(p_tags[tag-1][0] + p_tags[tag-1][1])))
+	#print tags[tag-1] + " prob yes: " + str(p_tags[tag-1][1]/ (float(p_tags[tag-1][0] + p_tags[tag-1][1]))) + " prob no: " +  str(p_tags[tag-1][0]/ (float(p_tags[tag-1][0] + p_tags[tag-1][1])))
 	
     return p_tags
 
@@ -442,7 +494,7 @@ def gen_image_probabilities(game_id, cursor):
     return probabilities
 
 
-def get_best_question(objects, asked_questions, pO, start, cursor, game_id, Pi, p_tags):
+def get_best_question_old(objects, asked_questions, pO, start, cursor, game_id, Pi, p_tags):
     tvals = get_tval(cursor)
     probabilities_yes = []
     probabilities_no = []
@@ -456,9 +508,10 @@ def get_best_question(objects, asked_questions, pO, start, cursor, game_id, Pi, 
         probabilities_yes.append(0)
 	probabilities_no.append(0)
 
-    for i in range(1, 18):
-        for j in range(1, 290):
-            if j not in asked_questions:
+    
+    for j in range(1, 290):
+	if j not in asked_questions:
+	    for i in range(1, 18): 
                 T = get_t(i, j, cursor)
                 num_yes = sum(objects[i][j])
                 length = len(objects[i][j])
@@ -469,34 +522,173 @@ def get_best_question(objects, asked_questions, pO, start, cursor, game_id, Pi, 
 		else:
 		    probabilities_yes[i-1] = pO[i-1] * (tvals[T] + (num_yes + 1.0)/(length + 2.0) + Pi[i-1][j-1])#/((p_tags[j-1][1] + 1) / float(p_tags[j-1][1] + p_tags[j-1][0] + 2))
 		    probabilities_no[i-1] = pO[i-1] * ((1 - tvals[T]) + (length - num_yes + 1.0)/(length + 2.0) + 1 - Pi[i-1][j-1])#/((p_tags[j-1][0] + 1) / float(p_tags[j-1][1] + p_tags[j-1][0] + 2))
-                probabilities_yes.sort()
-                probabilities_yes.reverse()
 		
-		yes_indices = np.argsort(probabilities_yes)
+	    yes = probabilities_yes[i-1] / (probabilities_no[i-1] + probabilities_yes[i-1])
+	    no = probabilities_no[i-1] / (probabilities_no[i-1] + probabilities_yes[i-1])
 
-                topProbYes = 0
-                bottomProbYes = 0
+	    probabilities_yes.sort()
+	    probabilities_yes.reverse()
+	    
+	    yes_indices = np.argsort(probabilities_yes)
 
-		bottomProbNo = 0
-		topProbNo = 0
+	    topProbYes = 0
+	    bottomProbYes = 0
 
-                for x in range(start, top):
-                    topProbYes = topProbYes + probabilities_yes[x]
-		    topProbNo = topProbNo + probabilities_no[yes_indices[x]]
+	    bottomProbNo = 0
+	    topProbNo = 0
 
-                for x in range(top, 17):
-                    bottomProbYes = bottomProbYes + probabilities_yes[x]
-		    bottomProbNo = bottomProbNo + probabilities_no[yes_indices[x]]
+	    for x in range(start, top):
+		topProbYes = topProbYes + probabilities_yes[x]
+		topProbNo = topProbNo + probabilities_no[yes_indices[x]]
 
-                topProbYes = topProbYes/(0.0 + top)
-                bottomProbYes = bottomProbYes/(0.0 + bottom)
+	    for x in range(top, 17):
+		bottomProbYes = bottomProbYes + probabilities_yes[x]
+		bottomProbNo = bottomProbNo + probabilities_no[yes_indices[x]]
+
+	    topProbYes = topProbYes/(0.0 + top)
+	    bottomProbYes = bottomProbYes/(0.0 + bottom)
+	    
+	    topProbNo = topProbNo/(0.0 + top)
+	    bottomProbNo = bottomProbNo/(0.0 + bottom)
+
+	    if(abs(topProbYes - bottomProbYes) + abs(topProbNo - bottomProbNo) > bestDifference):
+		bestDifference = abs(topProbYes - bottomProbYes) + abs(topProbNo - bottomProbNo)
+		bestD = j
 		
-		topProbNo = topProbNo/(0.0 + top)
-		bottomProbNo = bottomProbNo/(0.0 + bottom)
 
-                if(abs(topProbYes - bottomProbYes) + abs(topProbNo - bottomProbNo) > bestDifference):
-                    bestDifference = abs(topProbYes - bottomProbYes) + abs(topProbNo - bottomProbNo)
-                    bestD = j
+    return bestD
+
+
+def get_best_question_tag_entropy(objects, asked_questions, pO, start, cursor, game_id, Pi, p_tags):
+    tvals = get_tval(cursor)
+    probabilities_yes = []
+    probabilities_no = []
+
+    top = (17 - start - 1)/2 + start + 1
+    bottom = 17 - top
+    bestDifference = 0
+    bestD = 0
+      
+    for i in range(0, 17):
+        probabilities_yes.append(0)
+	probabilities_no.append(0)
+
+    pO_sorted = np.argsort(pO)
+    objects_considered = pO_sorted[start:]
+    for i in range(0,len(objects_considered)):
+	objects_considered[i] += 1
+    
+    for j in range(1, 290):
+	yes = 0
+	no = 0
+	
+	p_for_yes = 0
+	p_for_no = 0
+	
+	pi_given_yes_times_log = 0
+	pi_given_no_times_log = 0
+	    
+	if j not in asked_questions and j is not 285:
+	    for i in objects_considered:
+		
+		T = get_t(i, j, cursor)
+		num_yes = sum(objects[i][j])
+		length = len(objects[i][j])
+			
+		if Pi[i-1][j-1] == -1:
+		    probabilities_yes[i-1] = pO[i-1] * (tvals[T] + (num_yes + 1.0)/(length + 2.0))#/((p_tags[j-1][1] + 1) / float(p_tags[j-1][1] + p_tags[j-1][0] + 2))
+		    probabilities_no[i-1] = pO[i-1] * ((1 - tvals[T]) + (length - num_yes + 1.0)/(length + 2.0))#/((p_tags[j-1][0] + 1) / float(p_tags[j-1][1] + p_tags[j-1][0] + 2))
+		else:
+		    probabilities_yes[i-1] = pO[i-1] * (tvals[T] + (num_yes + 1.0)/(length + 2.0) + Pi[i-1][j-1])#/((p_tags[j-1][1] + 1) / float(p_tags[j-1][1] + p_tags[j-1][0] + 2))
+		    probabilities_no[i-1] = pO[i-1] * ((1 - tvals[T]) + (length - num_yes + 1.0)/(length + 2.0) + 1 - Pi[i-1][j-1])#/((p_tags[j-1][0] + 1) / float(p_tags[j-1][1] + p_tags[j-1][0] + 2))
+		
+		p_for_yes += pO[i-1] * num_yes / length
+		p_for_no += pO[i-1] * (length - num_yes) / length
+		
+		yes  += probabilities_yes[i-1]
+		no += probabilities_no[i-1]
+		
+		pi_given_yes_times_log += probabilities_yes[i-1] * math.log(probabilities_yes[i-1], 2)
+		pi_given_no_times_log += probabilities_no[i-1] * math.log(probabilities_no[i-1], 2)
+	    
+	    
+	    yes = yes / len(objects_considered)
+	    no = no / len(objects_considered)
+	    
+	    #entropy = -p_for_yes * pi_given_yes_times_log - p_for_no * pi_given_no_times_log
+	    entropy = - yes * math.log(yes, 2) - no * math.log(no, 2)
+	    if entropy > bestDifference:
+		bestD = j
+		bestDifference = entropy
+
+    return bestD
+
+
+def get_best_question(objects, asked_questions, pO, start, cursor, game_id, Pi, p_tags):
+    tvals = get_tval(cursor)
+
+    top = (17 - start - 1)/2 + start + 1
+    bottom = 17 - top
+    bestDifference = 10
+    bestD = 0
+    
+    probabilities_yes = []
+    probabilities_no = [] 
+    for i in range(0, 17):
+        probabilities_yes.append(0)
+	probabilities_no.append(0)
+
+    pO_sorted = np.argsort(pO)
+    objects_considered = pO_sorted[start:]
+    for i in range(0,len(objects_considered)):
+	objects_considered[i] += 1
+        
+    for j in range(1, 290):
+	yes = 0
+	no = 0
+	
+	p_for_yes = 0
+	p_for_no = 0
+	
+	pi_given_yes_times_log = 0
+	pi_given_no_times_log = 0
+	    
+	if j not in asked_questions:
+	    for i in objects_considered:
+		
+		T = get_t(i, j, cursor)
+		num_yes = sum(objects[i][j])
+		length = len(objects[i][j])
+			
+		if Pi[i-1][j-1] == -1:
+		    probabilities_yes[i-1] = pO[i-1] * (tvals[T] + (num_yes + 1.0)/(length + 2.0)) / 2
+		    probabilities_no[i-1] = pO[i-1] * ((1 - tvals[T]) + (length - num_yes + 1.0)/(length + 2.0)) / 2
+		else:
+		    probabilities_yes[i-1] = pO[i-1] * (tvals[T] + (num_yes + 1.0)/(length + 2.0) + Pi[i-1][j-1]) / 3
+		    probabilities_no[i-1] = pO[i-1] * ((1 - tvals[T]) + (length - num_yes + 1.0)/(length + 2.0) + 1 - Pi[i-1][j-1]) / 3
+		
+	    probabilities_yes = np.asarray(probabilities_yes)
+	    probabilities_no = np.asarray(probabilities_no)
+	    probabilities_yes = probabilities_yes / sum(probabilities_yes)
+	    probabilities_no = probabilities_no / sum(probabilities_no)
+	    
+	    for i in objects_considered:
+		num_yes = sum(objects[i][j])
+		length = len(objects[i][j])
+		
+		p_for_yes += pO[i-1] * num_yes / length
+		p_for_no += pO[i-1] * (length - num_yes) / length
+		
+		yes  += probabilities_yes[i-1]
+		no += probabilities_no[i-1]
+		
+		pi_given_yes_times_log += probabilities_yes[i-1] * math.log(probabilities_yes[i-1], 2)
+		pi_given_no_times_log += probabilities_no[i-1] * math.log(probabilities_no[i-1], 2)
+	    
+	    entropy = -p_for_yes * pi_given_yes_times_log - p_for_no * pi_given_no_times_log
+	    if entropy < bestDifference:
+		bestD = j
+		bestDifference = entropy
 
     return bestD
 
@@ -524,8 +716,7 @@ def get_subset_split(pO):
 def ask_question(cursor, answer_data, OBJECT_WE_PLAY, bestD, answers, pO, tags, game_folder, objectlist, objects, Pi, p_tags):
     probabilityD = get_tval(cursor)
     question_tag = tags[bestD-1]
-    print question_tag, bestD
-    #answer = raw_input("Is it " + tags[bestD] + "? (yes/no) ")
+    #answer = raw_input("Does it have " + tags[bestD-1] + "? (yes/no) ")
     #answer = answer.lower()
     answer = answer_data[OBJECT_WE_PLAY-1][bestD-1]
     print game_folder, OBJECT_WE_PLAY,objectlist[OBJECT_WE_PLAY-1][0],'qt->'+question_tag+' ' ,'ans->'+answer 
@@ -542,14 +733,13 @@ def ask_question(cursor, answer_data, OBJECT_WE_PLAY, bestD, answers, pO, tags, 
 		    T = get_t(objectID+1, bestD, cursor)
 		    N = sum(objects[objectID+1][bestD])
 		    D = len(objects[objectID+1][bestD])
-		    pO[objectID] = pO[objectID] * (probabilityD[T] + (N + 1)/(D + 2.0))#/((p_tags[bestD-1][1] + 1) / float(p_tags[bestD-1][1] + p_tags[bestD-1][0] + 2))	
+		    pO[objectID] = pO[objectID] * (probabilityD[T] + (N + 1)/(D + 2.0)) / 2 #/((p_tags[bestD-1][1] + 1) / float(p_tags[bestD-1][1] + p_tags[bestD-1][0] + 2))	
 	    else:
 		for objectID in range(0,17):
-		    print Pi[objectID][bestD-1]
 		    T = get_t(objectID+1, bestD, cursor)
 		    N = sum(objects[objectID+1][bestD])
 		    D = len(objects[objectID+1][bestD])
-		    pO[objectID] = pO[objectID] * ((probabilityD[T] + (N + 1)/(D + 2.0) + Pi[objectID][bestD-1]))#/((p_tags[bestD-1][1] + 1) / float(p_tags[bestD-1][1] + p_tags[bestD-1][0] + 2))
+		    pO[objectID] = pO[objectID] * ((probabilityD[T] + (N + 1)/(D + 2.0) + Pi[objectID][bestD-1])) / 3 #/((p_tags[bestD-1][1] + 1) / float(p_tags[bestD-1][1] + p_tags[bestD-1][0] + 2))
 
     else:
 	    if answer =='no' or answer is 'no':
@@ -559,14 +749,13 @@ def ask_question(cursor, answer_data, OBJECT_WE_PLAY, bestD, answers, pO, tags, 
 				T = get_t(objectID+1, bestD, cursor)
 				N = sum(objects[objectID+1][bestD])
 				D = len(objects[objectID+1][bestD])
-				pO[objectID] = pO[objectID] * ((1 - probabilityD[T]) + (D - N + 1)/(D + 2.0))#/((p_tags[bestD-1][1] + 1) / float(p_tags[bestD-1][0] + p_tags[bestD-1][0] + 2))	    
+				pO[objectID] = pO[objectID] * ((1 - probabilityD[T]) + (D - N + 1)/(D + 2.0)) / 2 #/((p_tags[bestD-1][1] + 1) / float(p_tags[bestD-1][0] + p_tags[bestD-1][0] + 2))	    
 			else:
 			    for objectID in range(0,17):
-				print Pi[objectID][bestD-1]
 				T = get_t(objectID+1, bestD, cursor)
 				N = sum(objects[objectID+1][bestD])
 				D = len(objects[objectID+1][bestD])
-				pO[objectID] = pO[objectID] * (((1 - probabilityD[T]) + (D - N + 1)/(D + 2.0) + 1 - Pi[objectID][bestD-1]))#/((p_tags[bestD-1][0] + 1) / float(p_tags[bestD-1][1] + p_tags[bestD-1][0] + 2))
+				pO[objectID] = pO[objectID] * (((1 - probabilityD[T]) + (D - N + 1)/(D + 2.0) + 1 - Pi[objectID][bestD-1])) / 3 #/((p_tags[bestD-1][0] + 1) / float(p_tags[bestD-1][1] + p_tags[bestD-1][0] + 2))
 				    
     pO = pO / np.sum(pO)
     
@@ -671,7 +860,7 @@ def record_object_results(cursor, object_id, answers, questions, con, guess2say,
     
     for i in range(0, len(questions)):
 	T = get_t(object_id, questions[i], cursor)
-	print object_id, questions[i], answers[i]
+	#print object_id, questions[i], answers[i]
 	if answers[i] == True:
 	    cursor.execute("SELECT yes_answers FROM Pqd where t_value = %s", T)
 	    yes_count = cursor.fetchone()[0]
@@ -694,7 +883,14 @@ def record_object_results(cursor, object_id, answers, questions, con, guess2say,
 
     with open("game.txt", "a") as myfile:
 	  myfile.write(str(gameID)+','+ str(object_id) +','+ str(guess2say)+"," + str(len(questions)) + "," + result  +  "\n")
+    myfile.close()
     
+    with open("answers.txt", "a") as answerfile:
+	answerfile.write("\n" + str(gameID) + " " + str(object_id) + " " + result + "\n")
+	for i in range(0, len(questions)):
+	    answerfile.write(get_tag(questions[i], cursor) + " -> " + str(answers[i]) + "\n")
+    answerfile.close()
+
 
 def record_round_results(gameID, round_wins, round_losses, number_of_questions):
     
@@ -741,9 +937,9 @@ def play_object(cursor, object_id, tags, gameID, all_games, objectlist, con, Pi)
     askedQuestions = []
     answers = []
     split = 0
-    answer_data = np.genfromtxt('/local2/awh0047/iSpy/ISPY_PY/Answers/Game' + str(gameID) + '.csv',dtype=str, delimiter='\t')
+    #answer_data = np.genfromtxt('/local2/awh0047/iSpy/ispy_python/Answers/Game' + str(gameID) + '.csv',dtype=str, delimiter='\t')
 
-    while np.sort(pO)[pO.size - 1] - np.sort(pO)[pO.size - 2] < 0.1:
+    while np.sort(pO)[pO.size - 1] - np.sort(pO)[pO.size - 2] < 0.15:
 	best_question = get_best_question(objects, askedQuestions, pO, split, cursor, gameID, Pi, p_tags)
 	askedQuestions.append(best_question)
         pO, answers = ask_question(cursor, answer_data, object_id, best_question, answers, pO, tags, game_folder, objectlist, objects, Pi, p_tags)
@@ -757,6 +953,8 @@ def play_object(cursor, object_id, tags, gameID, all_games, objectlist, con, Pi)
     
     result = guess_object(pO, objectlist[object_id-1][0], guess2say)
 
+    print len(askedQuestions)
+    
     record_object_results(cursor, object_id, answers, askedQuestions, con, guess2say, result, gameID)
     
     return result, len(askedQuestions)
@@ -803,10 +1001,10 @@ def play_game(cursor, con):
     objectlist = build_object_list(cursor)
     tags = get_tags(cursor)
 
-    for gameID in range(16,31):
+    for gameID in range(16,17):
 	   round_wins, round_losses, round_questions, avg_for_win, avg_for_lose = play_round(cursor, tags, gameID, all_games, objectlist, con)
 	   build_model(cursor, con, gameID, gameID+1)
-           test_unknown_image(cursor, tags, gameID)
+           #test_unknown_image(cursor, tags, gameID)
 	   wins = wins + round_wins
 	   losses = losses + round_losses
 	   number_of_questions = number_of_questions + round_questions
@@ -814,9 +1012,9 @@ def play_game(cursor, con):
 	   avg_lose = avg_for_lose + avg_lose
     
     with open("game.txt", "a") as myfile:
-       myfile.write("Wins=" + str(wins) + ', Losses='+str(losses) + ', Average number of questions=' + str(number_of_questions/float(wins+losses)))
+       myfile.write("Wins=" + str(wins) + ', Losses='+str(losses) + ', Average number of questions=' + str(number_of_questions/float(wins+losses)) + '\n')
        myfile.write("Average questions for a win: " + str(avg_win/float(wins)) + " Average questions for a loss: " + str(avg_lose/float(losses)))
-
+    print wins, losses
 
 def main():
     con = mdb.connect('localhost', 'iSpy_team', 'password', 'iSpy_features')
@@ -826,7 +1024,9 @@ def main():
     #test_images(cursor)
     #get_p_tag(cursor)
     #build_model(cursor, con, 1, 2)
-    build_object_classifiers(cursor,con)
+    #build_object_classifiers(cursor,con)
+    
+    test_object_classifiers()
     
     #test_unknown_image(cursor, get_tags(cursor), 16)
     #add_answerset(cursor, 16, con)
@@ -835,8 +1035,7 @@ def main():
     #copy_into_answers(cursor, get_tags(cursor))
     #con.commit()
     #build_pqd(cursor, con, get_tags(cursor))
-
-  
+    
 		      
 if __name__ == '__main__':
         sys.exit(main())

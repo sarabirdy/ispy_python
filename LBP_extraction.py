@@ -4,8 +4,10 @@ import numpy as np
 import cv2
 from matplotlib import pyplot as plt
 import math
+import warnings
 
-
+def fxn():
+    warnings.warn("deprecated", DeprecationWarning)
 
 def normalize(v):
     norm=np.linalg.norm(v)
@@ -110,4 +112,5 @@ def LBP(img):
 
     return normalize(LBP[0])
 
-
+warnings.filterwarnings("ignore")
+    
