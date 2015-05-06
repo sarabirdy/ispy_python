@@ -88,10 +88,12 @@ def RetrieveFeatureVector(feature_info,start,end):
 
 
 def test_object_classifiers():
-    for x in range(1,6):
-	image_path = os.getcwd() + '/test_images/' + str(x) + '/1.jpg'
-	image = cv2.imread(image_path)
-	image_path = '/local2/awh0047/iSpy/ispy_python_old/cropped_ims/obj' + str(x) + '/5.jpg'
+    results = []
+    
+    for x in range(1,18):
+	#image_path = os.getcwd() + '/test_images/' + str(x) + '/1.jpg'
+	#image = cv2.imread(image_path)
+	image_path = '/local2/awh0047/iSpy/ispy_python_old/cropped_ims/obj' + str(x) + '/3.jpg'
 	image = cv2.imread(image_path)
 	image_path = os.getcwd() + '/test_images/' + str(x) + '/2.jpg'
 	image2 = cv2.imread(image_path)
@@ -127,10 +129,11 @@ def test_object_classifiers():
 	#    #myfile.write("DBN\n")
 	#    #myfile.write(classification_report([1,1,0,0,1], dbn_preds))
 	#    myfile.write("\n\n")
-	print identify_objects(feature_vector)
+	results.append(identify_objects(feature_vector, x))
+    return results
 
 
-def identify_objects(feature_vector):
+def identify_objects(feature_vector, object_id):
     answers = []
     models = []
     
@@ -154,12 +157,29 @@ def identify_objects(feature_vector):
 		    bestPred = score[0]
 	return bestGuess
     elif sum(answers) == 0:
-	return -1
+	bestPred = -1
     else:
 	for objectID in range(1,18):
 	    if answers[objectID-1] == 1:
-		return objectID
+		bestPred = objectID
+		
+    return bestPred
 
+
+def test_object_classifiers_over_time(cursor,con):
+    for i in range(0, 31):
+	first.Object_Learning(i,con)
+	build_object_classifiers(cursor,con)
+	results = test_object_classifiers()
+	correct = 0
+	with open("agreement.txt", "a") as myfile:
+            myfile.write(str(i) + "\n")
+            for i in range(0,len(results)):
+                myfile.write("Object: " + str(i+1) + " Guessed: " + str(results[i]) + "\n")
+		if results[i] == i+1:
+		    correct += 1
+            myfile.write("Identified " + str(correct/float(len(results))) + " of objects correctly \n")
+    
 
 def build_object_classifiers(cursor, con):
     
@@ -1016,6 +1036,7 @@ def play_game(cursor, con):
        myfile.write("Average questions for a win: " + str(avg_win/float(wins)) + " Average questions for a loss: " + str(avg_lose/float(losses)))
     print wins, losses
 
+
 def main():
     con = mdb.connect('localhost', 'iSpy_team', 'password', 'iSpy_features')
     with con:
@@ -1026,7 +1047,11 @@ def main():
     #build_model(cursor, con, 1, 2)
     #build_object_classifiers(cursor,con)
     
-    test_object_classifiers()
+    #first.Object_Learning(0,con)
+    
+    #test_object_classifiers()
+    
+    test_object_classifiers_over_time(cursor, con)
     
     #test_unknown_image(cursor, get_tags(cursor), 16)
     #add_answerset(cursor, 16, con)
@@ -1035,6 +1060,8 @@ def main():
     #copy_into_answers(cursor, get_tags(cursor))
     #con.commit()
     #build_pqd(cursor, con, get_tags(cursor))
+    
+    pass
     
 		      
 if __name__ == '__main__':

@@ -23,9 +23,26 @@ import matplotlib.pyplot as plt
 import insert_db as ins
 
 
+def get_feature_vector(con,img):
+   cur = con.cursor()
+ 
+   visual_vector=[]
+   
+   lbp_vector=TextureVector(img) #texture
+   visual_vector.extend(lbp_vector)
+   
+   rgbs_vector=ColorVector(img) #color
+   for i in rgbs_vector:
+      visual_vector.append(i[0])
+   
+   hog_vector=ShapeVector(img) #shape
+   for i in hog_vector[0]:
+     visual_vector.append(i)
+
+   return visual_vector
 
 # UPDATE ALL FEATURES OF AN OBJECT
-def FeatureUpdate(con,img,objID):
+def FeatureUpdate(con,img,objID,game_id):
 
      cur = con.cursor()
  
@@ -47,7 +64,7 @@ def FeatureUpdate(con,img,objID):
 
 
      for index, value in enumerate(visual_vector):
-	 ins.InsertFeatureVector(con,objID,index,value)
+	 ins.InsertFeatureVector(con,objID,index,value,game_id)
 	 
      plt.close('all')
 

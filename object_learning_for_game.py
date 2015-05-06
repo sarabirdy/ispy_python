@@ -17,7 +17,7 @@ def Object_Learning(game_num, con):
 
 	# for all segmented objects insert their feature vectors to the DB
 
-	if game_num == 1:
+	if game_num == 0:
 		folder = os.getcwd()+"/cropped_ims"
 		NoOfObjects = len(os.listdir(folder))
 
@@ -30,17 +30,20 @@ def Object_Learning(game_num, con):
 			for image in captures:
 				image_path = current_folder + "/" + image
 				img = cv2.imread(image_path)
-				feat.FeatureUpdate(con,img,str(objID))
+				feat.FeatureUpdate(con,img,str(objID), 0)
 		con.commit()
 	else:
-		folder = os.getcwd()+"/GAMES/Game" + str(game_num-1)
+		folder = os.getcwd()+"/GAMES/Game" + str(game_num)
 
 		captures =  os.listdir(folder)
 		for image in captures:
-			if image.endswith('.jpg'):
-				objID = image[3:5]
-				img = cv2.imread(image)
-				feat.FeatureUpdate(con,img,objID)
+		    print image
+		    if image.endswith('.jpg'):
+			    objID = image[3:5]
+			    if '.' in objID:
+				objID = objID[0:1]
+			    img = cv2.imread(folder + "/" + image)
+			    feat.FeatureUpdate(con,img,objID,game_num)
 		con.commit()
 		
 	

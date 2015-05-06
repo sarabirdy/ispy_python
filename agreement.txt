@@ -12238,3 +12238,1183 @@ cardboard 0 0.548138101687
 orange 1 0.490561988309
 button 0 0.627746904643
 Agreed 0.304347826087 of the time on object 17
+
+
+0
+Object: 1 Guessed: 8
+Object: 2 Guessed: 2
+Object: 3 Guessed: 4
+Object: 4 Guessed: 8
+Object: 5 Guessed: 1
+Object: 6 Guessed: 16
+Object: 7 Guessed: 8
+Object: 8 Guessed: 8
+Object: 9 Guessed: 2
+Object: 10 Guessed: 10
+Object: 11 Guessed: 5
+Object: 12 Guessed: 1
+Object: 13 Guessed: 4
+Object: 14 Guessed: 15
+Object: 15 Guessed: 14
+Object: 16 Guessed: 9
+Object: 17 Guessed: 17
+Identified 0.235294117647 of objects correctly 
+1
+Object: 1 Guessed: 10
+Object: 2 Guessed: 16
+Object: 3 Guessed: 3
+Object: 4 Guessed: 3
+Object: 5 Guessed: 10
+Object: 6 Guessed: 6
+Object: 7 Guessed: 7
+Object: 8 Guessed: 3
+Object: 9 Guessed: 9
+Object: 10 Guessed: 10
+Object: 11 Guessed: 10
+Object: 12 Guessed: 7
+Object: 13 Guessed: 16
+Object: 14 Guessed: 5
+Object: 15 Guessed: 16
+Object: 16 Guessed: 2
+Object: 17 Guessed: 13
+Identified 0.294117647059 of objects correctly 
+2
+Object: 1 Guessed: 5
+Object: 2 Guessed: 2
+Object: 3 Guessed: 4
+Object: 4 Guessed: 4
+Object: 5 Guessed: 5
+Object: 6 Guessed: 2
+Object: 7 Guessed: 7
+Object: 8 Guessed: 8
+Object: 9 Guessed: 4
+Object: 10 Guessed: 5
+Object: 11 Guessed: 11
+Object: 12 Guessed: 7
+Object: 13 Guessed: 9
+Object: 14 Guessed: 7
+Object: 15 Guessed: 1
+Object: 16 Guessed: 1
+Object: 17 Guessed: 13
+Identified 0.352941176471 of objects correctly 
+3
+Object: 1 Guessed: 1
+Object: 2 Guessed: 15
+Object: 3 Guessed: 3
+Object: 4 Guessed: 3
+Object: 5 Guessed: 10
+Object: 6 Guessed: 11
+Object: 7 Guessed: 1
+Object: 8 Guessed: 3
+Object: 9 Guessed: 9
+Object: 10 Guessed: 10
+Object: 11 Guessed: 11
+Object: 12 Guessed: 1
+Object: 13 Guessed: 13
+Object: 14 Guessed: 14
+Object: 15 Guessed: 15
+Object: 16 Guessed: 15
+Object: 17 Guessed: 4
+Identified 0.470588235294 of objects correctly 
+4
+Object: 1 Guessed: 1
+Object: 2 Guessed: 2
+Object: 3 Guessed: 1
+Object: 4 Guessed: 9
+Object: 5 Guessed: 1
+Object: 6 Guessed: 6
+Object: 7 Guessed: 12
+Object: 8 Guessed: 2
+Object: 9 Guessed: 1
+Object: 10 Guessed: 1
+Object: 11 Guessed: 1
+Object: 12 Guessed: 12
+Object: 13 Guessed: 9
+Object: 14 Guessed: 14
+Object: 15 Guessed: 1
+Object: 16 Guessed: 16
+Object: 17 Guessed: 17
+Identified 0.411764705882 of objects correctly 
+5
+Object: 1 Guessed: 9
+Object: 2 Guessed: 15
+Object: 3 Guessed: 4
+Object: 4 Guessed: 4
+Object: 5 Guessed: 12
+Object: 6 Guessed: 6
+Object: 7 Guessed: 7
+Object: 8 Guessed: 7
+Object: 9 Guessed: 9
+Object: 10 Guessed: 9
+Object: 11 Guessed: 9
+Object: 12 Guessed: 12
+Object: 13 Guessed: 5
+Object: 14 Guessed: 14
+Object: 15 Guessed: 15
+Object: 16 Guessed: 15
+Object: 17 Guessed: 17
+Identified 0.470588235294 of objects correctly 
+6
+Object: 1 Guessed: 11
+Object: 2 Guessed: 15
+Object: 3 Guessed: 3
+Object: 4 Guessed: 4
+Object: 5 Guessed: 3
+Object: 6 Guessed: 6
+Object: 7 Guessed: 7
+Object: 8 Guessed: 8
+Object: 9 Guessed: 4
+Object: 10 Guessed: 11
+Object: 11 Guessed: 11
+Object: 12 Guessed: 7
+Object: 13 Guessed: 13
+Object: 14 Guessed: 5
+Object: 15 Guessed: 15
+Object: 16 Guessed: 1
+Object: 17 Guessed: 9
+Identified 0.470588235294 of objects correctly 
+7
+Object: 1 Guessed: 10
+Object: 2 Guessed: 2
+Object: 3 Guessed: 4
+Object: 4 Guessed: 4
+Object: 5 Guessed: 10
+Object: 6 Guessed: 6
+Object: 7 Guessed: 7
+Object: 8 Guessed: 7
+Object: 9 Guessed: 2
+Object: 10 Guessed: 10
+Object: 11 Guessed: 10
+Object: 12 Guessed: 7
+Object: 13 Guessed: 13
+Object: 14 Guessed: 14
+Object: 15 Guessed: 15
+Object: 16 Guessed: 16
+Object: 17 Guessed: 3
+Identified 0.529411764706 of objects correctly 
+8
+Object: 1 Guessed: 1
+Object: 2 Guessed: 2
+Object: 3 Guessed: 3
+Object: 4 Guessed: 3
+Object: 5 Guessed: 1
+Object: 6 Guessed: 2
+Object: 7 Guessed: 7
+Object: 8 Guessed: 8
+Object: 9 Guessed: 9
+Object: 10 Guessed: 1
+Object: 11 Guessed: 1
+Object: 12 Guessed: 7
+Object: 13 Guessed: 13
+Object: 14 Guessed: 5
+Object: 15 Guessed: 15
+Object: 16 Guessed: 2
+Object: 17 Guessed: 17
+Identified 0.529411764706 of objects correctly 
+9
+Object: 1 Guessed: 1
+Object: 2 Guessed: 2
+Object: 3 Guessed: 4
+Object: 4 Guessed: 4
+Object: 5 Guessed: 5
+Object: 6 Guessed: 2
+Object: 7 Guessed: 1
+Object: 8 Guessed: 8
+Object: 9 Guessed: 2
+Object: 10 Guessed: 1
+Object: 11 Guessed: 1
+Object: 12 Guessed: 1
+Object: 13 Guessed: 9
+Object: 14 Guessed: 7
+Object: 15 Guessed: 10
+Object: 16 Guessed: 2
+Object: 17 Guessed: 17
+Identified 0.352941176471 of objects correctly 
+10
+Object: 1 Guessed: 5
+Object: 2 Guessed: 16
+Object: 3 Guessed: 4
+Object: 4 Guessed: 4
+Object: 5 Guessed: 5
+Object: 6 Guessed: 6
+Object: 7 Guessed: 5
+Object: 8 Guessed: 4
+Object: 9 Guessed: 9
+Object: 10 Guessed: 5
+Object: 11 Guessed: 5
+Object: 12 Guessed: 5
+Object: 13 Guessed: 13
+Object: 14 Guessed: 15
+Object: 15 Guessed: 15
+Object: 16 Guessed: 16
+Object: 17 Guessed: 17
+Identified 0.470588235294 of objects correctly 
+11
+Object: 1 Guessed: 1
+Object: 2 Guessed: 16
+Object: 3 Guessed: 3
+Object: 4 Guessed: 4
+Object: 5 Guessed: 5
+Object: 6 Guessed: 6
+Object: 7 Guessed: 12
+Object: 8 Guessed: 3
+Object: 9 Guessed: 1
+Object: 10 Guessed: 1
+Object: 11 Guessed: 11
+Object: 12 Guessed: 12
+Object: 13 Guessed: 13
+Object: 14 Guessed: 3
+Object: 15 Guessed: 15
+Object: 16 Guessed: 16
+Object: 17 Guessed: 17
+Identified 0.647058823529 of objects correctly 
+12
+Object: 1 Guessed: 1
+Object: 2 Guessed: 16
+Object: 3 Guessed: 9
+Object: 4 Guessed: 15
+Object: 5 Guessed: 1
+Object: 6 Guessed: 16
+Object: 7 Guessed: 12
+Object: 8 Guessed: 1
+Object: 9 Guessed: 9
+Object: 10 Guessed: 1
+Object: 11 Guessed: 11
+Object: 12 Guessed: 12
+Object: 13 Guessed: 5
+Object: 14 Guessed: 5
+Object: 15 Guessed: 15
+Object: 16 Guessed: 16
+Object: 17 Guessed: 3
+Identified 0.352941176471 of objects correctly 
+13
+Object: 1 Guessed: 1
+Object: 2 Guessed: 16
+Object: 3 Guessed: 3
+Object: 4 Guessed: 3
+Object: 5 Guessed: 5
+Object: 6 Guessed: 6
+Object: 7 Guessed: 1
+Object: 8 Guessed: 3
+Object: 9 Guessed: 1
+Object: 10 Guessed: 10
+Object: 11 Guessed: 11
+Object: 12 Guessed: 1
+Object: 13 Guessed: 13
+Object: 14 Guessed: 3
+Object: 15 Guessed: 16
+Object: 16 Guessed: 16
+Object: 17 Guessed: 9
+Identified 0.470588235294 of objects correctly 
+14
+Object: 1 Guessed: 5
+Object: 2 Guessed: 15
+Object: 3 Guessed: 5
+Object: 4 Guessed: 9
+Object: 5 Guessed: 5
+Object: 6 Guessed: 6
+Object: 7 Guessed: 12
+Object: 8 Guessed: 12
+Object: 9 Guessed: 15
+Object: 10 Guessed: 5
+Object: 11 Guessed: 11
+Object: 12 Guessed: 12
+Object: 13 Guessed: 9
+Object: 14 Guessed: 14
+Object: 15 Guessed: 15
+Object: 16 Guessed: 16
+Object: 17 Guessed: 3
+Identified 0.411764705882 of objects correctly 
+15
+Object: 1 Guessed: 1
+Object: 2 Guessed: 1
+Object: 3 Guessed: 3
+Object: 4 Guessed: 4
+Object: 5 Guessed: 5
+Object: 6 Guessed: 11
+Object: 7 Guessed: 1
+Object: 8 Guessed: 8
+Object: 9 Guessed: 1
+Object: 10 Guessed: 1
+Object: 11 Guessed: 1
+Object: 12 Guessed: 1
+Object: 13 Guessed: 13
+Object: 14 Guessed: 14
+Object: 15 Guessed: 10
+Object: 16 Guessed: 1
+Object: 17 Guessed: 17
+Identified 0.470588235294 of objects correctly 
+16
+Object: 1 Guessed: 2
+Object: 2 Guessed: 2
+Object: 3 Guessed: 4
+Object: 4 Guessed: 4
+Object: 5 Guessed: 11
+Object: 6 Guessed: 2
+Object: 7 Guessed: 8
+Object: 8 Guessed: 8
+Object: 9 Guessed: 2
+Object: 10 Guessed: 11
+Object: 11 Guessed: 11
+Object: 12 Guessed: 8
+Object: 13 Guessed: 13
+Object: 14 Guessed: 14
+Object: 15 Guessed: 15
+Object: 16 Guessed: 15
+Object: 17 Guessed: 17
+Identified 0.470588235294 of objects correctly 
+17
+Object: 1 Guessed: 1
+Object: 2 Guessed: 2
+Object: 3 Guessed: 8
+Object: 4 Guessed: 9
+Object: 5 Guessed: 10
+Object: 6 Guessed: 6
+Object: 7 Guessed: 7
+Object: 8 Guessed: 8
+Object: 9 Guessed: 2
+Object: 10 Guessed: 10
+Object: 11 Guessed: 11
+Object: 12 Guessed: 7
+Object: 13 Guessed: 9
+Object: 14 Guessed: 14
+Object: 15 Guessed: 15
+Object: 16 Guessed: 16
+Object: 17 Guessed: 17
+Identified 0.647058823529 of objects correctly 
+18
+Object: 1 Guessed: 10
+Object: 2 Guessed: 15
+Object: 3 Guessed: 3
+Object: 4 Guessed: 3
+Object: 5 Guessed: 10
+Object: 6 Guessed: 6
+Object: 7 Guessed: 8
+Object: 8 Guessed: 8
+Object: 9 Guessed: 10
+Object: 10 Guessed: 10
+Object: 11 Guessed: 11
+Object: 12 Guessed: 10
+Object: 13 Guessed: 9
+Object: 14 Guessed: 14
+Object: 15 Guessed: 15
+Object: 16 Guessed: 16
+Object: 17 Guessed: 17
+Identified 0.529411764706 of objects correctly 
+19
+Object: 1 Guessed: 5
+Object: 2 Guessed: 9
+Object: 3 Guessed: 5
+Object: 4 Guessed: 14
+Object: 5 Guessed: 5
+Object: 6 Guessed: 6
+Object: 7 Guessed: 7
+Object: 8 Guessed: 8
+Object: 9 Guessed: 9
+Object: 10 Guessed: 5
+Object: 11 Guessed: 5
+Object: 12 Guessed: 7
+Object: 13 Guessed: 13
+Object: 14 Guessed: 14
+Object: 15 Guessed: 10
+Object: 16 Guessed: 2
+Object: 17 Guessed: 17
+Identified 0.470588235294 of objects correctly 
+20
+Object: 1 Guessed: 2
+Object: 2 Guessed: 2
+Object: 3 Guessed: 3
+Object: 4 Guessed: 3
+Object: 5 Guessed: 11
+Object: 6 Guessed: 16
+Object: 7 Guessed: 7
+Object: 8 Guessed: 8
+Object: 9 Guessed: 2
+Object: 10 Guessed: 11
+Object: 11 Guessed: 11
+Object: 12 Guessed: 12
+Object: 13 Guessed: 13
+Object: 14 Guessed: 14
+Object: 15 Guessed: 15
+Object: 16 Guessed: 16
+Object: 17 Guessed: 4
+Identified 0.588235294118 of objects correctly 
+21
+Object: 1 Guessed: 2
+Object: 2 Guessed: 2
+Object: 3 Guessed: 4
+Object: 4 Guessed: 4
+Object: 5 Guessed: 5
+Object: 6 Guessed: 2
+Object: 7 Guessed: 12
+Object: 8 Guessed: 8
+Object: 9 Guessed: 9
+Object: 10 Guessed: 11
+Object: 11 Guessed: 11
+Object: 12 Guessed: 12
+Object: 13 Guessed: 13
+Object: 14 Guessed: 7
+Object: 15 Guessed: 15
+Object: 16 Guessed: 15
+Object: 17 Guessed: 17
+Identified 0.588235294118 of objects correctly 
+22
+Object: 1 Guessed: 1
+Object: 2 Guessed: 16
+Object: 3 Guessed: 5
+Object: 4 Guessed: 5
+Object: 5 Guessed: 5
+Object: 6 Guessed: 16
+Object: 7 Guessed: 7
+Object: 8 Guessed: 8
+Object: 9 Guessed: 9
+Object: 10 Guessed: 10
+Object: 11 Guessed: 11
+Object: 12 Guessed: 7
+Object: 13 Guessed: 13
+Object: 14 Guessed: 12
+Object: 15 Guessed: 16
+Object: 16 Guessed: 16
+Object: 17 Guessed: 17
+Identified 0.588235294118 of objects correctly 
+23
+Object: 1 Guessed: 2
+Object: 2 Guessed: 2
+Object: 3 Guessed: 3
+Object: 4 Guessed: 4
+Object: 5 Guessed: 5
+Object: 6 Guessed: 6
+Object: 7 Guessed: 7
+Object: 8 Guessed: 8
+Object: 9 Guessed: 9
+Object: 10 Guessed: 11
+Object: 11 Guessed: 11
+Object: 12 Guessed: 7
+Object: 13 Guessed: 13
+Object: 14 Guessed: 14
+Object: 15 Guessed: 15
+Object: 16 Guessed: 16
+Object: 17 Guessed: 17
+Identified 0.823529411765 of objects correctly 
+24
+Object: 1 Guessed: 2
+Object: 2 Guessed: 2
+Object: 3 Guessed: 3
+Object: 4 Guessed: 3
+Object: 5 Guessed: 5
+Object: 6 Guessed: 2
+Object: 7 Guessed: 8
+Object: 8 Guessed: 8
+Object: 9 Guessed: 2
+Object: 10 Guessed: 5
+Object: 11 Guessed: 2
+Object: 12 Guessed: 10
+Object: 13 Guessed: 13
+Object: 14 Guessed: 7
+Object: 15 Guessed: 15
+Object: 16 Guessed: 15
+Object: 17 Guessed: 17
+Identified 0.411764705882 of objects correctly 
+25
+Object: 1 Guessed: 9
+Object: 2 Guessed: 15
+Object: 3 Guessed: 3
+Object: 4 Guessed: 4
+Object: 5 Guessed: 10
+Object: 6 Guessed: 6
+Object: 7 Guessed: 7
+Object: 8 Guessed: 3
+Object: 9 Guessed: 9
+Object: 10 Guessed: 9
+Object: 11 Guessed: 4
+Object: 12 Guessed: 7
+Object: 13 Guessed: 13
+Object: 14 Guessed: 14
+Object: 15 Guessed: 15
+Object: 16 Guessed: 2
+Object: 17 Guessed: 17
+Identified 0.529411764706 of objects correctly 
+26
+Object: 1 Guessed: 10
+Object: 2 Guessed: 16
+Object: 3 Guessed: 3
+Object: 4 Guessed: 4
+Object: 5 Guessed: 12
+Object: 6 Guessed: 16
+Object: 7 Guessed: 12
+Object: 8 Guessed: 8
+Object: 9 Guessed: 9
+Object: 10 Guessed: 10
+Object: 11 Guessed: 11
+Object: 12 Guessed: 12
+Object: 13 Guessed: 5
+Object: 14 Guessed: 14
+Object: 15 Guessed: 1
+Object: 16 Guessed: 16
+Object: 17 Guessed: 17
+Identified 0.588235294118 of objects correctly 
+27
+Object: 1 Guessed: 10
+Object: 2 Guessed: 16
+Object: 3 Guessed: 3
+Object: 4 Guessed: 4
+Object: 5 Guessed: 5
+Object: 6 Guessed: 16
+Object: 7 Guessed: 12
+Object: 8 Guessed: 3
+Object: 9 Guessed: 9
+Object: 10 Guessed: 10
+Object: 11 Guessed: 11
+Object: 12 Guessed: 12
+Object: 13 Guessed: 15
+Object: 14 Guessed: 7
+Object: 15 Guessed: 1
+Object: 16 Guessed: 16
+Object: 17 Guessed: 3
+Identified 0.470588235294 of objects correctly 
+28
+Object: 1 Guessed: 10
+Object: 2 Guessed: 2
+Object: 3 Guessed: 4
+Object: 4 Guessed: 4
+Object: 5 Guessed: 10
+Object: 6 Guessed: 2
+Object: 7 Guessed: 7
+Object: 8 Guessed: 8
+Object: 9 Guessed: 9
+Object: 10 Guessed: 10
+Object: 11 Guessed: 11
+Object: 12 Guessed: 7
+Object: 13 Guessed: 13
+Object: 14 Guessed: 14
+Object: 15 Guessed: 15
+Object: 16 Guessed: 16
+Object: 17 Guessed: 17
+Identified 0.705882352941 of objects correctly 
+29
+Object: 1 Guessed: 10
+Object: 2 Guessed: 2
+Object: 3 Guessed: 3
+Object: 4 Guessed: 4
+Object: 5 Guessed: 5
+Object: 6 Guessed: 6
+Object: 7 Guessed: 12
+Object: 8 Guessed: 3
+Object: 9 Guessed: 4
+Object: 10 Guessed: 10
+Object: 11 Guessed: 11
+Object: 12 Guessed: 12
+Object: 13 Guessed: 13
+Object: 14 Guessed: 7
+Object: 15 Guessed: 1
+Object: 16 Guessed: 6
+Object: 17 Guessed: 17
+Identified 0.588235294118 of objects correctly 
+30
+Object: 1 Guessed: 1
+Object: 2 Guessed: 15
+Object: 3 Guessed: 3
+Object: 4 Guessed: 3
+Object: 5 Guessed: 10
+Object: 6 Guessed: 6
+Object: 7 Guessed: 12
+Object: 8 Guessed: 3
+Object: 9 Guessed: 1
+Object: 10 Guessed: 10
+Object: 11 Guessed: 11
+Object: 12 Guessed: 12
+Object: 13 Guessed: 13
+Object: 14 Guessed: 14
+Object: 15 Guessed: 15
+Object: 16 Guessed: 2
+Object: 17 Guessed: 17
+Identified 0.588235294118 of objects correctly 
+0
+Object: 1 Guessed: 10
+Object: 2 Guessed: 16
+Object: 3 Guessed: 3
+Object: 4 Guessed: 4
+Object: 5 Guessed: 5
+Object: 6 Guessed: 16
+Object: 7 Guessed: 7
+Object: 8 Guessed: 3
+Object: 9 Guessed: 11
+Object: 10 Guessed: 5
+Object: 11 Guessed: 11
+Object: 12 Guessed: 7
+Object: 13 Guessed: 16
+Object: 14 Guessed: 15
+Object: 15 Guessed: 14
+Object: 16 Guessed: 2
+Object: 17 Guessed: 17
+Identified 0.352941176471 of objects correctly 
+1
+Object: 1 Guessed: 1
+Object: 2 Guessed: 15
+Object: 3 Guessed: 5
+Object: 4 Guessed: 2
+Object: 5 Guessed: 5
+Object: 6 Guessed: 15
+Object: 7 Guessed: 12
+Object: 8 Guessed: 2
+Object: 9 Guessed: 9
+Object: 10 Guessed: 10
+Object: 11 Guessed: 10
+Object: 12 Guessed: 12
+Object: 13 Guessed: 13
+Object: 14 Guessed: 15
+Object: 15 Guessed: 15
+Object: 16 Guessed: 16
+Object: 17 Guessed: 3
+Identified 0.470588235294 of objects correctly 
+2
+Object: 1 Guessed: 10
+Object: 2 Guessed: 2
+Object: 3 Guessed: 5
+Object: 4 Guessed: 9
+Object: 5 Guessed: 5
+Object: 6 Guessed: 2
+Object: 7 Guessed: 10
+Object: 8 Guessed: 5
+Object: 9 Guessed: 10
+Object: 10 Guessed: 10
+Object: 11 Guessed: 10
+Object: 12 Guessed: 5
+Object: 13 Guessed: 9
+Object: 14 Guessed: 9
+Object: 15 Guessed: 1
+Object: 16 Guessed: 1
+Object: 17 Guessed: 13
+Identified 0.176470588235 of objects correctly 
+3
+Object: 1 Guessed: 7
+Object: 2 Guessed: 13
+Object: 3 Guessed: 3
+Object: 4 Guessed: 3
+Object: 5 Guessed: 12
+Object: 6 Guessed: 1
+Object: 7 Guessed: 7
+Object: 8 Guessed: 3
+Object: 9 Guessed: 3
+Object: 10 Guessed: 12
+Object: 11 Guessed: 7
+Object: 12 Guessed: 12
+Object: 13 Guessed: 13
+Object: 14 Guessed: 5
+Object: 15 Guessed: 1
+Object: 16 Guessed: 1
+Object: 17 Guessed: 9
+Identified 0.235294117647 of objects correctly 
+4
+Object: 1 Guessed: 5
+Object: 2 Guessed: 15
+Object: 3 Guessed: 3
+Object: 4 Guessed: 3
+Object: 5 Guessed: 5
+Object: 6 Guessed: 11
+Object: 7 Guessed: 7
+Object: 8 Guessed: 3
+Object: 9 Guessed: 11
+Object: 10 Guessed: 5
+Object: 11 Guessed: 11
+Object: 12 Guessed: 7
+Object: 13 Guessed: 9
+Object: 14 Guessed: 14
+Object: 15 Guessed: 15
+Object: 16 Guessed: 9
+Object: 17 Guessed: 9
+Identified 0.352941176471 of objects correctly 
+5
+Object: 1 Guessed: 10
+Object: 2 Guessed: 16
+Object: 3 Guessed: 4
+Object: 4 Guessed: 4
+Object: 5 Guessed: 10
+Object: 6 Guessed: 6
+Object: 7 Guessed: 8
+Object: 8 Guessed: 8
+Object: 9 Guessed: 9
+Object: 10 Guessed: 10
+Object: 11 Guessed: 11
+Object: 12 Guessed: 10
+Object: 13 Guessed: 13
+Object: 14 Guessed: 5
+Object: 15 Guessed: 15
+Object: 16 Guessed: 16
+Object: 17 Guessed: 3
+Identified 0.529411764706 of objects correctly 
+6
+Object: 1 Guessed: 10
+Object: 2 Guessed: 11
+Object: 3 Guessed: 3
+Object: 4 Guessed: 4
+Object: 5 Guessed: 5
+Object: 6 Guessed: 1
+Object: 7 Guessed: 8
+Object: 8 Guessed: 8
+Object: 9 Guessed: 10
+Object: 10 Guessed: 10
+Object: 11 Guessed: 11
+Object: 12 Guessed: 10
+Object: 13 Guessed: 13
+Object: 14 Guessed: 14
+Object: 15 Guessed: 1
+Object: 16 Guessed: 1
+Object: 17 Guessed: 17
+Identified 0.529411764706 of objects correctly 
+7
+Object: 1 Guessed: 5
+Object: 2 Guessed: 15
+Object: 3 Guessed: 4
+Object: 4 Guessed: 4
+Object: 5 Guessed: 5
+Object: 6 Guessed: 6
+Object: 7 Guessed: 12
+Object: 8 Guessed: 8
+Object: 9 Guessed: 9
+Object: 10 Guessed: 5
+Object: 11 Guessed: 11
+Object: 12 Guessed: 12
+Object: 13 Guessed: 13
+Object: 14 Guessed: 15
+Object: 15 Guessed: 15
+Object: 16 Guessed: 1
+Object: 17 Guessed: 3
+Identified 0.529411764706 of objects correctly 
+8
+Object: 1 Guessed: 1
+Object: 2 Guessed: 2
+Object: 3 Guessed: 3
+Object: 4 Guessed: 4
+Object: 5 Guessed: 5
+Object: 6 Guessed: 6
+Object: 7 Guessed: 1
+Object: 8 Guessed: 8
+Object: 9 Guessed: 9
+Object: 10 Guessed: 10
+Object: 11 Guessed: 11
+Object: 12 Guessed: 1
+Object: 13 Guessed: 13
+Object: 14 Guessed: 14
+Object: 15 Guessed: 2
+Object: 16 Guessed: 2
+Object: 17 Guessed: 8
+Identified 0.705882352941 of objects correctly 
+9
+Object: 1 Guessed: 1
+Object: 2 Guessed: 2
+Object: 3 Guessed: 3
+Object: 4 Guessed: 4
+Object: 5 Guessed: 1
+Object: 6 Guessed: 6
+Object: 7 Guessed: 7
+Object: 8 Guessed: 3
+Object: 9 Guessed: 9
+Object: 10 Guessed: 1
+Object: 11 Guessed: 11
+Object: 12 Guessed: 7
+Object: 13 Guessed: 3
+Object: 14 Guessed: 5
+Object: 15 Guessed: 10
+Object: 16 Guessed: 2
+Object: 17 Guessed: 17
+Identified 0.529411764706 of objects correctly 
+10
+Object: 1 Guessed: 10
+Object: 2 Guessed: 1
+Object: 3 Guessed: 8
+Object: 4 Guessed: 14
+Object: 5 Guessed: 10
+Object: 6 Guessed: 6
+Object: 7 Guessed: 8
+Object: 8 Guessed: 8
+Object: 9 Guessed: 9
+Object: 10 Guessed: 10
+Object: 11 Guessed: 11
+Object: 12 Guessed: 10
+Object: 13 Guessed: 5
+Object: 14 Guessed: 14
+Object: 15 Guessed: 1
+Object: 16 Guessed: 1
+Object: 17 Guessed: 3
+Identified 0.352941176471 of objects correctly 
+11
+Object: 1 Guessed: 5
+Object: 2 Guessed: 9
+Object: 3 Guessed: 4
+Object: 4 Guessed: 4
+Object: 5 Guessed: 5
+Object: 6 Guessed: 6
+Object: 7 Guessed: 7
+Object: 8 Guessed: 7
+Object: 9 Guessed: 9
+Object: 10 Guessed: 5
+Object: 11 Guessed: 11
+Object: 12 Guessed: 7
+Object: 13 Guessed: 13
+Object: 14 Guessed: 1
+Object: 15 Guessed: 10
+Object: 16 Guessed: 6
+Object: 17 Guessed: 17
+Identified 0.470588235294 of objects correctly 
+12
+Object: 1 Guessed: 5
+Object: 2 Guessed: 16
+Object: 3 Guessed: 4
+Object: 4 Guessed: 4
+Object: 5 Guessed: 5
+Object: 6 Guessed: 6
+Object: 7 Guessed: 12
+Object: 8 Guessed: 8
+Object: 9 Guessed: 4
+Object: 10 Guessed: 5
+Object: 11 Guessed: 11
+Object: 12 Guessed: 12
+Object: 13 Guessed: 13
+Object: 14 Guessed: 14
+Object: 15 Guessed: 10
+Object: 16 Guessed: 16
+Object: 17 Guessed: 17
+Identified 0.588235294118 of objects correctly 
+13
+Object: 1 Guessed: 5
+Object: 2 Guessed: 2
+Object: 3 Guessed: 3
+Object: 4 Guessed: 4
+Object: 5 Guessed: 5
+Object: 6 Guessed: 6
+Object: 7 Guessed: 3
+Object: 8 Guessed: 3
+Object: 9 Guessed: 2
+Object: 10 Guessed: 5
+Object: 11 Guessed: 11
+Object: 12 Guessed: 5
+Object: 13 Guessed: 9
+Object: 14 Guessed: 3
+Object: 15 Guessed: 10
+Object: 16 Guessed: 2
+Object: 17 Guessed: 9
+Identified 0.352941176471 of objects correctly 
+14
+Object: 1 Guessed: 10
+Object: 2 Guessed: 16
+Object: 3 Guessed: 3
+Object: 4 Guessed: 3
+Object: 5 Guessed: 5
+Object: 6 Guessed: 6
+Object: 7 Guessed: 3
+Object: 8 Guessed: 3
+Object: 9 Guessed: 10
+Object: 10 Guessed: 10
+Object: 11 Guessed: 11
+Object: 12 Guessed: 10
+Object: 13 Guessed: 13
+Object: 14 Guessed: 3
+Object: 15 Guessed: 1
+Object: 16 Guessed: 16
+Object: 17 Guessed: 17
+Identified 0.470588235294 of objects correctly 
+15
+Object: 1 Guessed: 10
+Object: 2 Guessed: 15
+Object: 3 Guessed: 8
+Object: 4 Guessed: 9
+Object: 5 Guessed: 10
+Object: 6 Guessed: 6
+Object: 7 Guessed: 12
+Object: 8 Guessed: 8
+Object: 9 Guessed: 10
+Object: 10 Guessed: 10
+Object: 11 Guessed: 11
+Object: 12 Guessed: 12
+Object: 13 Guessed: 13
+Object: 14 Guessed: 14
+Object: 15 Guessed: 15
+Object: 16 Guessed: 15
+Object: 17 Guessed: 17
+Identified 0.529411764706 of objects correctly 
+16
+Object: 1 Guessed: 10
+Object: 2 Guessed: 2
+Object: 3 Guessed: 4
+Object: 4 Guessed: 4
+Object: 5 Guessed: 10
+Object: 6 Guessed: 6
+Object: 7 Guessed: 12
+Object: 8 Guessed: 8
+Object: 9 Guessed: 9
+Object: 10 Guessed: 10
+Object: 11 Guessed: 10
+Object: 12 Guessed: 12
+Object: 13 Guessed: 5
+Object: 14 Guessed: 14
+Object: 15 Guessed: 15
+Object: 16 Guessed: 16
+Object: 17 Guessed: 17
+Identified 0.647058823529 of objects correctly 
+17
+Object: 1 Guessed: 5
+Object: 2 Guessed: 2
+Object: 3 Guessed: 3
+Object: 4 Guessed: 4
+Object: 5 Guessed: 5
+Object: 6 Guessed: 2
+Object: 7 Guessed: 8
+Object: 8 Guessed: 8
+Object: 9 Guessed: 2
+Object: 10 Guessed: 5
+Object: 11 Guessed: 11
+Object: 12 Guessed: 5
+Object: 13 Guessed: 13
+Object: 14 Guessed: 14
+Object: 15 Guessed: 15
+Object: 16 Guessed: 2
+Object: 17 Guessed: 9
+Identified 0.529411764706 of objects correctly 
+18
+Object: 1 Guessed: 1
+Object: 2 Guessed: 16
+Object: 3 Guessed: 3
+Object: 4 Guessed: 3
+Object: 5 Guessed: 10
+Object: 6 Guessed: 6
+Object: 7 Guessed: 1
+Object: 8 Guessed: 8
+Object: 9 Guessed: 9
+Object: 10 Guessed: 10
+Object: 11 Guessed: 11
+Object: 12 Guessed: 1
+Object: 13 Guessed: 5
+Object: 14 Guessed: 5
+Object: 15 Guessed: 16
+Object: 16 Guessed: 16
+Object: 17 Guessed: 4
+Identified 0.470588235294 of objects correctly 
+19
+Object: 1 Guessed: 1
+Object: 2 Guessed: 2
+Object: 3 Guessed: 3
+Object: 4 Guessed: 4
+Object: 5 Guessed: 5
+Object: 6 Guessed: 2
+Object: 7 Guessed: 1
+Object: 8 Guessed: 8
+Object: 9 Guessed: 9
+Object: 10 Guessed: 10
+Object: 11 Guessed: 10
+Object: 12 Guessed: 1
+Object: 13 Guessed: 14
+Object: 14 Guessed: 14
+Object: 15 Guessed: 7
+Object: 16 Guessed: 1
+Object: 17 Guessed: 13
+Identified 0.529411764706 of objects correctly 
+20
+Object: 1 Guessed: 1
+Object: 2 Guessed: 15
+Object: 3 Guessed: 3
+Object: 4 Guessed: 4
+Object: 5 Guessed: 5
+Object: 6 Guessed: 16
+Object: 7 Guessed: 12
+Object: 8 Guessed: 8
+Object: 9 Guessed: 4
+Object: 10 Guessed: 1
+Object: 11 Guessed: 11
+Object: 12 Guessed: 12
+Object: 13 Guessed: 9
+Object: 14 Guessed: 14
+Object: 15 Guessed: 15
+Object: 16 Guessed: 16
+Object: 17 Guessed: 9
+Identified 0.588235294118 of objects correctly 
+21
+Object: 1 Guessed: 1
+Object: 2 Guessed: 16
+Object: 3 Guessed: 8
+Object: 4 Guessed: 14
+Object: 5 Guessed: 1
+Object: 6 Guessed: 16
+Object: 7 Guessed: 12
+Object: 8 Guessed: 8
+Object: 9 Guessed: 9
+Object: 10 Guessed: 10
+Object: 11 Guessed: 11
+Object: 12 Guessed: 12
+Object: 13 Guessed: 5
+Object: 14 Guessed: 14
+Object: 15 Guessed: 10
+Object: 16 Guessed: 16
+Object: 17 Guessed: 17
+Identified 0.529411764706 of objects correctly 
+22
+Object: 1 Guessed: 1
+Object: 2 Guessed: 15
+Object: 3 Guessed: 3
+Object: 4 Guessed: 3
+Object: 5 Guessed: 5
+Object: 6 Guessed: 6
+Object: 7 Guessed: 7
+Object: 8 Guessed: 8
+Object: 9 Guessed: 9
+Object: 10 Guessed: 10
+Object: 11 Guessed: 10
+Object: 12 Guessed: 7
+Object: 13 Guessed: 13
+Object: 14 Guessed: 3
+Object: 15 Guessed: 15
+Object: 16 Guessed: 16
+Object: 17 Guessed: 17
+Identified 0.705882352941 of objects correctly 
+23
+Object: 1 Guessed: 10
+Object: 2 Guessed: 16
+Object: 3 Guessed: 4
+Object: 4 Guessed: 4
+Object: 5 Guessed: 5
+Object: 6 Guessed: 16
+Object: 7 Guessed: 7
+Object: 8 Guessed: 7
+Object: 9 Guessed: 9
+Object: 10 Guessed: 10
+Object: 11 Guessed: 10
+Object: 12 Guessed: 7
+Object: 13 Guessed: 13
+Object: 14 Guessed: 14
+Object: 15 Guessed: 1
+Object: 16 Guessed: 16
+Object: 17 Guessed: 3
+Identified 0.470588235294 of objects correctly 
+24
+Object: 1 Guessed: 5
+Object: 2 Guessed: 15
+Object: 3 Guessed: 3
+Object: 4 Guessed: 4
+Object: 5 Guessed: 5
+Object: 6 Guessed: 16
+Object: 7 Guessed: 12
+Object: 8 Guessed: 3
+Object: 9 Guessed: 9
+Object: 10 Guessed: 5
+Object: 11 Guessed: 4
+Object: 12 Guessed: 12
+Object: 13 Guessed: 13
+Object: 14 Guessed: 7
+Object: 15 Guessed: 15
+Object: 16 Guessed: 16
+Object: 17 Guessed: 17
+Identified 0.529411764706 of objects correctly 
+25
+Object: 1 Guessed: 1
+Object: 2 Guessed: 2
+Object: 3 Guessed: 8
+Object: 4 Guessed: 9
+Object: 5 Guessed: 12
+Object: 6 Guessed: 6
+Object: 7 Guessed: 12
+Object: 8 Guessed: 8
+Object: 9 Guessed: 2
+Object: 10 Guessed: 1
+Object: 11 Guessed: 11
+Object: 12 Guessed: 12
+Object: 13 Guessed: 13
+Object: 14 Guessed: 14
+Object: 15 Guessed: 15
+Object: 16 Guessed: 16
+Object: 17 Guessed: 3
+Identified 0.588235294118 of objects correctly 
+26
+Object: 1 Guessed: 1
+Object: 2 Guessed: 16
+Object: 3 Guessed: 3
+Object: 4 Guessed: 4
+Object: 5 Guessed: 5
+Object: 6 Guessed: 16
+Object: 7 Guessed: 7
+Object: 8 Guessed: 8
+Object: 9 Guessed: 4
+Object: 10 Guessed: 1
+Object: 11 Guessed: 11
+Object: 12 Guessed: 7
+Object: 13 Guessed: 9
+Object: 14 Guessed: 14
+Object: 15 Guessed: 10
+Object: 16 Guessed: 16
+Object: 17 Guessed: 17
+Identified 0.588235294118 of objects correctly 
+27
+Object: 1 Guessed: 10
+Object: 2 Guessed: 2
+Object: 3 Guessed: 3
+Object: 4 Guessed: 4
+Object: 5 Guessed: 5
+Object: 6 Guessed: 2
+Object: 7 Guessed: 3
+Object: 8 Guessed: 3
+Object: 9 Guessed: 9
+Object: 10 Guessed: 10
+Object: 11 Guessed: 2
+Object: 12 Guessed: 10
+Object: 13 Guessed: 13
+Object: 14 Guessed: 14
+Object: 15 Guessed: 1
+Object: 16 Guessed: 14
+Object: 17 Guessed: 17
+Identified 0.529411764706 of objects correctly 
+28
+Object: 1 Guessed: 1
+Object: 2 Guessed: 15
+Object: 3 Guessed: 3
+Object: 4 Guessed: 3
+Object: 5 Guessed: 5
+Object: 6 Guessed: 16
+Object: 7 Guessed: 1
+Object: 8 Guessed: 8
+Object: 9 Guessed: 1
+Object: 10 Guessed: 10
+Object: 11 Guessed: 11
+Object: 12 Guessed: 1
+Object: 13 Guessed: 9
+Object: 14 Guessed: 14
+Object: 15 Guessed: 15
+Object: 16 Guessed: 16
+Object: 17 Guessed: 3
+Identified 0.529411764706 of objects correctly 
+29
+Object: 1 Guessed: 10
+Object: 2 Guessed: 2
+Object: 3 Guessed: 5
+Object: 4 Guessed: 5
+Object: 5 Guessed: 5
+Object: 6 Guessed: 6
+Object: 7 Guessed: 7
+Object: 8 Guessed: 2
+Object: 9 Guessed: 9
+Object: 10 Guessed: 10
+Object: 11 Guessed: 11
+Object: 12 Guessed: 12
+Object: 13 Guessed: 3
+Object: 14 Guessed: 2
+Object: 15 Guessed: 1
+Object: 16 Guessed: 6
+Object: 17 Guessed: 4
+Identified 0.470588235294 of objects correctly 
+30
+Object: 1 Guessed: 10
+Object: 2 Guessed: 2
+Object: 3 Guessed: 4
+Object: 4 Guessed: 4
+Object: 5 Guessed: 5
+Object: 6 Guessed: 6
+Object: 7 Guessed: 7
+Object: 8 Guessed: 8
+Object: 9 Guessed: 2
+Object: 10 Guessed: 10
+Object: 11 Guessed: 11
+Object: 12 Guessed: 7
+Object: 13 Guessed: 13
+Object: 14 Guessed: 12
+Object: 15 Guessed: 15
+Object: 16 Guessed: 16
+Object: 17 Guessed: 9
+Identified 0.647058823529 of objects correctly 

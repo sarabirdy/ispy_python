@@ -28,9 +28,9 @@ def Insert(cur,i):
     
 
 ############ INSERT FEATURE VECTORS FOR EACH OBJECT TO THE DATABASE ##########################
-def InsertFeatureVector(con,obs_id,feature_id,feature_value):
+def InsertFeatureVector(con,obs_id,feature_id,feature_value,game_id):
  cur = con.cursor()
- cur.execute("INSERT INTO FeatureInfo(observation_id,feature_id,feature_value) VALUES('{0}','{1}','{2}')".format(obs_id,feature_id,feature_value))#set the tag_color name
+ cur.execute("INSERT INTO FeatureInfo(observation_id,feature_id,feature_value,game_id) VALUES('{0}','{1}','{2}','{3}')".format(obs_id,feature_id,feature_value,game_id))#set the tag_color name
  #con.commit()
 
 
