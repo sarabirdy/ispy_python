@@ -29,6 +29,7 @@ import pylab as pl
 import matplotlib as mpl
 from sklearn import mixture
 from sklearn.externals import joblib
+from sklearn.svm import SVC
 
 def ModelTraining(tag,feature_matrix,gameID):
  
@@ -36,5 +37,10 @@ def ModelTraining(tag,feature_matrix,gameID):
   g = mixture.GMM(n_components=2, covariance_type = 'tied')
   g.fit(feature_matrix)
   joblib.dump(g, 'GMM_model_' + str(gameID) + '/'+ tag +'_model.pkl') #NAME OF FOLDER TO SAVE THE NEW RETRAINED MODELS
+  
+def ModelTrainingSVM(tag,feature_matrix,labels,gameID):
+  svm = SVC()
+  svm.fit(feature_matrix, labels)
+  joblib.dump(svm, 'SVM_model_' + str(gameID) + '/' + tag + '_model.pkl') #NAME OF FOLDER TO SAVE RETRAINED SVM MODELS
   
 
