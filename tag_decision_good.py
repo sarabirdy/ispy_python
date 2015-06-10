@@ -1,4 +1,4 @@
-import MySQLdb as mdb
+import sql_driver
 import numpy as np
 import sys
 import test_model 
@@ -84,7 +84,7 @@ def get_subset_split(pO):
 
 
 def log_tag_answers(asked, answers, object_id):
-    con = mdb.connect('localhost', 'iSpy_team', 'password', 'iSpy_features')
+    con = sql_driver.driver.connect('localhost', 'iSpy_team', 'password', 'iSpy_features')
     with con:
         cur = con.cursor()
 

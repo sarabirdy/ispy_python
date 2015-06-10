@@ -4,7 +4,7 @@
 import numpy as np
 import feature_update2 as feat
 import os
-import MySQLdb as mdb
+import sql_driver
 import cv2
 import db_data_retrieval as train
 

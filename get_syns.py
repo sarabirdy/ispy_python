@@ -1,7 +1,7 @@
 import urllib
 import json
 import requests
-import MySQLdb as mdb
+import sql_driver
 
 url = "http://maps.googleapis.com/maps/api/geocode/json?address=googleplex&sensor=false"
 
