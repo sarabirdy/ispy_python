@@ -3,7 +3,7 @@ import os
 import math
 import time
 import csv
-import sql_driver
+from sql_driver import sql_driver
 import numpy as np 
 import random
 import sys
@@ -1926,7 +1926,7 @@ def main():
     # To run the simulation, uncomment play_game(cursor, con)
     
     
-    con = sql_driver.driver.connect('localhost', 'root', 'root', 'iSpy_features')
+    con = sql_driver().connect('localhost', 'root', 'root', 'iSpy_features')
     with con:
 	cursor = con.cursor()
     

@@ -3,7 +3,7 @@ import os
 import math
 import time
 import csv
-import sql_driver
+from sql_driver import sql_driver
 import numpy as np 
 import random
 import sys
@@ -1038,7 +1038,7 @@ def play_game(cursor, con):
 
 
 def main():
-    con = sql_driver.driver.connect('localhost', 'iSpy_team', 'password', 'iSpy_features')
+    con = sql_driver().connect('localhost', 'iSpy_team', 'password', 'iSpy_features')
     with con:
 	cursor = con.cursor()
 

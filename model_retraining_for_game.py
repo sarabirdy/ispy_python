@@ -3,7 +3,7 @@
 import numpy as np
 import feature_update2 as feat
 import os
-import sql_driver
+from sql_driver import sql_driver
 import cv2
 import db_data_retrieval as train
 import re
