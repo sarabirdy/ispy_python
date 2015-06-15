@@ -3,7 +3,7 @@ import os
 import math
 import time
 import csv
-import MySQLdb as mdb
+from sql_driver import sql_driver
 import numpy as np 
 import random
 import sys
@@ -1029,8 +1029,8 @@ def get_t(object_id, question_id, cursor):
 
     cursor.execute('SELECT COUNT(*) \
                     FROM Descriptions \
-                    WHERE description like %s \
-                    AND objectID = %s', ('%{0}%'.format(tag), object_id))
+                    WHERE description LIKE %s \
+                    AND objectID = %s', ('%{0}%'.format(tag), str(object_id)))
 
     return cursor.fetchone()[0]
 
@@ -1212,12 +1212,12 @@ def get_model_info(cursor, game_id):
 	    cursor.execute("SELECT id FROM Tags WHERE tag = %s", (T))
 	    qid = cursor.fetchone()[0]
 	    models[qid] = model_clone
-	    
+
     return models, feature_matrix, feature_matrix_labels
 
 
 def gen_image_probabilities_evaluation(game_id, cursor):
-    models, feature_vectors = get_model_info(cursor, game_id)
+    models, feature_vectors, feature_vector_labels = get_model_info(cursor, game_id)
     available_models = []
     probabilities = {}
     for i in range(0, 17):
@@ -1669,8 +1669,8 @@ def record_object_results(cursor, object_id, answers, questions, con, guess2say,
 	total_count = cursor.fetchone()[0]
 	#print total_count
 	cursor.execute("UPDATE Pqd SET total_answers = %s WHERE t_value = %s", (total_count + 1, T))
-	
-	cursor.execute("INSERT INTO answers (oid, qid, answer) VALUES (%s, %s, %s)", (object_id, questions[i], answers[i]))
+
+	cursor.execute("INSERT INTO answers (oid, qid, answer) VALUES (%s, %s, %s)", (str(object_id), questions[i], answers[i]))
 	    
 	con.commit()
 
@@ -1785,6 +1785,7 @@ def play_object(cursor, object_id, tags, gameID, all_games, objectlist, con, Pi)
     
     # Get answer data for question/object pairs from specific games (1-30)
     # Should really all be coming from DB since they're all there, anyway
+
     answer_data = np.genfromtxt(folder+'/Answers/Game'+str(gameID)+'.csv',dtype=str, delimiter='\t')
     NoOfQuestions = 0
     pO = []
@@ -1808,7 +1809,7 @@ def play_object(cursor, object_id, tags, gameID, all_games, objectlist, con, Pi)
     # We call this the 'confidence threshold'
     while np.sort(pO)[pO.size - 1] - np.sort(pO)[pO.size - 2] < 0.15:
 	# Find best question
-	best_question = get_best_question(objects, askedQuestions, pO, split, cursor, gameID, Pi, p_tags)
+	best_question = get_best_question_new(objects, askedQuestions, pO, split, cursor, gameID, Pi, p_tags)
 	# Save under questions already asked
 	askedQuestions.append(best_question)
 	# Get updated probabilies based on the answer to the question
@@ -1925,7 +1926,7 @@ def main():
     # To run the simulation, uncomment play_game(cursor, con)
     
     
-    con = mdb.connect('localhost', 'iSpy_team', 'password', 'iSpy_features')
+    con = sql_driver().connect('localhost', 'root', 'root', 'iSpy_features')
     with con:
 	cursor = con.cursor()
     
@@ -1933,20 +1934,20 @@ def main():
     # Pqd needs to be rebuilt because it updates to include test answers
     # Before you rebuild Pqd, must run "DELETE FROM Pqd" in mysql against the iSpy_features table
 
-#    copy_into_answers(cursor, get_tags(cursor))
-#    con.commit()
-#    build_pqd(cursor, con, get_tags(cursor))
+    #copy_into_answers(cursor, get_tags(cursor))
+    #con.commit()
+    #build_pqd(cursor, con, get_tags(cursor))
 
     # Builds the models necessary for gameplay (keyword models)
     # Not necessary to rerun each time unless you want to start fresh
 
-#    build_model(cursor, con, 15, 16, 1, {}, {})
+    #build_model(cursor, con, 15, 16, 1, {}, {})
 
 
-#    for game in range(16,31):
-#	model_evaluation_1(con, game)   
+    for game in range(16,31):
+	model_evaluation_1(con, game)   
 #
-#    play_game(cursor, con)
+    play_game(cursor, con)
 
     # Testing out different methods, nothing below should matter except build_object_classifiers(cursor, con)
 

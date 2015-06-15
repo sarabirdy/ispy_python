@@ -3669,4 +3669,40 @@ Average number of questions: 22.9411764706
 Round 30: Wins=11, Losses=6 Accuracy: 0.647058823529
 Average number of questions: 19.0
 Wins=171, Losses=84, Average number of questions=19.9921568627
-Average questions for a win: 19.9239766082 Average questions for a loss: 20.130952381
+Average questions for a win: 19.9239766082 Average questions for a loss: 20.13095238116,1,digital_clock,5,win
+16,2,cardboard_box,4,lose
+16,3,red_soccer_ball,2,win
+16,4,basketball,3,win
+16,5,football,4,win
+16,6,yellow_book,6,win
+16,7,yellow_flashlight,5,win
+16,8,blue_soccer_ball,4,win
+16,9,apple,5,win
+16,10,black_mug,5,win
+16,11,yellow_book,6,lose
+16,12,yellow_flashlight,5,lose
+16,13,cardboard_box,4,win
+16,14,pepper,6,win
+16,15,green_mug,4,win
+16,16,polka_dot_box,5,win
+16,17,scissors,4,win
+Round 16: Wins=14, Losses=3 Accuracy: 0.823529411765
+Average number of questions: 4.52941176471
+17,1,digital_clock,5,win
+17,2,analog_clock,5,win
+17,3,red_soccer_ball,2,win
+17,4,basketball,3,win
+17,5,red_soccer_ball,2,lose
+17,6,black_mug,5,lose
+17,7,yellow_flashlight,5,win
+17,8,scissors,4,lose
+17,9,apple,5,win
+17,10,black_mug,5,win
+17,11,yellow_flashlight,6,lose
+17,12,yellow_flashlight,5,lose
+17,13,cardboard_box,4,win
+17,14,pepper,6,win
+17,15,green_mug,4,win
+16,1,digital_clock,5,win
+16,1,digital_clock,5,win
+16,1,digital_clock,5,win
