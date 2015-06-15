@@ -1,3 +1,4 @@
 *.pyc
 *~
 GMM_model_*
+log.txt
