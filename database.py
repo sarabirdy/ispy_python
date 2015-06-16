@@ -12,9 +12,9 @@ class Database:
 
 		self._init_driver()
 
-		connection = self.driver.connect(address, username, password, database)
-		with connection:
-			self.cursor = connection.cursor()
+		self.connection = self.driver.connect(address, username, password, database)
+		with self.connection:
+			self.cursor = self.connection.cursor()
 			log.info('Connected to database')
 
 	def _init_driver(self):
