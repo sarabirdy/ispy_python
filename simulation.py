@@ -1926,7 +1926,7 @@ def main():
     # To run the simulation, uncomment play_game(cursor, con)
     
     
-    con = sql_driver().connect('localhost', 'root', 'root', 'iSpy_features')
+    con = sql_driver().connect('localhost', 'iSpy_team', 'password', 'iSpy_features')
     with con:
 	cursor = con.cursor()
     

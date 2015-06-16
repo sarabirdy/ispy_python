@@ -3,8 +3,8 @@ from sys import exit
 driver = None
 
 try:
-	import mysqldb
-	driver = mysqldb
+	import MySQLdb
+	driver = MySQLdb
 	print "Using mysqldb"
 except ImportError:
 	print "mysqldb not found, trying pymysql"
