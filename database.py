@@ -12,23 +12,23 @@ class Database:
 
 		self._init_driver()
 
-		self.connection = self.driver.connect(address, username, password, database)
+		self.connection = self.driver.connect(address, username, password, database, unix_socket='/Applications/MAMP/tmp/mysql/mysql.sock')
 		with self.connection:
 			self.cursor = self.connection.cursor()
 			log.info('Connected to database')
 
 	def _init_driver(self):
 		"""
-		Use native mysqldb driver,
-		or fall back on pymsql
+		Use native MySQLdb driver,
+		or fall back on pymysql
 		"""
 
 		try:
-			import mysqldb
-			self.driver = mysqldb
-			log.info('Using mysqldb')
+			import MySQLdb
+			self.driver = MySQLdb
+			log.info('Using MySQLdb')
 		except ImportError:
-			log.info('Mysqldb not found')
+			log.info('MySQLdb not found')
 			
 			try:
 				import pymysql

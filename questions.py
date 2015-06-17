@@ -9,7 +9,6 @@ import tags as _tags
 _questions = []
 
 def ask(question_id, object, game, answer_data, answers, pO, Pi, p_tags, objects):
-	log.info("Asking question")
 	# Takes best question and updates all object probabilies based on the answer
 
 	probabilityD = get_tval(game.cursor)
@@ -71,7 +70,6 @@ def ask(question_id, object, game, answer_data, answers, pO, Pi, p_tags, objects
 	return pO, answers
 
 def ask_old(question_id, object, game, answer_data, answers, pO, Pi, p_tags, objects):
-	log.info("Asking question")
 	# Takes best question and updates all object probabilies based on the answer
 
 	probabilityD = get_tval(game.cursor)
@@ -183,7 +181,6 @@ def get_p_tags(cursor):
 	return p_tags
 
 def get_best(game, objects, asked_questions, pO, Pi, p_tags, start):
-	log.info('Finding best question')
 	# Finds the question that best splits our current subset of objects
 	tvals = get_tval(game.cursor)
 
@@ -257,14 +254,11 @@ def get_best(game, objects, asked_questions, pO, Pi, p_tags, start):
 			if entropy < bestDifference:
 				bestD = j
 				bestDifference = entropy
-
-	log.info("Found best question")
 
 	return bestD
 
 
 def get_best_old(game, objects, asked_questions, pO, Pi, p_tags, start):
-	log.info('Finding best question')
 	# Finds the question that best splits our current subset of objects
 	tvals = get_tval(game.cursor)
 
@@ -338,8 +332,6 @@ def get_best_old(game, objects, asked_questions, pO, Pi, p_tags, start):
 			if entropy < bestDifference:
 				bestD = j
 				bestDifference = entropy
-
-	log.info("Found best question")
 
 	return bestD
 

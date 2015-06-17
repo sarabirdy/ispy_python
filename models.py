@@ -138,7 +138,7 @@ def build(_game, method, questions={}, answers={}, skip={}):
                 #cursor.execute("SELECT DISTINCT(observation_id) FROM TagInfoBk WHERE tag=%s",(tag))
                 cursor.execute("SELECT DISTINCT(observation_id) FROM TagInfoBk")
                 tag_obs_ids=cursor.fetchall()
-                cursor.execute('SELECT id FROM Tags WHERE tag = %s', (tag))
+                cursor.execute('SELECT id FROM Tags WHERE tag = %s', (tag,))
                 qid = cursor.fetchone()[0]
 
                 should_train = False

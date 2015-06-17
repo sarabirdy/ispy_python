@@ -45,6 +45,8 @@ class Object:
 		# We call this the 'confidence threshold'
 		# Basically sorts the probabilities and gets the largest (pO.size - 1) and second-largest (pO.size - 2),
 		# and checks continues [asking questions]? until their difference is >= 0.15
+		log.info("Asking questions")
+		start = time.time()
 		while np.sort(pO)[pO.size - 1] - np.sort(pO)[pO.size - 2] < 0.15:
 			# Find best question (aka gives most info)
 			best_question = _questions.get_best(game, objects, askedQuestions, pO, Pi, p_tags, split)
@@ -54,6 +56,8 @@ class Object:
 			pO, answers = _questions.ask(best_question, self, game, answer_data, answers, pO, Pi, p_tags, objects)
 			# Split the current subset into two more subsets
 			split = get_subset_split(pO)
+		end = time.time()
+		log.info('Finished asking %d questions (Took %.2fs)', len(askedQuestions), end - start)
 
 		# Get most likely object
 		minimum=np.max(pO)
@@ -180,12 +184,12 @@ def record_object_results(game, object, answers, questions, guess2say, result):
         T = _questions.get_t(object.id, questions[i], cursor)
         #print object_id, questions[i], answers[i]
         if answers[i] == True:
-            cursor.execute("SELECT yes_answers FROM Pqd where t_value = %s", T)
+            cursor.execute("SELECT yes_answers FROM Pqd where t_value = %s", (T,))
             yes_count = cursor.fetchone()[0]
             #print yes_count, 'yes'
             cursor.execute("UPDATE Pqd SET yes_answers = %s WHERE t_value = %s", (yes_count + 1, T))
 
-        cursor.execute("SELECT total_answers FROM Pqd where t_value = %s", (T))
+        cursor.execute("SELECT total_answers FROM Pqd where t_value = %s", (T,))
         total_count = cursor.fetchone()[0]
         #print total_count
         cursor.execute("UPDATE Pqd SET total_answers = %s WHERE t_value = %s", (total_count + 1, T))
