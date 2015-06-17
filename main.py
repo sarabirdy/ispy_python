@@ -2,9 +2,10 @@ import os
 import time
 import logging as log
 
-from database import Database
+import database as db
 from game import Game
 import models
+import questions
 
 class Main:
 	"""
@@ -14,8 +15,8 @@ class Main:
 	def __init__(self):
 		self._init_logger()
 		
-		self.db = Database('localhost', 'root', 'root', 'iSpy_features')
-		self.cursor = self.db.cursor
+		db.init_driver()
+		db.connect('localhost', 'root', 'root', 'iSpy_features', unix_socket='/Applications/MAMP/tmp/mysql/mysql.sock')
 
 		self.setup()
 
@@ -46,8 +47,8 @@ class Main:
 		question_answers = {}
 
 		for number in range(16, 31):
-			game = Game(self.db, number)
-			#models.info(self.cursor, game)
+			game = Game(number)
+
 			game_wins, game_losses, game_num_questions, game_win_avg, game_lose_avg, game_answers, game_questions = game.play()
 
 			questions_asked[game.id] = game_questions
@@ -69,6 +70,13 @@ class Main:
 		"""
 
 		log.info('Performing setup')
+		db.cursor.execute("DELETE FROM Pqd")
+		db.connection.commit()
+		questions.copy_into_answers()
+		questions.build_pqd()
+		models.build(Game(15), 1)
+		for number in range(16, 31):
+			models.evaluation_1(Game(number))
 
 
 	def _init_logger(self):

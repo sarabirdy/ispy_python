@@ -1,12 +1,12 @@
+import database as db
+
 _tags = []
 
-def get(question_id, cursor):
-	#cursor.execute('SELECT tag from Tags where id = %s', (question_id))
-	return all(cursor)[question_id-1]
+def get(question_id):
+	return get_all()[question_id-1]
 
-	#return cursor.fetchone()[0]
 
-def all(cursor):
+def get_all():
 	"""
 	Get list of all tags
 	Returns list in the form of [tag]
@@ -14,8 +14,8 @@ def all(cursor):
 
 	global _tags
 	if not _tags:
-		cursor.execute('SELECT tag FROM Tags')
-		result = cursor.fetchall()
+		db.cursor.execute('SELECT tag FROM Tags')
+		result = db.cursor.fetchall()
 		for tag in result:
 			_tags.append(tag[0])
 	return _tags

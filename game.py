@@ -3,6 +3,7 @@ import logging as log
 
 import objects
 import models
+import database as db
 
 class Game:
 	"""
@@ -19,7 +20,7 @@ class Game:
 		start = time.time()
 
 		# Generate all image probabilities at once since this takes a little while
-		Pi = models.gen_image_probabilities(self.cursor, self)
+		Pi = models.gen_image_probabilities(self)
 
 		# Initialize game stats to empty
 		NoOfQuestions = 0
@@ -31,7 +32,7 @@ class Game:
 		questions_asked = {}
 
 		# For each object in the set
-		for obj in objects.get_all(self.cursor):
+		for obj in objects.get_all():
 			# Record individual object stats
 			result, number_of_questions, answers, askedQuestions = obj.play(self, Pi)
 			log.info("Game %d, object %d complete, updating stats", self.id, obj.id)
@@ -63,8 +64,5 @@ class Game:
 			myfile.write("Average number of questions: " + str(num_questions/float(17)) + "\n")
 
 
-
-	def __init__(self, db, id):
-		self.db = db
-		self.cursor = db.cursor
+	def __init__(self, id):
 		self.id = id

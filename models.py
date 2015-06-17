@@ -1,17 +1,17 @@
 import os
 import logging as log
 
-import questions as _questions
+import questions
+import database as db
 
-def build(_game, method, questions={}, answers={}, skip={}):
+def build(_game, method, game_questions={}, game_answers={}, skip={}):
     log.info("Retraining model")
-    cursor = _game.cursor
 
     # Builds models for all keywords using different methods (Currently only 1 and 3 work)
 
     #get all the different tags available
-    cursor.execute("SELECT DISTINCT(tag) FROM TagInfoBk")
-    results=cursor.fetchall()
+    db.cursor.execute("SELECT DISTINCT(tag) FROM TagInfoBk")
+    results=db.cursor.fetchall()
 
     tags = []
     for result in results:
@@ -25,26 +25,26 @@ def build(_game, method, questions={}, answers={}, skip={}):
             feature_matrix=[]#initialize feature matrix for each different tag
             feature_matrix_labels = [] # Labels to indicate if the example is positive or negative
             #cursor.execute("SELECT DISTINCT(observation_id) FROM TagInfoBk WHERE tag=%s",(tag))
-            cursor.execute("SELECT DISTINCT(observation_id) FROM TagInfoBk")
-            tag_obs_ids=cursor.fetchall()
-            cursor.execute('SELECT id FROM Tags WHERE tag = %s', (tag))
-            qid = cursor.fetchone()[0]
+            db.cursor.execute("SELECT DISTINCT(observation_id) FROM TagInfoBk")
+            tag_obs_ids=db.cursor.fetchall()
+            db.cursor.execute('SELECT id FROM Tags WHERE tag = %s', (tag,))
+            qid = db.cursor.fetchone()[0]
 
             should_train = False
             #for every observation/object of this spesific tag
             for obs_id in tag_obs_ids:
 
                 object_matrix = []
-                T = _questions.get_t(obs_id[0], qid, cursor)
+                T = questions.get_t(obs_id[0], qid)
                 if _game.id == 0:
                     if T >= 3:
                         should_train = True
                         count = count + 1
-                        cursor.execute("SELECT COUNT(*) FROM FeatureInfo WHERE feature_id='0' AND observation_id='{0}' AND game_id='{1}' ".format(obs_id[0], _game.id))
-                        num_of_images_per_oservation=cursor.fetchall()
+                        db.cursor.execute("SELECT COUNT(*) FROM FeatureInfo WHERE feature_id='0' AND observation_id='{0}' AND game_id='{1}' ".format(obs_id[0], _game.id))
+                        num_of_images_per_oservation=db.cursor.fetchall()
 
-                        cursor.execute("SELECT feature_id,feature_value FROM FeatureInfo WHERE observation_id='{0}' AND game_id='{1}'".format(obs_id[0],_game.id))
-                        feature_info=cursor.fetchall()
+                        db.cursor.execute("SELECT feature_id,feature_value FROM FeatureInfo WHERE observation_id='{0}' AND game_id='{1}'".format(obs_id[0],_game.id))
+                        feature_info=db.cursor.fetchall()
 
                         vv_seperator=len(feature_info)/num_of_images_per_oservation[0][0]
 
@@ -75,11 +75,11 @@ def build(_game, method, questions={}, answers={}, skip={}):
                             if game == 0:
                                 should_train = True
                                 count = count + 1
-                                cursor.execute("SELECT COUNT(*) FROM FeatureInfo WHERE feature_id='0' AND observation_id='{0}' AND game_id='{1}' ".format(obs_id[0], game))
-                                num_of_images_per_oservation=cursor.fetchall()
+                                db.cursor.execute("SELECT COUNT(*) FROM FeatureInfo WHERE feature_id='0' AND observation_id='{0}' AND game_id='{1}' ".format(obs_id[0], game))
+                                num_of_images_per_oservation=db.cursor.fetchall()
 
-                                cursor.execute("SELECT feature_id,feature_value FROM FeatureInfo WHERE observation_id='{0}' AND game_id='{1}'".format(obs_id[0],game))
-                                feature_info=cursor.fetchall()
+                                db.cursor.execute("SELECT feature_id,feature_value FROM FeatureInfo WHERE observation_id='{0}' AND game_id='{1}'".format(obs_id[0],game))
+                                feature_info=db.cursor.fetchall()
 
                                 vv_seperator=len(feature_info)/num_of_images_per_oservation[0][0]
 
@@ -101,11 +101,11 @@ def build(_game, method, questions={}, answers={}, skip={}):
                                 if answer_data[int(obs_id[0])-1][qid-1] == 'yes' or answer_data[int(obs_id[0])-1][qid-1] is 'yes':
                                     should_train = True
                                     count = count + 1
-                                    cursor.execute("SELECT COUNT(*) FROM FeatureInfo WHERE feature_id='0' AND observation_id='{0}' AND game_id='{1}' ".format(obs_id[0], game))
-                                    num_of_images_per_oservation=cursor.fetchall()
+                                    db.cursor.execute("SELECT COUNT(*) FROM FeatureInfo WHERE feature_id='0' AND observation_id='{0}' AND game_id='{1}' ".format(obs_id[0], game))
+                                    num_of_images_per_oservation=db.cursor.fetchall()
 
-                                    cursor.execute("SELECT feature_id,feature_value FROM FeatureInfo WHERE observation_id='{0}' AND game_id='{1}'".format(obs_id[0],game))
-                                    feature_info=cursor.fetchall()
+                                    db.cursor.execute("SELECT feature_id,feature_value FROM FeatureInfo WHERE observation_id='{0}' AND game_id='{1}'".format(obs_id[0],game))
+                                    feature_info=db.cursor.fetchall()
 
                                     vv_seperator=len(feature_info)/num_of_images_per_oservation[0][0]
 
@@ -136,26 +136,26 @@ def build(_game, method, questions={}, answers={}, skip={}):
                 feature_matrix=[]#initialize feature matrix for each different tag
                 feature_matrix_labels = [] # Labels to indicate if the example is positive or negative
                 #cursor.execute("SELECT DISTINCT(observation_id) FROM TagInfoBk WHERE tag=%s",(tag))
-                cursor.execute("SELECT DISTINCT(observation_id) FROM TagInfoBk")
-                tag_obs_ids=cursor.fetchall()
-                cursor.execute('SELECT id FROM Tags WHERE tag = %s', (tag,))
-                qid = cursor.fetchone()[0]
+                db.cursor.execute("SELECT DISTINCT(observation_id) FROM TagInfoBk")
+                tag_obs_ids=db.cursor.fetchall()
+                db.cursor.execute('SELECT id FROM Tags WHERE tag = %s', (tag,))
+                qid = db.cursor.fetchone()[0]
 
                 should_train = False
                 #for every observation/object of this spesific tag
                 for obs_id in tag_obs_ids:
 
-                    T = _questions.get_t(obs_id[0], qid, cursor)
+                    T = questions.get_t(obs_id[0], qid)
                     # For game 0, if a tag has been used 3 or more times in the object descriptions, that object is used as a positive example
                     if _game.id == 0:
                         if T >= 3:
                             should_train = True
                             count = count + 1
-                            cursor.execute("SELECT COUNT(*) FROM FeatureInfo WHERE feature_id='0' AND observation_id='{0}' AND game_id='{1}' ".format(obs_id[0], _game.id))
-                            num_of_images_per_oservation=cursor.fetchall()
+                            db.cursor.execute("SELECT COUNT(*) FROM FeatureInfo WHERE feature_id='0' AND observation_id='{0}' AND game_id='{1}' ".format(obs_id[0], _game.id))
+                            num_of_images_per_oservation=db.cursor.fetchall()
 
-                            cursor.execute("SELECT feature_id,feature_value FROM FeatureInfo WHERE observation_id='{0}' AND game_id='{1}'".format(obs_id[0],_game.id))
-                            feature_info=cursor.fetchall()
+                            db.cursor.execute("SELECT feature_id,feature_value FROM FeatureInfo WHERE observation_id='{0}' AND game_id='{1}'".format(obs_id[0],_game.id))
+                            feature_info=db.cursor.fetchall()
 
                             vv_seperator=len(feature_info)/num_of_images_per_oservation[0][0]
 
@@ -173,11 +173,11 @@ def build(_game, method, questions={}, answers={}, skip={}):
                         # An object is only a negative example if it is used 0 times
                         elif T == 0:
                             count = count + 1
-                            cursor.execute("SELECT COUNT(*) FROM FeatureInfo WHERE feature_id='0' AND observation_id='{0}' AND game_id='{1}' ".format(obs_id[0], _game.id))
-                            num_of_images_per_oservation=cursor.fetchall()
+                            db.cursor.execute("SELECT COUNT(*) FROM FeatureInfo WHERE feature_id='0' AND observation_id='{0}' AND game_id='{1}' ".format(obs_id[0], _game.id))
+                            num_of_images_per_oservation=db.cursor.fetchall()
 
-                            cursor.execute("SELECT feature_id,feature_value FROM FeatureInfo WHERE observation_id='{0}' AND game_id='{1}'".format(obs_id[0],_game.id))
-                            feature_info=cursor.fetchall()
+                            db.cursor.execute("SELECT feature_id,feature_value FROM FeatureInfo WHERE observation_id='{0}' AND game_id='{1}'".format(obs_id[0],_game.id))
+                            feature_info=db.cursor.fetchall()
 
                             vv_seperator=len(feature_info)/num_of_images_per_oservation[0][0]
 
@@ -211,11 +211,11 @@ def build(_game, method, questions={}, answers={}, skip={}):
                                     if T >= 3:
                                         should_train = True
                                         count = count + 1
-                                        cursor.execute("SELECT COUNT(*) FROM FeatureInfo WHERE feature_id='0' AND observation_id='{0}' AND game_id='{1}' ".format(obs_id[0], game))
-                                        num_of_images_per_oservation=cursor.fetchall()
+                                        db.cursor.execute("SELECT COUNT(*) FROM FeatureInfo WHERE feature_id='0' AND observation_id='{0}' AND game_id='{1}' ".format(obs_id[0], game))
+                                        num_of_images_per_oservation=db.cursor.fetchall()
 
-                                        cursor.execute("SELECT feature_id,feature_value FROM FeatureInfo WHERE observation_id='{0}' AND game_id='{1}'".format(obs_id[0],game))
-                                        feature_info=cursor.fetchall()
+                                        db.cursor.execute("SELECT feature_id,feature_value FROM FeatureInfo WHERE observation_id='{0}' AND game_id='{1}'".format(obs_id[0],game))
+                                        feature_info=db.cursor.fetchall()
 
                                         vv_seperator=len(feature_info)/num_of_images_per_oservation[0][0]
 
@@ -233,10 +233,10 @@ def build(_game, method, questions={}, answers={}, skip={}):
                                     elif T == 0:
                                         should_train = True
                                         count = count + 1
-                                        cursor.execute("SELECT COUNT(*) FROM FeatureInfo WHERE feature_id='0' AND observation_id='{0}' AND game_id='{1}' ".format(obs_id[0], game))
-                                        num_of_images_per_oservation=cursor.fetchall()
+                                        db.cursor.execute("SELECT COUNT(*) FROM FeatureInfo WHERE feature_id='0' AND observation_id='{0}' AND game_id='{1}' ".format(obs_id[0], game))
+                                        num_of_images_per_oservation=db.cursor.fetchall()
 
-                                        cursor.execute("SELECT feature_id,feature_value FROM FeatureInfo WHERE observation_id='{0}' AND game_id='{1}'".format(obs_id[0],game))
+                                        db.cursor.execute("SELECT feature_id,feature_value FROM FeatureInfo WHERE observation_id='{0}' AND game_id='{1}'".format(obs_id[0],game))
                                         feature_info=cursor.fetchall()
 
                                         vv_seperator=len(feature_info)/num_of_images_per_oservation[0][0]
@@ -259,11 +259,11 @@ def build(_game, method, questions={}, answers={}, skip={}):
                                     if answer_data[int(obs_id[0])-1][qid-1] == 'yes' or answer_data[int(obs_id[0])-1][qid-1] is 'yes':
                                         should_train = True
                                         count = count + 1
-                                        cursor.execute("SELECT COUNT(*) FROM FeatureInfo WHERE feature_id='0' AND observation_id='{0}' AND game_id='{1}' ".format(obs_id[0], game))
-                                        num_of_images_per_oservation=cursor.fetchall()
+                                        db.cursor.execute("SELECT COUNT(*) FROM FeatureInfo WHERE feature_id='0' AND observation_id='{0}' AND game_id='{1}' ".format(obs_id[0], game))
+                                        num_of_images_per_oservation=db.cursor.fetchall()
 
-                                        cursor.execute("SELECT feature_id,feature_value FROM FeatureInfo WHERE observation_id='{0}' AND game_id='{1}'".format(obs_id[0],game))
-                                        feature_info=cursor.fetchall()
+                                        db.cursor.execute("SELECT feature_id,feature_value FROM FeatureInfo WHERE observation_id='{0}' AND game_id='{1}'".format(obs_id[0],game))
+                                        feature_info=db.cursor.fetchall()
 
                                         vv_seperator=len(feature_info)/num_of_images_per_oservation[0][0]
 
@@ -281,11 +281,11 @@ def build(_game, method, questions={}, answers={}, skip={}):
                                     else:
                                         should_train = True
                                         count = count + 1
-                                        cursor.execute("SELECT COUNT(*) FROM FeatureInfo WHERE feature_id='0' AND observation_id='{0}' AND game_id='{1}' ".format(obs_id[0], game))
-                                        num_of_images_per_oservation=cursor.fetchall()
+                                        db.cursor.execute("SELECT COUNT(*) FROM FeatureInfo WHERE feature_id='0' AND observation_id='{0}' AND game_id='{1}' ".format(obs_id[0], game))
+                                        num_of_images_per_oservation=db.cursor.fetchall()
 
-                                        cursor.execute("SELECT feature_id,feature_value FROM FeatureInfo WHERE observation_id='{0}' AND game_id='{1}'".format(obs_id[0],game))
-                                        feature_info=cursor.fetchall()
+                                        db.cursor.execute("SELECT feature_id,feature_value FROM FeatureInfo WHERE observation_id='{0}' AND game_id='{1}'".format(obs_id[0],game))
+                                        feature_info=db.cursor.fetchall()
 
                                         vv_seperator=len(feature_info)/num_of_images_per_oservation[0][0]
 
@@ -318,11 +318,11 @@ def build(_game, method, questions={}, answers={}, skip={}):
                                     if T >= 3:
                                         should_train = True
                                         count = count + 1
-                                        cursor.execute("SELECT COUNT(*) FROM FeatureInfo WHERE feature_id='0' AND observation_id='{0}' AND game_id='{1}' ".format(obs_id[0], game))
-                                        num_of_images_per_oservation=cursor.fetchall()
+                                        db.cursor.execute("SELECT COUNT(*) FROM FeatureInfo WHERE feature_id='0' AND observation_id='{0}' AND game_id='{1}' ".format(obs_id[0], game))
+                                        num_of_images_per_oservation=db.cursor.fetchall()
 
-                                        cursor.execute("SELECT feature_id,feature_value FROM FeatureInfo WHERE observation_id='{0}' AND game_id='{1}'".format(obs_id[0],game))
-                                        feature_info=cursor.fetchall()
+                                        db.cursor.execute("SELECT feature_id,feature_value FROM FeatureInfo WHERE observation_id='{0}' AND game_id='{1}'".format(obs_id[0],game))
+                                        feature_info=db.cursor.fetchall()
 
                                         vv_seperator=len(feature_info)/num_of_images_per_oservation[0][0]
 
@@ -339,11 +339,11 @@ def build(_game, method, questions={}, answers={}, skip={}):
                                     elif T == 0:
                                         should_train = True
                                         count = count + 1
-                                        cursor.execute("SELECT COUNT(*) FROM FeatureInfo WHERE feature_id='0' AND observation_id='{0}' AND game_id='{1}' ".format(obs_id[0], game))
-                                        num_of_images_per_oservation=cursor.fetchall()
+                                        db.cursor.execute("SELECT COUNT(*) FROM FeatureInfo WHERE feature_id='0' AND observation_id='{0}' AND game_id='{1}' ".format(obs_id[0], game))
+                                        num_of_images_per_oservation=db.cursor.fetchall()
 
-                                        cursor.execute("SELECT feature_id,feature_value FROM FeatureInfo WHERE observation_id='{0}' AND game_id='{1}'".format(obs_id[0],game))
-                                        feature_info=cursor.fetchall()
+                                        db.cursor.execute("SELECT feature_id,feature_value FROM FeatureInfo WHERE observation_id='{0}' AND game_id='{1}'".format(obs_id[0],game))
+                                        feature_info=db.cursor.fetchall()
 
                                         vv_seperator=len(feature_info)/num_of_images_per_oservation[0][0]
 
@@ -364,11 +364,11 @@ def build(_game, method, questions={}, answers={}, skip={}):
                                     if answer_data[int(obs_id[0])-1][qid-1] == 'yes' or answer_data[int(obs_id[0])-1][qid-1] is 'yes':
                                         should_train = True
                                         count = count + 1
-                                        cursor.execute("SELECT COUNT(*) FROM FeatureInfo WHERE feature_id='0' AND observation_id='{0}' AND game_id='{1}' ".format(obs_id[0], game))
-                                        num_of_images_per_oservation=cursor.fetchall()
+                                        db.cursor.execute("SELECT COUNT(*) FROM FeatureInfo WHERE feature_id='0' AND observation_id='{0}' AND game_id='{1}' ".format(obs_id[0], game))
+                                        num_of_images_per_oservation=db.cursor.fetchall()
 
-                                        cursor.execute("SELECT feature_id,feature_value FROM FeatureInfo WHERE observation_id='{0}' AND game_id='{1}'".format(obs_id[0],game))
-                                        feature_info=cursor.fetchall()
+                                        db.cursor.execute("SELECT feature_id,feature_value FROM FeatureInfo WHERE observation_id='{0}' AND game_id='{1}'".format(obs_id[0],game))
+                                        feature_info=db.cursor.fetchall()
 
                                         vv_seperator=len(feature_info)/num_of_images_per_oservation[0][0]
 
@@ -386,11 +386,11 @@ def build(_game, method, questions={}, answers={}, skip={}):
                                     elif answer_data[int(obs_id[0])-1][qid-1] == 'no' or answer_data[int(obs_id[0])-1][qid-1] is 'no':
                                         should_train = True
                                         count = count + 1
-                                        cursor.execute("SELECT COUNT(*) FROM FeatureInfo WHERE feature_id='0' AND observation_id='{0}' AND game_id='{1}' ".format(obs_id[0], game))
-                                        num_of_images_per_oservation=cursor.fetchall()
+                                        db.cursor.execute("SELECT COUNT(*) FROM FeatureInfo WHERE feature_id='0' AND observation_id='{0}' AND game_id='{1}' ".format(obs_id[0], game))
+                                        num_of_images_per_oservation=db.cursor.fetchall()
 
-                                        cursor.execute("SELECT feature_id,feature_value FROM FeatureInfo WHERE observation_id='{0}' AND game_id='{1}'".format(obs_id[0],game))
-                                        feature_info=cursor.fetchall()
+                                        db.cursor.execute("SELECT feature_id,feature_value FROM FeatureInfo WHERE observation_id='{0}' AND game_id='{1}'".format(obs_id[0],game))
+                                        feature_info=db.cursor.fetchall()
 
                                         vv_seperator=len(feature_info)/num_of_images_per_oservation[0][0]
 
@@ -406,20 +406,20 @@ def build(_game, method, questions={}, answers={}, skip={}):
 
                                             feature_matrix_labels.append(0)
                                 else:
-                                    cursor.execute("SELECT id FROM Tags WHERE tag = '{0}'".format(tag))
-                                    tag_id = cursor.fetchone()[0]
-                                    if tag_id in questions[game][int(obs_id[0])]:
-                                        index = questions[game][int(obs_id[0])].index(tag_id)
+                                    db.cursor.execute("SELECT id FROM Tags WHERE tag = '{0}'".format(tag))
+                                    tag_id = db.cursor.fetchone()[0]
+                                    if tag_id in game_questions[game][int(obs_id[0])]:
+                                        index = game_questions[game][int(obs_id[0])].index(tag_id)
                                         #cursor.execute("SELECT id FROM Tags where tag ='{0}'".format(tag))
                                         #tag_id = cursor.fetchone()[0]
-                                        if answers[game][int(obs_id[0])][index] == 1:
+                                        if game_answers[game][int(obs_id[0])][index] == 1:
                                             should_train = True
                                             count = count + 1
-                                            cursor.execute("SELECT COUNT(*) FROM FeatureInfo WHERE feature_id='0' AND observation_id='{0}' AND game_id='{1}' ".format(obs_id[0], game))
-                                            num_of_images_per_oservation=cursor.fetchall()
+                                            db.cursor.execute("SELECT COUNT(*) FROM FeatureInfo WHERE feature_id='0' AND observation_id='{0}' AND game_id='{1}' ".format(obs_id[0], game))
+                                            num_of_images_per_oservation=db.cursor.fetchall()
 
-                                            cursor.execute("SELECT feature_id,feature_value FROM FeatureInfo WHERE observation_id='{0}' AND game_id='{1}'".format(obs_id[0],game))
-                                            feature_info=cursor.fetchall()
+                                            db.cursor.execute("SELECT feature_id,feature_value FROM FeatureInfo WHERE observation_id='{0}' AND game_id='{1}'".format(obs_id[0],game))
+                                            feature_info=db.cursor.fetchall()
 
                                             vv_seperator=len(feature_info)/num_of_images_per_oservation[0][0]
 
@@ -434,14 +434,14 @@ def build(_game, method, questions={}, answers={}, skip={}):
                                                 feature_matrix.append(feature_vector) #insert feature vectors into a matrix for each tag
 
                                                 feature_matrix_labels.append(1)
-                                        elif answers[game][int(obs_id[0])][index] == 0:
+                                        elif game_answers[game][int(obs_id[0])][index] == 0:
                                             should_train = True
                                             count = count + 1
-                                            cursor.execute("SELECT COUNT(*) FROM FeatureInfo WHERE feature_id='0' AND observation_id='{0}' AND game_id='{1}' ".format(obs_id[0], game))
-                                            num_of_images_per_oservation=cursor.fetchall()
+                                            db.cursor.execute("SELECT COUNT(*) FROM FeatureInfo WHERE feature_id='0' AND observation_id='{0}' AND game_id='{1}' ".format(obs_id[0], game))
+                                            num_of_images_per_oservation=db.cursor.fetchall()
 
-                                            cursor.execute("SELECT feature_id,feature_value FROM FeatureInfo WHERE observation_id='{0}' AND game_id='{1}'".format(obs_id[0],game))
-                                            feature_info=cursor.fetchall()
+                                            db.cursor.execute("SELECT feature_id,feature_value FROM FeatureInfo WHERE observation_id='{0}' AND game_id='{1}'".format(obs_id[0],game))
+                                            feature_info=db.cursor.fetchall()
 
                                             vv_seperator=len(feature_info)/num_of_images_per_oservation[0][0]
 
@@ -463,37 +463,69 @@ def build(_game, method, questions={}, answers={}, skip={}):
                     model.ModelTrainingSVM(tag, feature_matrix, feature_matrix_labels, 777) #training the model with SVM
     #print count
 
-def gen_image_probabilities(cursor, game):
-    # Collect all keyword classifiers and feature vectors of objects in the game space
-    models, feature_vectors, labels = info(cursor, game)
-    available_models = []
-    probabilities = {}
-    for i in range(0, 17):
-	probability = []
-	for j in range(1, 290):
-	    if j in models:
-		# Score feature vector against keyword classifier and save the probability
-		probability.append(models[j].score(feature_vectors[i], labels[i]))
-		available_models.append(j-1)
-		beans = models[j].score(feature_vectors[i], labels[i])
-		if beans > 0:
-		    print j, beans
-	    else:
-		# If no keyword classifier is available, score as -1 so we can skip later
-		probability.append(-1)
-	probabilities[i] = probability
-	log.info("Image %d processed for game %d", i + 1, game.id)
-   
-    return probabilities
 
-def info(cursor, game):
+def gen_image_probabilities(game):
+	# Collect all keyword classifiers and feature vectors of objects in the game space
+	models, feature_vectors, labels = info(game)
+	available_models = []
+	probabilities = {}
+	for i in range(0, 17):
+		probability = []
+		for j in range(1, 290):
+			if j in models:
+				# Score feature vector against keyword classifier and save the probability
+				probability.append(models[j].score(feature_vectors[i], labels[i]))
+				available_models.append(j-1)
+				beans = models[j].score(feature_vectors[i], labels[i])
+				if beans > 0:
+					print j, beans
+			else:
+				# If no keyword classifier is available, score as -1 so we can skip later
+				probability.append(-1)
+		probabilities[i] = probability
+	log.info("Image %d processed for game %d", i + 1, game.id)
+
+	return probabilities
+
+
+def evaluation_1(game):
+	Pi = gen_image_probabilities_evaluation(game)
+	with open("evaluation1.txt", "a") as myfile:
+		myfile.write(str(game.id) + " game: \n")
+		for obj in range(0, 17):
+			for tag in range(0, 289):
+				if Pi[obj][tag] >= 0:
+					myfile.write(str(obj + 1) + " object: " + str(tag+1) + " -> " + get_tag(tag+1,cursor) + " tag: " + str(Pi[obj][tag]) + " score \n")
+		myfile.write("\n")
+	myfile.close() 
+
+
+def gen_image_probabilities_evaluation(game):
+	models, feature_vectors, feature_vector_labels = info(game)
+	available_models = []
+	probabilities = {}
+	for i in range(0, 17):
+		probability = []
+		for j in range(1, 290):
+			if j in models:
+				probability.append(score_tag(feature_vectors[i], models[j]))
+				available_models.append(j-1)
+			else:
+				probability.append(-1)
+		probabilities[i] = probability
+	log.info("Image " + str(i + 1) + " processed")
+
+	return probabilities
+
+
+def score_tag(feature_vector, model):
+    prob = model.score([feature_vector])
+    return math.e ** (prob[0] / 100000.0)
+
+
+def info(game):
     """
     Gets model info
-
-    Args:
-            game - A Game object
-
-    Returns idk
     """
 
     log.info("Getting model info for Game %d", game.id)
@@ -502,11 +534,11 @@ def info(cursor, game):
     feature_matrix = []
     feature_matrix_labels = []
     for i in range(1, 18):
-        cursor.execute('SELECT COUNT(*) FROM FeatureInfo WHERE feature_id="0" AND observation_id="{0}" AND game_id < "{1}"'.format(i, game.id))
-        num_of_images_per_observation = cursor.fetchall()
+        db.cursor.execute('SELECT COUNT(*) FROM FeatureInfo WHERE feature_id="0" AND observation_id="{0}" AND game_id < "{1}"'.format(i, game.id))
+        num_of_images_per_observation = db.cursor.fetchall()
 
-        cursor.execute('SELECT feature_id,feature_value FROM FeatureInfo WHERE observation_id="{0}" AND game_id < "{1}"'.format(i, game.id))
-        feature_info = cursor.fetchall()
+        db.cursor.execute('SELECT feature_id,feature_value FROM FeatureInfo WHERE observation_id="{0}" AND game_id < "{1}"'.format(i, game.id))
+        feature_info = db.cursor.fetchall()
 
         vv_seperator = len(feature_info)/num_of_images_per_observation[0][0]
 
@@ -538,11 +570,12 @@ def info(cursor, game):
             model_clone = joblib.load(model_folder + '/' + model)
             T = model.split('_', 1)[0]
             T = T.lower()
-            cursor.execute('SELECT id FROM Tags WHERE tag = %s', (T))
-            qid = cursor.fetchone()[0]
+            db.cursor.execute('SELECT id FROM Tags WHERE tag = %s', (T))
+            qid = db.cursor.fetchone()[0]
             models[qid] = model_clone
 
     return models, feature_matrix, feature_matrix_labels
+
 
 def RetrieveFeatureVector(feature_info, start, end):
     feature_vector=[]

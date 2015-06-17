@@ -1,39 +1,45 @@
 import logging as log
 
-class Database:
+connection = None
+cursor = None
+driver = None
+
+
+def connect(address, username, password, database, unix_socket='/tmp/mysql.sock'):
 	"""
-	Handles database drivers
+	Connect to the database
 	"""
 
-	def __init__(self, address, username, password, database):
-		"""
-		Initialize the database connection with credentials
-		"""
+	global connection
+	global cursor
+	global driver
 
-		self._init_driver()
+	connection = driver.connect(address, username, password, database, unix_socket=unix_socket)
+	with connection:
+		cursor = connection.cursor()
+		log.info('Connected to database')
 
-		self.connection = self.driver.connect(address, username, password, database, unix_socket='/Applications/MAMP/tmp/mysql/mysql.sock')
-		with self.connection:
-			self.cursor = self.connection.cursor()
-			log.info('Connected to database')
 
-	def _init_driver(self):
-		"""
-		Use native MySQLdb driver,
-		or fall back on pymysql
-		"""
+def init_driver():
+	"""
+	Use native MySQLdb driver, or fall back on pymysql
+	Must be called before connect()
+	"""
+
+	global driver
+
+	try:
+		import MySQLdb
+		log.info('Using MySQLdb')
+		driver = MySQLdb
+		return MySQLdb
+	except ImportError:
+		log.info('MySQLdb not found')
 
 		try:
-			import MySQLdb
-			self.driver = MySQLdb
-			log.info('Using MySQLdb')
+			import pymysql
+			log.info('Using pymysql')
+			driver = pymysql
+			return pymysql
 		except ImportError:
-			log.info('MySQLdb not found')
-			
-			try:
-				import pymysql
-				self.driver = pymysql
-				log.info('Using pymysql')
-			except ImportError:
-				raise Exception('No database driver found')
-
+			raise Exception('No database driver found')

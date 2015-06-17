@@ -3706,3 +3706,1194 @@ Average number of questions: 4.52941176471
 16,1,digital_clock,5,win
 16,1,digital_clock,5,win
 16,1,digital_clock,5,win
+Round 16: Wins=0, Losses=0 Accuracy: 0.0
+Average number of questions: 0.0
+Round 17: Wins=0, Losses=0 Accuracy: 0.0
+Average number of questions: 0.0
+Round 18: Wins=0, Losses=0 Accuracy: 0.0
+Average number of questions: 0.0
+Round 19: Wins=0, Losses=0 Accuracy: 0.0
+Average number of questions: 0.0
+Round 20: Wins=0, Losses=0 Accuracy: 0.0
+Average number of questions: 0.0
+Round 21: Wins=0, Losses=0 Accuracy: 0.0
+Average number of questions: 0.0
+Round 22: Wins=0, Losses=0 Accuracy: 0.0
+Average number of questions: 0.0
+Round 23: Wins=0, Losses=0 Accuracy: 0.0
+Average number of questions: 0.0
+Round 24: Wins=0, Losses=0 Accuracy: 0.0
+Average number of questions: 0.0
+Round 25: Wins=0, Losses=0 Accuracy: 0.0
+Average number of questions: 0.0
+Round 26: Wins=0, Losses=0 Accuracy: 0.0
+Average number of questions: 0.0
+Round 27: Wins=0, Losses=0 Accuracy: 0.0
+Average number of questions: 0.0
+Round 28: Wins=0, Losses=0 Accuracy: 0.0
+Average number of questions: 0.0
+Round 29: Wins=0, Losses=0 Accuracy: 0.0
+Average number of questions: 0.0
+Round 30: Wins=0, Losses=0 Accuracy: 0.0
+Average number of questions: 0.0
+16,1,analog_clock,5,lose
+16,2,cardboard_box,5,lose
+16,3,red_soccer_ball,2,win
+16,4,basketball,4,win
+16,1,digital_clock,5,win
+16,1,digital_clock,5,win
+16,1,digital_clock,5,win
+16,1,digital_clock,5,win
+16,2,cardboard_box,5,lose
+16,3,red_soccer_ball,2,win
+16,4,basketball,3,win
+16,5,football,4,win
+16,6,yellow_book,5,win
+16,7,yellow_flashlight,5,win
+16,8,blue_soccer_ball,4,win
+16,9,apple,7,win
+16,10,black_mug,5,win
+16,11,yellow_book,5,lose
+16,12,yellow_flashlight,5,lose
+16,13,cardboard_box,5,win
+16,14,pepper,6,win
+16,15,green_mug,4,win
+16,16,polka_dot_box,5,win
+16,17,scissors,4,win
+16,1,digital_clock,5,win
+16,1,digital_clock,5,win
+16,2,cardboard_box,5,lose
+16,3,red_soccer_ball,2,win
+16,4,basketball,3,win
+16,5,football,4,win
+16,6,yellow_book,5,win
+16,7,yellow_flashlight,5,win
+16,8,blue_soccer_ball,4,win
+16,9,apple,7,win
+16,10,black_mug,5,win
+16,11,yellow_book,5,lose
+16,12,yellow_flashlight,5,lose
+16,13,cardboard_box,5,win
+16,14,pepper,6,win
+16,15,green_mug,4,win
+16,16,polka_dot_box,5,win
+16,17,scissors,4,win
+16,1,digital_clock,5,win
+16,2,cardboard_box,5,lose
+16,3,red_soccer_ball,2,win
+16,4,basketball,3,win
+16,5,football,4,win
+16,6,yellow_book,5,win
+16,7,yellow_flashlight,5,win
+16,8,blue_soccer_ball,4,win
+16,1,digital_clock,5,win
+16,9,apple,7,win
+16,10,black_mug,5,win
+16,1,digital_clock,5,win
+16,2,cardboard_box,5,lose
+16,3,red_soccer_ball,2,win
+16,4,basketball,3,win
+16,5,football,4,win
+16,6,yellow_book,5,win
+16,7,yellow_flashlight,5,win
+16,1,digital_clock,5,win
+16,1,digital_clock,5,win
+16,2,cardboard_box,4,lose
+16,3,red_soccer_ball,2,win
+16,4,basketball,3,win
+16,1,digital_clock,5,win
+16,1,digital_clock,5,win
+16,1,digital_clock,5,win
+16,2,cardboard_box,4,lose
+16,3,red_soccer_ball,2,win
+16,4,basketball,3,win
+16,5,football,4,win
+16,6,yellow_book,5,win
+16,7,yellow_flashlight,3,win
+16,8,blue_soccer_ball,4,win
+16,9,green_mug,6,lose
+16,10,black_mug,5,win
+16,11,yellow_book,5,lose
+16,12,black_mug,5,lose
+16,13,cardboard_box,4,win
+16,14,pepper,6,win
+16,15,green_mug,6,win
+16,16,polka_dot_box,5,win
+16,17,scissors,6,win
+16,1,digital_clock,5,win
+16,2,cardboard_box,4,lose
+16,3,red_soccer_ball,2,win
+16,4,basketball,3,win
+16,5,football,4,win
+16,6,yellow_book,5,win
+16,7,yellow_flashlight,3,win
+16,1,digital_clock,5,win
+16,2,cardboard_box,4,lose
+16,3,red_soccer_ball,2,win
+16,4,basketball,3,win
+16,5,football,4,win
+16,6,yellow_book,5,win
+16,7,yellow_flashlight,3,win
+16,8,blue_soccer_ball,4,win
+16,9,green_mug,6,lose
+16,10,black_mug,5,win
+16,11,yellow_book,5,lose
+16,12,black_mug,5,lose
+16,13,cardboard_box,4,win
+16,14,pepper,6,win
+16,15,green_mug,6,win
+16,16,polka_dot_box,5,win
+16,17,scissors,6,win
+Round 16: Wins=13, Losses=4 Accuracy: 0.764705882353
+Average number of questions: 4.58823529412
+16,1,digital_clock,5,win
+16,2,cardboard_box,4,lose
+16,3,red_soccer_ball,2,win
+16,4,basketball,3,win
+16,5,football,4,win
+16,6,yellow_book,5,win
+16,7,yellow_flashlight,3,win
+16,8,blue_soccer_ball,4,win
+16,9,green_mug,6,lose
+16,10,black_mug,5,win
+16,11,yellow_book,5,lose
+16,12,black_mug,5,lose
+16,13,cardboard_box,4,win
+16,1,digital_clock,5,win
+16,2,cardboard_box,4,lose
+16,3,red_soccer_ball,2,win
+16,4,basketball,3,win
+16,5,football,4,win
+16,6,yellow_book,5,win
+16,7,yellow_flashlight,3,win
+16,8,blue_soccer_ball,4,win
+16,9,green_mug,6,lose
+16,10,black_mug,5,win
+16,11,yellow_book,5,lose
+16,12,black_mug,5,lose
+16,13,cardboard_box,4,win
+16,14,pepper,6,win
+16,15,green_mug,6,win
+16,16,polka_dot_box,5,win
+16,17,scissors,6,win
+Round 16: Wins=13, Losses=4 Accuracy: 0.764705882353
+Average number of questions: 4.58823529412
+17,1,digital_clock,5,win
+17,2,analog_clock,5,win
+17,3,red_soccer_ball,2,win
+17,4,basketball,3,win
+17,5,red_soccer_ball,2,lose
+17,6,yellow_flashlight,3,lose
+16,1,digital_clock,5,win
+16,2,cardboard_box,4,lose
+16,3,red_soccer_ball,2,win
+16,1,digital_clock,5,win
+16,2,cardboard_box,4,lose
+16,3,red_soccer_ball,2,win
+16,4,basketball,3,win
+16,5,football,4,win
+16,6,yellow_book,5,win
+16,7,yellow_flashlight,4,win
+16,8,blue_soccer_ball,4,win
+16,9,green_mug,6,lose
+16,10,black_mug,5,win
+16,11,yellow_book,5,lose
+16,12,blue_flashlight,4,win
+16,13,cardboard_box,4,win
+16,14,pepper,6,win
+16,15,green_mug,6,win
+16,16,polka_dot_box,5,win
+16,17,scissors,6,win
+Round 16: Wins=14, Losses=3 Accuracy: 0.823529411765
+Average number of questions: 4.58823529412
+16,1,digital_clock,7,win
+16,2,analog_clock,59,win
+16,3,red_soccer_ball,7,win
+16,4,football,9,lose
+16,5,football,9,win
+16,6,yellow_book,16,win
+16,7,yellow_flashlight,7,win
+16,8,blue_soccer_ball,19,win
+16,1,digital_clock,9,win
+16,1,digital_clock,9,win
+16,1,digital_clock,9,win
+16,2,analog_clock,32,win
+16,3,red_soccer_ball,7,win
+16,4,football,9,lose
+16,5,football,9,win
+16,6,yellow_book,16,win
+16,7,yellow_flashlight,7,win
+16,8,blue_soccer_ball,18,win
+16,9,apple,9,win
+16,10,black_mug,19,win
+16,1,digital_clock,9,win
+16,1,digital_clock,9,win
+16,1,digital_clock,9,win
+16,2,analog_clock,32,win
+16,3,red_soccer_ball,7,win
+16,4,football,9,lose
+16,5,football,9,win
+16,6,yellow_book,16,win
+16,7,yellow_flashlight,7,win
+16,8,blue_soccer_ball,19,win
+16,9,apple,9,win
+16,10,black_mug,19,win
+16,11,blue_book,8,win
+16,12,blue_flashlight,7,win
+16,13,cardboard_box,37,win
+16,14,pepper,8,win
+16,15,green_mug,43,win
+16,16,cardboard_box,42,lose
+16,17,scissors,17,win
+Round 16: Wins=15, Losses=2 Accuracy: 0.882352941176
+Average number of questions: 17.5294117647
+16,1,digital_clock,9,win
+16,2,analog_clock,55,win
+16,3,red_soccer_ball,7,win
+16,4,football,9,lose
+16,5,football,9,win
+16,6,yellow_book,17,win
+16,7,yellow_flashlight,7,win
+16,8,blue_soccer_ball,19,win
+16,9,apple,14,win
+16,10,black_mug,19,win
+16,11,blue_book,8,win
+16,12,blue_flashlight,7,win
+16,13,cardboard_box,37,win
+16,14,pepper,8,win
+16,15,green_mug,45,win
+16,16,cardboard_box,42,lose
+16,17,scissors,17,win
+Round 16: Wins=15, Losses=2 Accuracy: 0.882352941176
+Average number of questions: 19.3529411765
+16,1,digital_clock,9,win
+16,2,yellow_flashlight,64,lose
+16,3,red_soccer_ball,7,win
+16,4,football,9,lose
+16,5,football,9,win
+16,6,yellow_book,16,win
+16,7,yellow_flashlight,7,win
+16,8,blue_soccer_ball,19,win
+16,9,apple,14,win
+16,10,black_mug,19,win
+16,11,blue_book,8,win
+16,12,blue_flashlight,7,win
+16,13,cardboard_box,37,win
+16,14,pepper,8,win
+16,15,green_mug,35,win
+16,16,cardboard_box,42,lose
+16,17,scissors,17,win
+Round 16: Wins=14, Losses=3 Accuracy: 0.823529411765
+Average number of questions: 19.2352941176
+16,1,digital_clock,10,win
+16,2,analog_clock,59,win
+16,3,red_soccer_ball,7,win
+16,4,football,9,lose
+16,5,football,9,win
+16,6,yellow_book,16,win
+16,7,yellow_flashlight,7,win
+16,8,blue_soccer_ball,19,win
+16,9,apple,14,win
+16,10,black_mug,19,win
+16,11,blue_book,12,win
+16,12,blue_flashlight,7,win
+16,13,cardboard_box,37,win
+16,14,pepper,8,win
+16,15,green_mug,35,win
+16,16,cardboard_box,42,lose
+16,17,scissors,17,win
+Round 16: Wins=15, Losses=2 Accuracy: 0.882352941176
+Average number of questions: 19.2352941176
+16,1,digital_clock,10,win
+16,2,analog_clock,47,win
+16,3,red_soccer_ball,7,win
+16,4,football,9,lose
+16,5,football,9,win
+16,6,yellow_book,17,win
+16,7,yellow_flashlight,7,win
+16,8,blue_soccer_ball,19,win
+16,9,apple,14,win
+16,10,black_mug,20,win
+16,11,blue_book,12,win
+16,12,blue_flashlight,7,win
+16,13,cardboard_box,37,win
+16,14,pepper,8,win
+16,15,green_mug,35,win
+16,16,cardboard_box,42,lose
+16,17,scissors,17,win
+Round 16: Wins=15, Losses=2 Accuracy: 0.882352941176
+Average number of questions: 18.6470588235
+16,1,digital_clock,10,win
+16,2,analog_clock,47,win
+16,3,red_soccer_ball,7,win
+16,4,football,9,lose
+16,5,football,9,win
+16,6,yellow_book,16,win
+16,7,yellow_flashlight,7,win
+16,8,blue_soccer_ball,19,win
+16,9,apple,14,win
+16,10,black_mug,20,win
+16,11,blue_book,12,win
+16,12,blue_flashlight,7,win
+16,13,cardboard_box,37,win
+16,14,pepper,8,win
+16,15,green_mug,35,win
+16,16,cardboard_box,42,lose
+16,17,scissors,19,win
+Round 16: Wins=15, Losses=2 Accuracy: 0.882352941176
+Average number of questions: 18.7058823529
+17,1,analog_clock,13,lose
+17,2,analog_clock,13,win
+17,3,red_soccer_ball,7,win
+17,4,basketball,6,win
+17,5,blue_soccer_ball,44,lose
+17,6,blue_book,14,lose
+17,7,blue_flashlight,17,lose
+17,8,blue_book,14,lose
+17,9,apple,26,win
+17,10,black_mug,20,win
+17,11,apple,11,lose
+17,12,blue_flashlight,7,win
+17,13,cardboard_box,14,win
+17,14,pepper,8,win
+17,15,green_mug,51,win
+17,16,polka_dot_box,18,win
+17,17,scissors,11,win
+Round 17: Wins=11, Losses=6 Accuracy: 0.647058823529
+Average number of questions: 17.2941176471
+18,1,digital_clock,10,win
+18,2,analog_clock,21,win
+18,3,red_soccer_ball,7,win
+18,4,football,9,lose
+18,5,football,26,win
+18,6,blue_book,14,lose
+18,7,yellow_flashlight,51,win
+18,8,red_soccer_ball,19,lose
+18,9,apple,9,win
+18,10,black_mug,9,win
+18,11,blue_book,12,win
+18,12,blue_flashlight,7,win
+18,13,cardboard_box,15,win
+18,14,pepper,8,win
+18,15,green_mug,38,win
+18,16,polka_dot_box,39,win
+18,17,scissors,11,win
+Round 18: Wins=14, Losses=3 Accuracy: 0.823529411765
+Average number of questions: 17.9411764706
+19,1,basketball,11,lose
+19,2,analog_clock,13,win
+19,3,red_soccer_ball,7,win
+19,4,basketball,6,win
+19,5,football,9,win
+19,6,blue_book,14,lose
+19,7,blue_flashlight,28,lose
+19,8,blue_book,24,lose
+19,9,apple,8,win
+19,10,black_mug,9,win
+19,11,yellow_book,17,lose
+19,12,pepper,76,lose
+19,13,cardboard_box,15,win
+19,14,pepper,8,win
+19,15,green_mug,34,win
+19,16,blue_book,54,lose
+19,17,scissors,11,win
+Round 19: Wins=10, Losses=7 Accuracy: 0.588235294118
+Average number of questions: 20.2352941176
+20,1,analog_clock,16,lose
+20,2,analog_clock,13,win
+20,3,red_soccer_ball,7,win
+20,4,basketball,10,win
+20,5,football,13,win
+20,6,blue_book,14,lose
+20,7,blue_flashlight,16,lose
+20,8,blue_soccer_ball,9,win
+20,9,apple,9,win
+20,10,black_mug,19,win
+20,11,blue_book,12,win
+20,12,blue_flashlight,7,win
+20,13,cardboard_box,42,win
+20,14,blue_flashlight,9,lose
+20,15,green_mug,28,win
+20,16,polka_dot_box,12,win
+20,17,scissors,18,win
+Round 20: Wins=13, Losses=4 Accuracy: 0.764705882353
+Average number of questions: 14.9411764706
+21,1,digital_clock,9,win
+21,2,analog_clock,8,win
+21,3,red_soccer_ball,70,win
+21,4,basketball,37,win
+21,5,basketball,18,lose
+21,6,pepper,77,lose
+21,7,yellow_flashlight,7,win
+21,8,blue_flashlight,17,lose
+21,9,apple,26,win
+21,10,black_mug,9,win
+21,11,blue_book,14,win
+21,12,blue_flashlight,7,win
+21,13,cardboard_box,14,win
+21,14,analog_clock,18,lose
+21,15,blue_book,20,lose
+21,16,polka_dot_box,29,win
+21,17,scissors,20,win
+Round 21: Wins=12, Losses=5 Accuracy: 0.705882352941
+Average number of questions: 23.5294117647
+22,1,basketball,6,lose
+22,2,blue_flashlight,16,lose
+22,3,red_soccer_ball,7,win
+22,4,football,10,lose
+22,5,football,10,win
+22,6,black_mug,9,lose
+22,7,blue_flashlight,44,lose
+22,8,football,28,lose
+22,9,basketball,6,lose
+22,10,black_mug,9,win
+22,11,blue_book,28,win
+22,12,blue_flashlight,7,win
+22,13,polka_dot_box,11,lose
+22,14,pepper,8,win
+22,15,green_mug,49,win
+22,16,polka_dot_box,31,win
+22,17,scissors,17,win
+Round 22: Wins=9, Losses=8 Accuracy: 0.529411764706
+Average number of questions: 17.4117647059
+23,1,analog_clock,13,lose
+23,2,analog_clock,13,win
+23,3,red_soccer_ball,7,win
+23,4,basketball,46,win
+23,5,blue_soccer_ball,37,lose
+23,6,blue_book,12,lose
+23,7,yellow_flashlight,13,win
+23,8,blue_soccer_ball,9,win
+23,9,apple,27,win
+23,10,green_mug,57,lose
+23,11,blue_book,10,win
+23,12,pepper,56,lose
+23,13,blue_book,11,lose
+23,14,pepper,8,win
+23,15,black_mug,45,lose
+23,16,polka_dot_box,19,win
+23,17,scissors,19,win
+Round 23: Wins=10, Losses=7 Accuracy: 0.588235294118
+Average number of questions: 23.6470588235
+24,1,analog_clock,11,lose
+24,2,analog_clock,12,win
+24,3,red_soccer_ball,27,win
+24,4,basketball,36,win
+24,5,football,9,win
+24,6,blue_book,14,lose
+24,7,yellow_flashlight,19,win
+24,8,blue_soccer_ball,9,win
+24,9,apple,31,win
+24,10,black_mug,9,win
+24,11,basketball,6,lose
+24,12,blue_flashlight,9,win
+24,13,cardboard_box,15,win
+24,14,pepper,8,win
+24,15,green_mug,10,win
+24,16,polka_dot_box,17,win
+24,17,scissors,18,win
+Round 24: Wins=14, Losses=3 Accuracy: 0.823529411765
+Average number of questions: 15.2941176471
+25,1,basketball,5,lose
+25,2,analog_clock,8,win
+25,3,red_soccer_ball,7,win
+25,4,black_mug,22,lose
+25,5,football,9,win
+25,6,blue_book,14,lose
+25,7,blue_flashlight,18,lose
+25,8,blue_soccer_ball,11,win
+25,9,apple,9,win
+25,10,black_mug,14,win
+25,11,blue_book,17,win
+25,12,blue_flashlight,21,win
+25,13,cardboard_box,19,win
+25,14,football,16,lose
+25,15,black_mug,69,lose
+25,16,cardboard_box,15,lose
+25,17,scissors,19,win
+Round 25: Wins=10, Losses=7 Accuracy: 0.588235294118
+Average number of questions: 17.2352941176
+26,1,digital_clock,9,win
+26,2,analog_clock,13,win
+26,3,basketball,5,lose
+26,4,basketball,40,win
+26,5,red_soccer_ball,37,lose
+26,6,blue_book,14,lose
+26,7,yellow_flashlight,22,win
+26,8,blue_soccer_ball,9,win
+26,9,yellow_book,75,lose
+26,10,black_mug,19,win
+26,11,blue_book,11,win
+26,12,blue_flashlight,7,win
+26,13,red_soccer_ball,10,lose
+26,14,pepper,8,win
+26,15,green_mug,10,win
+26,16,polka_dot_box,16,win
+26,17,scissors,19,win
+Round 26: Wins=12, Losses=5 Accuracy: 0.705882352941
+Average number of questions: 19.0588235294
+27,1,digital_clock,9,win
+27,2,analog_clock,13,win
+27,3,basketball,92,lose
+27,4,basketball,5,win
+27,5,football,9,win
+27,6,yellow_book,17,win
+27,7,blue_flashlight,45,lose
+27,8,red_soccer_ball,30,lose
+27,9,apple,17,win
+27,10,black_mug,19,win
+27,11,blue_book,8,win
+27,12,blue_flashlight,7,win
+27,13,yellow_book,21,lose
+27,14,blue_book,13,lose
+27,15,green_mug,27,win
+27,16,polka_dot_box,29,win
+27,17,scissors,28,win
+Round 27: Wins=12, Losses=5 Accuracy: 0.705882352941
+Average number of questions: 22.8823529412
+28,1,digital_clock,28,win
+28,2,digital_clock,9,lose
+28,3,red_soccer_ball,7,win
+28,4,apple,63,lose
+28,5,football,9,win
+28,6,football,9,lose
+28,7,scissors,12,lose
+28,8,blue_soccer_ball,13,win
+28,9,apple,34,win
+28,10,black_mug,19,win
+28,11,basketball,6,lose
+28,12,blue_flashlight,7,win
+28,13,cardboard_box,37,win
+28,14,pepper,48,win
+28,15,green_mug,16,win
+28,16,cardboard_box,15,lose
+28,17,scissors,49,win
+Round 28: Wins=11, Losses=6 Accuracy: 0.647058823529
+Average number of questions: 22.4117647059
+29,1,digital_clock,9,win
+29,2,analog_clock,13,win
+29,3,red_soccer_ball,7,win
+29,4,basketball,53,win
+29,5,football,25,win
+29,6,blue_book,14,lose
+29,7,blue_flashlight,28,lose
+29,8,blue_soccer_ball,11,win
+29,9,apple,9,win
+29,10,black_mug,19,win
+29,11,blue_book,12,win
+29,12,basketball,6,lose
+29,13,cardboard_box,15,win
+29,14,pepper,11,win
+29,15,green_mug,16,win
+29,16,cardboard_box,15,lose
+29,17,scissors,19,win
+Round 29: Wins=13, Losses=4 Accuracy: 0.764705882353
+Average number of questions: 16.5882352941
+30,1,digital_clock,9,win
+30,2,analog_clock,13,win
+30,3,red_soccer_ball,105,win
+30,4,basketball,30,win
+30,5,football,9,win
+30,6,blue_book,14,lose
+30,7,yellow_flashlight,26,win
+30,8,blue_soccer_ball,13,win
+30,9,apple,21,win
+30,10,black_mug,19,win
+30,11,blue_book,12,win
+30,12,blue_flashlight,7,win
+30,13,basketball,15,lose
+30,14,pepper,8,win
+30,15,green_mug,38,win
+30,16,cardboard_box,15,lose
+30,17,scissors,31,win
+Round 30: Wins=14, Losses=3 Accuracy: 0.823529411765
+Average number of questions: 22.6470588235
+16,1,digital_clock,9,win
+16,1,digital_clock,9,win
+16,2,analog_clock,36,win
+16,3,red_soccer_ball,8,win
+16,4,football,9,lose
+16,5,football,9,win
+16,6,yellow_book,16,win
+16,7,yellow_flashlight,7,win
+16,8,basketball,39,lose
+16,9,apple,9,win
+16,10,black_mug,19,win
+16,11,blue_book,8,win
+16,12,blue_flashlight,7,win
+16,13,cardboard_box,37,win
+16,14,pepper,8,win
+16,15,green_mug,40,win
+16,16,cardboard_box,41,lose
+16,17,scissors,19,win
+Round 16: Wins=14, Losses=3 Accuracy: 0.823529411765
+Average number of questions: 18.8823529412
+16,1,digital_clock,9,win
+16,2,analog_clock,21,win
+16,3,red_soccer_ball,8,win
+16,4,football,9,lose
+16,5,football,9,win
+16,6,yellow_book,16,win
+16,7,yellow_flashlight,7,win
+16,8,basketball,39,lose
+16,9,apple,9,win
+16,10,black_mug,19,win
+16,11,blue_book,9,win
+16,12,blue_flashlight,7,win
+16,13,cardboard_box,37,win
+16,14,pepper,8,win
+16,15,green_mug,40,win
+16,16,cardboard_box,41,lose
+16,17,scissors,19,win
+Round 16: Wins=14, Losses=3 Accuracy: 0.823529411765
+Average number of questions: 18.0588235294
+17,1,analog_clock,13,lose
+17,2,analog_clock,13,win
+17,3,red_soccer_ball,5,win
+17,4,basketball,18,win
+17,5,blue_soccer_ball,21,lose
+17,6,blue_book,14,lose
+17,7,blue_flashlight,18,lose
+17,8,blue_book,27,lose
+17,9,apple,27,win
+17,10,black_mug,19,win
+17,11,apple,11,lose
+17,12,blue_flashlight,7,win
+17,13,cardboard_box,16,win
+17,14,pepper,8,win
+17,15,green_mug,49,win
+17,16,polka_dot_box,18,win
+17,17,scissors,11,win
+Round 17: Wins=11, Losses=6 Accuracy: 0.647058823529
+Average number of questions: 17.3529411765
+18,1,digital_clock,9,win
+18,2,analog_clock,17,win
+18,3,red_soccer_ball,7,win
+18,4,football,9,lose
+18,5,football,27,win
+18,6,blue_book,15,lose
+18,7,blue_flashlight,25,lose
+18,8,red_soccer_ball,24,lose
+18,9,apple,9,win
+18,10,black_mug,9,win
+18,11,blue_book,8,win
+18,12,blue_flashlight,7,win
+18,13,cardboard_box,15,win
+18,14,pepper,8,win
+18,15,green_mug,36,win
+18,16,polka_dot_box,39,win
+18,17,scissors,11,win
+Round 18: Wins=13, Losses=4 Accuracy: 0.764705882353
+Average number of questions: 16.1764705882
+19,1,blue_flashlight,11,lose
+19,2,analog_clock,13,win
+19,3,red_soccer_ball,7,win
+19,4,basketball,13,win
+19,5,football,9,win
+19,6,blue_book,14,lose
+19,7,blue_flashlight,19,lose
+19,8,blue_book,24,lose
+19,9,apple,8,win
+19,10,black_mug,9,win
+19,11,yellow_book,16,lose
+19,12,pepper,66,lose
+19,13,cardboard_box,15,win
+19,14,pepper,8,win
+19,15,green_mug,27,win
+19,16,blue_book,62,lose
+19,17,scissors,11,win
+Round 19: Wins=10, Losses=7 Accuracy: 0.588235294118
+Average number of questions: 19.5294117647
+20,1,analog_clock,21,lose
+20,2,analog_clock,13,win
+20,3,red_soccer_ball,5,win
+20,4,basketball,10,win
+20,5,football,13,win
+20,6,blue_book,14,lose
+20,7,yellow_flashlight,10,win
+20,8,blue_soccer_ball,12,win
+20,9,apple,9,win
+20,10,black_mug,20,win
+20,11,blue_book,8,win
+20,12,blue_flashlight,7,win
+20,13,cardboard_box,36,win
+20,14,blue_flashlight,9,lose
+20,15,green_mug,23,win
+20,16,polka_dot_box,12,win
+20,17,scissors,18,win
+Round 20: Wins=14, Losses=3 Accuracy: 0.823529411765
+Average number of questions: 14.1176470588
+21,1,digital_clock,9,win
+21,2,analog_clock,8,win
+21,3,red_soccer_ball,9,win
+21,4,basketball,36,win
+21,5,basketball,20,lose
+21,6,pepper,66,lose
+21,7,yellow_flashlight,7,win
+21,8,black_mug,65,lose
+21,9,apple,34,win
+21,10,black_mug,9,win
+21,11,blue_book,14,win
+21,12,blue_flashlight,7,win
+21,13,cardboard_box,14,win
+21,14,analog_clock,19,lose
+21,15,blue_book,24,lose
+21,16,polka_dot_box,29,win
+21,17,scissors,19,win
+Round 21: Wins=12, Losses=5 Accuracy: 0.705882352941
+Average number of questions: 22.8823529412
+22,1,basketball,6,lose
+22,2,digital_clock,29,lose
+22,3,red_soccer_ball,7,win
+22,4,football,9,lose
+22,5,football,9,win
+22,6,black_mug,9,lose
+22,7,blue_flashlight,13,lose
+22,8,football,54,lose
+22,9,basketball,6,lose
+22,10,black_mug,9,win
+22,11,blue_book,35,win
+22,12,blue_flashlight,7,win
+22,13,polka_dot_box,11,lose
+22,14,pepper,8,win
+22,15,green_mug,51,win
+22,16,cardboard_box,29,lose
+22,17,scissors,19,win
+Round 22: Wins=8, Losses=9 Accuracy: 0.470588235294
+Average number of questions: 18.2941176471
+23,1,analog_clock,13,lose
+23,2,analog_clock,13,win
+23,3,red_soccer_ball,7,win
+23,4,basketball,60,win
+23,5,blue_soccer_ball,43,lose
+23,6,blue_book,12,lose
+23,7,yellow_flashlight,10,win
+23,8,blue_soccer_ball,17,win
+23,9,apple,34,win
+23,10,black_mug,82,win
+23,11,blue_book,11,win
+23,12,pepper,54,lose
+23,13,blue_book,13,lose
+23,14,pepper,8,win
+23,15,black_mug,22,lose
+23,16,polka_dot_box,18,win
+23,17,scissors,19,win
+Round 23: Wins=11, Losses=6 Accuracy: 0.647058823529
+Average number of questions: 25.6470588235
+24,1,analog_clock,13,lose
+24,2,analog_clock,14,win
+24,3,red_soccer_ball,29,win
+24,4,basketball,36,win
+24,5,football,9,win
+24,6,blue_book,14,lose
+24,7,yellow_flashlight,10,win
+24,8,blue_soccer_ball,12,win
+24,9,apple,34,win
+24,10,black_mug,9,win
+24,11,basketball,6,lose
+24,12,blue_flashlight,10,win
+24,13,cardboard_box,15,win
+24,14,pepper,8,win
+24,15,green_mug,10,win
+24,16,polka_dot_box,18,win
+24,17,scissors,18,win
+Round 24: Wins=14, Losses=3 Accuracy: 0.823529411765
+Average number of questions: 15.5882352941
+25,1,basketball,5,lose
+25,2,analog_clock,8,win
+25,3,red_soccer_ball,7,win
+25,4,basketball,32,win
+25,5,football,9,win
+25,6,blue_book,14,lose
+25,7,yellow_flashlight,21,win
+25,8,blue_soccer_ball,11,win
+25,9,apple,9,win
+25,10,black_mug,15,win
+25,11,blue_book,17,win
+25,12,blue_flashlight,21,win
+25,13,cardboard_box,13,win
+25,14,basketball,5,lose
+25,15,black_mug,71,lose
+25,16,cardboard_box,15,lose
+25,17,scissors,19,win
+Round 25: Wins=12, Losses=5 Accuracy: 0.705882352941
+Average number of questions: 17.1764705882
+26,1,digital_clock,9,win
+26,2,analog_clock,13,win
+26,3,basketball,5,lose
+26,4,basketball,23,win
+26,5,red_soccer_ball,45,lose
+26,6,blue_book,14,lose
+26,7,yellow_flashlight,10,win
+26,8,blue_soccer_ball,17,win
+26,9,pepper,48,lose
+26,10,black_mug,19,win
+26,11,blue_book,10,win
+26,12,blue_flashlight,7,win
+26,13,blue_soccer_ball,5,lose
+26,14,pepper,8,win
+26,15,green_mug,10,win
+26,16,polka_dot_box,16,win
+26,17,scissors,19,win
+Round 26: Wins=12, Losses=5 Accuracy: 0.705882352941
+Average number of questions: 16.3529411765
+27,1,digital_clock,9,win
+27,2,analog_clock,13,win
+27,3,basketball,92,lose
+27,4,basketball,5,win
+27,5,football,9,win
+27,6,yellow_book,16,win
+27,7,blue_flashlight,38,lose
+27,8,blue_soccer_ball,10,win
+27,9,apple,17,win
+27,10,black_mug,19,win
+27,11,blue_book,8,win
+27,12,blue_flashlight,7,win
+27,13,apple,19,lose
+27,14,blue_book,13,lose
+27,15,green_mug,9,win
+27,16,polka_dot_box,18,win
+27,17,scissors,40,win
+Round 27: Wins=13, Losses=4 Accuracy: 0.764705882353
+Average number of questions: 20.1176470588
+28,1,digital_clock,28,win
+28,2,digital_clock,9,lose
+28,3,red_soccer_ball,7,win
+28,4,apple,30,lose
+28,5,football,9,win
+28,6,blue_soccer_ball,9,lose
+28,7,scissors,11,lose
+28,8,blue_soccer_ball,13,win
+28,9,apple,38,win
+28,10,black_mug,20,win
+28,11,basketball,6,lose
+28,12,blue_flashlight,7,win
+28,13,cardboard_box,40,win
+28,14,pepper,56,win
+28,15,green_mug,9,win
+28,16,cardboard_box,15,lose
+28,17,scissors,32,win
+Round 28: Wins=11, Losses=6 Accuracy: 0.647058823529
+Average number of questions: 19.9411764706
+29,1,digital_clock,9,win
+29,2,analog_clock,13,win
+29,3,red_soccer_ball,7,win
+29,4,basketball,52,win
+29,5,football,18,win
+29,6,blue_book,14,lose
+29,7,blue_flashlight,29,lose
+29,8,blue_soccer_ball,33,win
+29,9,apple,9,win
+29,10,black_mug,20,win
+29,11,blue_book,8,win
+29,12,basketball,6,lose
+29,13,cardboard_box,15,win
+29,14,pepper,11,win
+29,15,green_mug,9,win
+29,16,cardboard_box,15,lose
+29,17,scissors,18,win
+Round 29: Wins=13, Losses=4 Accuracy: 0.764705882353
+Average number of questions: 16.8235294118
+30,1,digital_clock,9,win
+30,2,analog_clock,13,win
+30,3,basketball,68,lose
+30,4,basketball,30,win
+30,5,football,9,win
+30,6,blue_book,14,lose
+30,7,yellow_flashlight,16,win
+30,8,blue_soccer_ball,13,win
+30,9,apple,38,win
+30,10,black_mug,19,win
+30,11,blue_book,8,win
+30,12,blue_flashlight,7,win
+30,13,basketball,5,lose
+30,14,pepper,24,win
+30,15,green_mug,26,win
+30,16,cardboard_box,15,lose
+30,17,scissors,32,win
+Round 30: Wins=13, Losses=4 Accuracy: 0.764705882353
+Average number of questions: 20.3529411765
+16,1,digital_clock,9,win
+16,2,analog_clock,36,win
+16,3,red_soccer_ball,8,win
+16,4,football,9,lose
+16,5,football,9,win
+16,6,yellow_book,16,win
+16,7,yellow_flashlight,7,win
+16,8,blue_soccer_ball,10,win
+16,9,apple,9,win
+16,10,black_mug,19,win
+16,11,blue_book,9,win
+16,12,blue_flashlight,7,win
+16,13,cardboard_box,36,win
+16,14,pepper,42,win
+16,15,green_mug,9,win
+16,16,polka_dot_box,18,win
+16,17,scissors,18,win
+Round 16: Wins=16, Losses=1 Accuracy: 0.941176470588
+Average number of questions: 15.9411764706
+17,1,analog_clock,13,lose
+17,2,analog_clock,13,win
+17,3,red_soccer_ball,7,win
+17,4,basketball,18,win
+17,5,blue_soccer_ball,5,lose
+17,6,blue_book,14,lose
+17,7,blue_flashlight,19,lose
+17,8,apple,21,lose
+17,9,apple,35,win
+17,10,black_mug,20,win
+17,11,apple,11,lose
+17,12,blue_flashlight,7,win
+17,13,cardboard_box,15,win
+17,14,pepper,23,win
+17,15,green_mug,9,win
+17,16,polka_dot_box,18,win
+17,17,scissors,11,win
+Round 17: Wins=11, Losses=6 Accuracy: 0.647058823529
+Average number of questions: 15.2352941176
+18,1,digital_clock,9,win
+16,1,digital_clock,9,win
+16,1,digital_clock,9,win
+16,1,digital_clock,9,win
+16,2,analog_clock,35,win
+16,3,red_soccer_ball,7,win
+16,4,football,8,lose
+16,5,football,8,win
+16,6,yellow_book,7,win
+16,7,yellow_flashlight,7,win
+16,8,blue_soccer_ball,10,win
+16,9,apple,8,win
+16,10,black_mug,18,win
+16,11,blue_book,7,win
+16,1,digital_clock,9,win
+16,2,analog_clock,35,win
+16,3,red_soccer_ball,7,win
+16,4,football,8,lose
+16,5,football,8,win
+16,1,digital_clock,9,win
+16,2,analog_clock,35,win
+16,3,red_soccer_ball,7,win
+16,1,digital_clock,7,win
+16,1,digital_clock,7,win
+16,1,analog_clock,6,lose
+16,2,black_mug,14,lose
+16,1,analog_clock,6,lose
+16,1,analog_clock,6,lose
+16,1,analog_clock,6,lose
+16,1,analog_clock,6,lose
+16,2,black_mug,14,lose
+16,3,red_soccer_ball,4,win
+16,4,basketball,5,win
+16,5,football,4,win
+16,6,yellow_book,4,win
+16,7,yellow_flashlight,5,win
+16,1,analog_clock,6,lose
+16,2,black_mug,14,lose
+16,1,digital_clock,7,win
+16,2,analog_clock,28,win
+16,3,red_soccer_ball,8,win
+16,1,digital_clock,7,win
+16,2,yellow_flashlight,36,lose
+16,3,red_soccer_ball,8,win
+16,4,football,9,lose
+16,5,football,9,win
+16,6,yellow_book,17,win
+16,7,yellow_flashlight,7,win
+16,8,basketball,57,lose
+16,9,apple,9,win
+16,10,black_mug,16,win
+16,11,blue_book,9,win
+16,12,blue_flashlight,7,win
+16,13,cardboard_box,31,win
+16,14,pepper,39,win
+16,15,green_mug,9,win
+16,1,analog_clock,8,lose
+16,2,yellow_flashlight,62,lose
+16,3,red_soccer_ball,33,win
+16,4,basketball,17,win
+16,5,football,11,win
+16,6,yellow_book,6,win
+16,7,yellow_flashlight,8,win
+16,8,blue_soccer_ball,14,win
+16,9,apple,17,win
+16,10,black_mug,18,win
+16,11,blue_book,9,win
+16,12,blue_flashlight,17,win
+16,13,cardboard_box,31,win
+16,14,pepper,43,win
+16,15,pepper,16,lose
+16,16,cardboard_box,25,lose
+16,17,scissors,24,win
+Round 16: Wins=13, Losses=4 Accuracy: 0.764705882353
+Average number of questions: 21.1176470588
+17,1,digital_clock,22,win
+17,2,analog_clock,8,win
+17,3,red_soccer_ball,10,win
+17,4,basketball,16,win
+17,5,digital_clock,54,lose
+17,6,yellow_book,6,win
+17,7,blue_flashlight,20,lose
+17,8,blue_flashlight,17,lose
+17,9,apple,20,win
+17,10,black_mug,18,win
+17,11,yellow_flashlight,7,lose
+17,12,blue_flashlight,12,win
+17,13,cardboard_box,13,win
+17,14,pepper,27,win
+17,15,green_mug,88,win
+17,16,polka_dot_box,16,win
+17,17,scissors,13,win
+Round 17: Wins=13, Losses=4 Accuracy: 0.764705882353
+Average number of questions: 21.5882352941
+18,1,analog_clock,8,lose
+18,2,analog_clock,21,win
+18,3,red_soccer_ball,8,win
+18,4,basketball,18,win
+18,5,football,34,win
+18,6,yellow_book,6,win
+18,7,yellow_flashlight,46,win
+18,8,blue_soccer_ball,6,win
+18,9,apple,12,win
+18,10,black_mug,13,win
+18,11,blue_book,9,win
+18,12,blue_flashlight,18,win
+18,13,cardboard_box,19,win
+18,14,pepper,29,win
+18,15,green_mug,55,win
+18,16,cardboard_box,19,lose
+18,17,scissors,20,win
+Round 18: Wins=15, Losses=2 Accuracy: 0.882352941176
+Average number of questions: 20.0588235294
+19,1,blue_flashlight,10,lose
+19,2,analog_clock,8,win
+19,3,red_soccer_ball,19,win
+19,4,basketball,12,win
+19,5,football,11,win
+19,6,yellow_book,6,win
+19,7,blue_flashlight,36,lose
+19,8,blue_book,29,lose
+19,9,apple,11,win
+19,10,black_mug,12,win
+19,11,analog_clock,19,lose
+19,12,pepper,90,lose
+19,13,cardboard_box,15,win
+19,14,pepper,31,win
+19,15,green_mug,37,win
+19,16,polka_dot_box,32,win
+19,17,scissors,29,win
+Round 19: Wins=12, Losses=5 Accuracy: 0.705882352941
+Average number of questions: 23.9411764706
+20,1,analog_clock,15,lose
+20,2,analog_clock,8,win
+20,3,red_soccer_ball,9,win
+20,4,basketball,13,win
+20,5,football,20,win
+20,6,blue_book,9,lose
+20,7,blue_flashlight,30,lose
+20,8,blue_soccer_ball,7,win
+20,9,apple,15,win
+20,10,black_mug,25,win
+20,11,blue_book,9,win
+20,12,blue_flashlight,30,win
+20,13,cardboard_box,23,win
+20,14,digital_clock,15,lose
+20,15,green_mug,41,win
+20,16,polka_dot_box,25,win
+20,17,scissors,10,win
+Round 20: Wins=13, Losses=4 Accuracy: 0.764705882353
+Average number of questions: 17.8823529412
+21,1,digital_clock,5,win
+21,2,digital_clock,31,lose
+21,3,red_soccer_ball,63,win
+21,4,basketball,21,win
+21,5,basketball,22,lose
+21,6,apple,129,lose
+21,7,yellow_flashlight,32,win
+21,8,blue_flashlight,26,lose
+21,9,apple,12,win
+21,10,black_mug,15,win
+21,11,blue_book,28,win
+21,12,blue_flashlight,20,win
+21,13,cardboard_box,14,win
+21,14,analog_clock,20,lose
+21,15,blue_book,25,lose
+21,16,polka_dot_box,54,win
+21,17,scissors,11,win
+Round 21: Wins=11, Losses=6 Accuracy: 0.647058823529
+Average number of questions: 31.0588235294
+22,1,red_soccer_ball,8,lose
+22,2,digital_clock,16,lose
+22,3,red_soccer_ball,11,win
+22,4,football,10,lose
+22,5,football,10,win
+22,6,black_mug,18,lose
+22,7,blue_flashlight,9,lose
+22,8,football,37,lose
+22,9,digital_clock,14,lose
+22,10,black_mug,27,win
+22,11,blue_book,49,win
+22,12,blue_flashlight,10,win
+22,13,polka_dot_box,21,lose
+22,14,pepper,22,win
+22,15,green_mug,63,win
+22,16,polka_dot_box,31,win
+22,17,scissors,12,win
+Round 22: Wins=9, Losses=8 Accuracy: 0.529411764706
+Average number of questions: 21.6470588235
+23,1,analog_clock,12,lose
+23,2,analog_clock,22,win
+23,3,red_soccer_ball,11,win
+23,4,basketball,86,win
+23,5,blue_soccer_ball,80,lose
+23,6,yellow_book,13,win
+23,7,blue_flashlight,17,lose
+23,8,blue_soccer_ball,37,win
+23,9,apple,25,win
+23,10,black_mug,55,win
+23,11,blue_book,23,win
+23,12,pepper,97,lose
+23,13,blue_book,30,lose
+23,14,pepper,13,win
+23,15,black_mug,52,lose
+23,16,polka_dot_box,50,win
+23,17,scissors,12,win
+Round 23: Wins=11, Losses=6 Accuracy: 0.647058823529
+Average number of questions: 37.3529411765
+24,1,analog_clock,23,lose
+24,2,analog_clock,26,win
+24,3,red_soccer_ball,98,win
+24,4,basketball,36,win
+24,5,football,37,win
+24,6,yellow_book,14,win
+24,7,yellow_flashlight,18,win
+24,8,blue_soccer_ball,33,win
+24,9,apple,25,win
+24,10,black_mug,24,win
+24,11,digital_clock,9,lose
+24,12,blue_flashlight,17,win
+24,13,cardboard_box,40,win
+24,14,pepper,13,win
+24,15,green_mug,10,win
+24,16,polka_dot_box,21,win
+24,17,scissors,11,win
+Round 24: Wins=15, Losses=2 Accuracy: 0.882352941176
+Average number of questions: 26.7647058824
+25,1,basketball,8,lose
+25,2,analog_clock,22,win
+25,3,red_soccer_ball,47,win
+25,4,basketball,19,win
+25,5,football,11,win
+25,6,yellow_book,7,win
+25,7,blue_flashlight,17,lose
+25,8,blue_soccer_ball,58,win
+25,9,green_mug,18,lose
+25,10,black_mug,20,win
+25,11,blue_book,18,win
+25,12,blue_flashlight,29,win
+25,13,cardboard_box,23,win
+25,14,football,17,lose
+25,15,black_mug,28,lose
+25,16,cardboard_box,23,lose
+25,17,scissors,11,win
+Round 25: Wins=11, Losses=6 Accuracy: 0.647058823529
+Average number of questions: 22.1176470588
