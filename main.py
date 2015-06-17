@@ -2,10 +2,11 @@ import os
 import time
 import logging as log
 
-import database as db
 from game import Game
 import models
 import questions
+import config
+import database as db
 
 class Main:
 	"""
@@ -16,9 +17,10 @@ class Main:
 		self._init_logger()
 		
 		db.init_driver()
-		db.connect('localhost', 'root', 'root', 'iSpy_features', unix_socket='/Applications/MAMP/tmp/mysql/mysql.sock')
+		db.connect(config.db['address'], config.db['username'], config.db['password'], config.db['database'], unix_socket=config.db['socket'])
 
-		self.setup()
+		if config.setup:
+			self.setup()
 
 		start = time.time()
 
@@ -26,7 +28,7 @@ class Main:
 
 		end = time.time()
 
-		log.info("Simulation complete! (Took %ds)", int(end - start))
+		log.info('Simulation complete! (Took %ds)', int(end - start))
 
 
 	def simulate(self):
@@ -70,7 +72,7 @@ class Main:
 		"""
 
 		log.info('Performing setup')
-		db.cursor.execute("DELETE FROM Pqd")
+		db.cursor.execute('DELETE FROM Pqd')
 		db.connection.commit()
 		questions.copy_into_answers()
 		questions.build_pqd()
