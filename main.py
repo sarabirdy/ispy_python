@@ -23,9 +23,7 @@ class Main:
 			self.setup()
 
 		start = time.time()
-
 		self.simulate()
-
 		end = time.time()
 
 		log.info('Simulation complete! (Took %ds)', int(end - start))

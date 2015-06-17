@@ -35,7 +35,6 @@ def init_driver():
 		return MySQLdb
 	except ImportError:
 		log.info('MySQLdb not found')
-
 		try:
 			import pymysql
 			log.info('Using pymysql')
