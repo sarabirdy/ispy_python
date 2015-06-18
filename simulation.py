@@ -1944,8 +1944,8 @@ def main():
     #build_model(cursor, con, 15, 16, 1, {}, {})
 
 
-    for game in range(16,31):
-	model_evaluation_1(con, game)   
+#    for game in range(16,31):
+#	model_evaluation_1(con, game)   
 #
     play_game(cursor, con)
 
