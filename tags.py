@@ -3,6 +3,9 @@ import database as db
 _tags = []
 
 def get(question_id):
+	"""
+	Get a specific tag
+	"""
 	return get_all()[question_id-1]
 
 

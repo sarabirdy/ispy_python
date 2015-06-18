@@ -13,6 +13,10 @@ _objects = []
 class Object:
 
 	def play(self, game, Pi):
+		"""
+		Play this object
+		"""
+
 		log.info('Playing object %d in game %d', self.id, game.id)
 		# Generate dictionary of initial probabilities in the form of
 		# {object_id: {question_id: [0/1, 0/1]}}, e.g.:
@@ -73,6 +77,13 @@ class Object:
 
 
 	def gen_init_prob(self):
+		"""
+		Fetches the proportions of yes answers
+		Returns a list containing 17 sub-lists, each list corresponding to an object
+		Each sub-list contains 289 tuples, one per question
+		Each tuple is in the form of (yes_answers, total_answers)
+		"""
+
 		log.info('Generating initial probabilities')
 		objects = [[]] * 17
 
@@ -84,7 +95,10 @@ class Object:
 
 
 	def _record_results(self, game, game_answers, game_questions, guess, result):
-		# Puts results into the DB as well as writing them to file for examination
+		"""
+		Puts results into the DB as well as writing them to file for examination
+		"""
+
 		log.info('Recording object results')
 		for i in range(0, len(game_questions)):
 			T = questions.get_t(self.id, game_questions[i])
@@ -120,7 +134,10 @@ class Object:
 
 
 	def _guess_object(self, guess):
-	    # Simply compare the object that the system thinks is most likely to the object currently in play
+		"""
+		Compare the object that the system thinks is most likely to the object currently in play
+		"""
+
 	    if self.id == guess.id:
 	        log.info('Win [Guess: %s | Actual: %s]', guess.name, self.name)
 	        return 1
@@ -135,6 +152,10 @@ class Object:
 
 
 def get(object_id):
+	"""
+	Get a specific object based on id
+	"""
+	
 	global _objects
 	return get_all()[object_id-1]
 

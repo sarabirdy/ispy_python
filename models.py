@@ -5,9 +5,12 @@ import questions
 import database as db
 
 def build(_game, method, game_questions={}, game_answers={}, skip={}):
-    log.info("Retraining model")
+    """
+    Build the model for all keywords using 1 of 3 different methods
+    Currently only 1 and 3 work
+    """
 
-    # Builds models for all keywords using different methods (Currently only 1 and 3 work)
+    log.info("Retraining model")
 
     #get all the different tags available
     db.cursor.execute("SELECT DISTINCT(tag) FROM TagInfoBk")

@@ -9,11 +9,12 @@ import config
 import database as db
 
 class Main:
-	"""
-	Entry point of the simulation
-	"""
 
 	def __init__(self):
+		"""
+		Entry point of the simulation
+		"""
+		
 		self._init_logger()
 		
 		db.init_driver()
@@ -57,7 +58,6 @@ class Main:
 			wins += game_wins
 			losses += game_losses
 			num_questions += game_num_questions
-			# TODO: Are these averages correct?
 			avg_win += game_win_avg
 			avg_lose += game_lose_avg
 
@@ -80,6 +80,10 @@ class Main:
 
 
 	def _init_logger(self):
+		"""
+		Setup logger
+		"""
+
 		log.basicConfig(level='DEBUG', format='[ %(levelname)-5.5s]  %(message)s')
 		rootLogger = log.getLogger()
 

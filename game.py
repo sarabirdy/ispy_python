@@ -57,6 +57,10 @@ class Game:
 		return round_wins, round_losses, NoOfQuestions, avg_win, avg_lose, question_answers, questions_asked
 
 	def _record(self, wins, losses, num_questions):
+		"""
+		Record game data
+		"""
+		
 		with open("game.txt", "a") as myfile:
 			myfile.write("Round " + str(self.id) + ": ")
 			myfile.write("Wins=" + str(wins) + ', Losses='+str(losses))

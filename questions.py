@@ -12,6 +12,9 @@ _descriptions = []
 
 
 def ask(question_id, object, game, answer_data, answers, pO, Pi, p_tags, objects):
+	"""
+	Ask a question
+	"""
 	# Takes best question and updates all object probabilies based on the answer
 
 	probabilityD = get_tval()
@@ -56,8 +59,11 @@ def ask(question_id, object, game, answer_data, answers, pO, Pi, p_tags, objects
 
 
 def get_p_tags():
-	# The P tag is the number of times a question has been answered true for a specific object
-	# IE black and scissors has its own P tag
+	"""
+	The P tag is the number of times a question has been answered true for a specific object
+	IE black and scissors has its own P tag
+	"""
+
 	p_tags = []
 
 	db.cursor.execute('SELECT qid, answer, COUNT(*) FROM answers GROUP BY qid, answer')
@@ -70,7 +76,10 @@ def get_p_tags():
 
 
 def get_best(game, objects, asked_questions, pO, Pi, p_tags, start):
-	# Finds the question that best splits our current subset of objects
+	"""
+	Finds the question that best splits our current subset of objects
+	"""
+
 	tvals = get_tval()
 
 	# Get top and bottom halves of current subset
@@ -148,8 +157,11 @@ def get_best(game, objects, asked_questions, pO, Pi, p_tags, start):
 
 
 def copy_into_answers():
-	# QuestionAnswers holds just the answer set data
-	# Copies the pure data into a table that will be appended to throughout gameplay
+	"""
+	QuestionAnswers holds just the answer set data
+	Copies the pure data into a table that will be appended to throughout gameplay
+	"""
+
 	log.info('Copying into answers')
 	db.cursor.execute('SELECT tag, answer, object from QuestionAnswers')
 	results = db.cursor.fetchall()
@@ -163,8 +175,11 @@ def copy_into_answers():
 
 
 def build_pqd():
-	# Pqd is the probability that an the answer will be yes to a keyword asked about an object where the keyword shows up X number of times in the descriptions
-	# Summed over all objects where a keyword shows up X number of times
+	"""
+	Pqd is the probability that an the answer will be yes to a keyword asked about an object where the keyword shows up X number of times in the descriptions
+	Summed over all objects where a keyword shows up X number of times
+	"""
+
 	log.info('Building Pqd')
 	probabilityD = [0,0,0,0,0,0,0]
 	denominator = [0,0,0,0,0,0,0]
@@ -201,8 +216,11 @@ def build_pqd():
 
 
 def get_subset_split(pO):
-    # When probabilities ordered least to greatest, returns index of largest difference between probabilities
-    # System asks questions to try to split subset in half each time, so the split should move closer to the max probability each time
+	"""
+    When probabilities ordered least to greatest, returns index of largest difference between probabilities
+    System asks questions to try to split subset in half each time, so the split should move closer to the max probability each time
+    """
+
     bestDifference = 0
 
     pO_sorted = np.sort(pO)
@@ -223,6 +241,10 @@ def get_subset_split(pO):
 
 
 def get_tval():
+	"""
+	Returns a list of 14 proportions of yes answers. 1 entry per t_value
+	"""
+	
 	db.cursor.execute('SELECT yes_answers/total_answers FROM Pqd')
 
 	result = db.cursor.fetchall()
@@ -231,11 +253,14 @@ def get_tval():
 	for r in result:
 		tvals.append(float(r[0]))
 
-	# Basically a list of 14 proportions of yes answers. 1 entry per t_value
 	return tvals
 
 
 def get_t(object_id, question_id):
+	"""
+	Returns the number of descriptions that an object has that contains a specific tag
+	"""
+
 	global _descriptions
 
 	if not _descriptions:
