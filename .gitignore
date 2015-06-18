@@ -1,3 +1,10 @@
 *.pyc
 *~
 GMM_model_*
+SVM_model_*
+log.txt
+answers.txt
+example.txt
+.DS_STORE
+game.txt
+config.py
