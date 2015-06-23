@@ -142,8 +142,13 @@ class Object:
 			log.info('Win [Guess: %s | Actual: %s]', guess.name, self.name)
 			return 1
 		else:
+<<<<<<< HEAD
 		    log.info('Lose [Guess: %s | Actual: %s]', guess.name, self.name)
 		    return 0
+=======
+			log.info('Lose [Guess: %s | Actual: %s]', guess.name, self.name)
+			return 0
+>>>>>>> 58104511b675b9cd61f5684f8f74a0308d18f8ba
 
 
 	def __init__(self, id, name):

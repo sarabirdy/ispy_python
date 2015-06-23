@@ -223,6 +223,7 @@ def get_subset_split(pO):
 	When probabilities ordered least to greatest, returns index of largest difference between probabilities
 	System asks questions to try to split subset in half each time, so the split should move closer to the max probability each time
 	"""
+<<<<<<< HEAD
     
 	bestDifference = 0
     
@@ -240,6 +241,25 @@ def get_subset_split(pO):
 		diff = pO_sorted[x+1] - pO_sorted[x]
 		bestDiff = x
     
+=======
+
+	bestDifference = 0
+
+	pO_sorted = np.sort(pO)
+	pO_args_sorted = np.argsort(pO)
+
+	# for x in range(0,17):
+		#print str(pO_args_sorted[x]) + " -> " + str(pO_sorted[x])
+
+	diff = 0
+	bestDiff = 0
+
+	for x in range(0, pO_sorted.size-1):
+		if pO_sorted[x+1] - pO_sorted[x] > diff:
+			diff = pO_sorted[x+1] - pO_sorted[x]
+			bestDiff = x
+
+>>>>>>> 58104511b675b9cd61f5684f8f74a0308d18f8ba
 	return bestDiff
 
 
@@ -264,23 +284,11 @@ def get_t(object_id, question_id):
 	Returns the number of descriptions that an object has that contains a specific tag
 	"""
 
-	global _descriptions
-
-	if not _descriptions:
-		_descriptions = [{} for _ in range(17)]
-		all_tags = tags.get_all()
-		db.cursor.execute('SELECT description, objectID, descNum FROM Descriptions')
-		for row in db.cursor.fetchall():
-			for tag in all_tags:
-				if tag in row[0]:
-					if not tag in _descriptions[row[1]-1]:
-						_descriptions[row[1]-1][tag] = 1
-					else:
-						_descriptions[row[1]-1][tag] += 1
-
 	tag = tags.get(question_id)
-	object_id = int(object_id)
-	o = _descriptions[object_id-1]
-	if not tag in o:
-		return 0
-	return o[tag]
+
+	db.cursor.execute('SELECT COUNT(*) \
+					FROM Descriptions \
+					WHERE description LIKE %s \
+					AND objectID = %s', ('%{0}%'.format(tag), str(object_id)))
+
+	return db.cursor.fetchone()[0]
