@@ -222,9 +222,7 @@ def get_subset_split(pO):
 	"""
 	When probabilities ordered least to greatest, returns index of largest difference between probabilities
 	System asks questions to try to split subset in half each time, so the split should move closer to the max probability each time
-	"""
-<<<<<<< HEAD
-    
+	"""    
 	bestDifference = 0
     
 	pO_sorted = np.sort(pO)
@@ -241,25 +239,6 @@ def get_subset_split(pO):
 		diff = pO_sorted[x+1] - pO_sorted[x]
 		bestDiff = x
     
-=======
-
-	bestDifference = 0
-
-	pO_sorted = np.sort(pO)
-	pO_args_sorted = np.argsort(pO)
-
-	# for x in range(0,17):
-		#print str(pO_args_sorted[x]) + " -> " + str(pO_sorted[x])
-
-	diff = 0
-	bestDiff = 0
-
-	for x in range(0, pO_sorted.size-1):
-		if pO_sorted[x+1] - pO_sorted[x] > diff:
-			diff = pO_sorted[x+1] - pO_sorted[x]
-			bestDiff = x
-
->>>>>>> 58104511b675b9cd61f5684f8f74a0308d18f8ba
 	return bestDiff
 
 
