@@ -138,12 +138,12 @@ class Object:
 		Compare the object that the system thinks is most likely to the object currently in play
 		"""
 
-	    if self.id == guess.id:
-	        log.info('Win [Guess: %s | Actual: %s]', guess.name, self.name)
-	        return 1
-	    else:
-	        log.info('Lose [Guess: %s | Actual: %s]', guess.name, self.name)
-	        return 0
+		if self.id == guess.id:
+			log.info('Win [Guess: %s | Actual: %s]', guess.name, self.name)
+			return 1
+		else:
+		    log.info('Lose [Guess: %s | Actual: %s]', guess.name, self.name)
+		    return 0
 
 
 	def __init__(self, id, name):

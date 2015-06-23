@@ -125,6 +125,9 @@ def get_best(game, objects, asked_questions, pO, Pi, p_tags, start):
 					probabilities_yes[i-1] = pO[i-1] * (tvals[T] + (num_yes + 1.0)/(length + 2.0)) / 2
 					probabilities_no[i-1] = pO[i-1] * ((1 - tvals[T]) + (length - num_yes + 1.0)/(length + 2.0)) / 2
 				else:
+					print pO[i-1]
+					print tvals[T]
+					print Pi[i-1][j-1]
 					probabilities_yes[i-1] = pO[i-1] * (tvals[T] + (num_yes + 1.0)/(length + 2.0) + Pi[i-1][j-1]) / 3
 					probabilities_no[i-1] = pO[i-1] * ((1 - tvals[T]) + (length - num_yes + 1.0)/(length + 2.0) + 1 - Pi[i-1][j-1]) / 3
 
@@ -217,27 +220,27 @@ def build_pqd():
 
 def get_subset_split(pO):
 	"""
-    When probabilities ordered least to greatest, returns index of largest difference between probabilities
-    System asks questions to try to split subset in half each time, so the split should move closer to the max probability each time
-    """
-
-    bestDifference = 0
-
-    pO_sorted = np.sort(pO)
-    pO_args_sorted = np.argsort(pO)
-
-   # for x in range(0,17):
-        #print str(pO_args_sorted[x]) + " -> " + str(pO_sorted[x])
-
-    diff = 0
-    bestDiff = 0
-
-    for x in range(0, pO_sorted.size-1):
-        if pO_sorted[x+1] - pO_sorted[x] > diff:
-            diff = pO_sorted[x+1] - pO_sorted[x]
-            bestDiff = x
-
-    return bestDiff
+	When probabilities ordered least to greatest, returns index of largest difference between probabilities
+	System asks questions to try to split subset in half each time, so the split should move closer to the max probability each time
+	"""
+    
+	bestDifference = 0
+    
+	pO_sorted = np.sort(pO)
+	pO_args_sorted = np.argsort(pO)
+    
+       # for x in range(0,17):
+	    #print str(pO_args_sorted[x]) + " -> " + str(pO_sorted[x])
+    
+	diff = 0
+	bestDiff = 0
+    
+	for x in range(0, pO_sorted.size-1):
+	    if pO_sorted[x+1] - pO_sorted[x] > diff:
+		diff = pO_sorted[x+1] - pO_sorted[x]
+		bestDiff = x
+    
+	return bestDiff
 
 
 def get_tval():

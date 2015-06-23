@@ -3,6 +3,7 @@ import logging as log
 
 import questions
 import database as db
+from sklearn.externals import joblib
 
 def build(_game, method, game_questions={}, game_answers={}, skip={}):
     """

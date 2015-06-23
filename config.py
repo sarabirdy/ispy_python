@@ -3,7 +3,7 @@ db = {
 	'username': 'iSpy_team',
 	'password': 'password',
 	'database': 'iSpy_features',
-	'socket': '/tmp/mysql.sock'
+	'socket': '/var/run/mysqld/mysqld.sock'
 }
 
 setup = False
