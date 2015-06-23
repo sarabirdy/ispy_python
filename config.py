@@ -1,9 +1,9 @@
 db = {
 	'address': 'localhost',
-	'username': 'iSpy_team',
-	'password': 'password',
+	'username': 'root',
+	'password': 'root',
 	'database': 'iSpy_features',
-	'socket': '/tmp/mysql.sock'
+	'socket': '/Applications/MAMP/tmp/mysql/mysql.sock'
 }
 
 setup = False
