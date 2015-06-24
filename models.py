@@ -1,9 +1,10 @@
 import os
 import logging as log
-
+import numpy as np 
 import questions
 import database as db
 from sklearn.externals import joblib
+import gmm_training as model
 
 def build(_game, method, game_questions={}, game_answers={}, skip={}):
     """
@@ -22,118 +23,8 @@ def build(_game, method, game_questions={}, game_answers={}, skip={}):
         tags.append(result[0])
 
     count = 0
-    # Builds models by using images where the answer set has a yes for the paring as a positive example
-    if method == 1:
-        #for each tag we select all the observation_ids that are related to it
-        for tag in tags:
-            feature_matrix=[]#initialize feature matrix for each different tag
-            feature_matrix_labels = [] # Labels to indicate if the example is positive or negative
-            #cursor.execute("SELECT DISTINCT(observation_id) FROM TagInfoBk WHERE tag=%s",(tag))
-            db.cursor.execute("SELECT DISTINCT(observation_id) FROM TagInfoBk")
-            tag_obs_ids=db.cursor.fetchall()
-            db.cursor.execute('SELECT id FROM Tags WHERE tag = %s', (tag,))
-            qid = db.cursor.fetchone()[0]
-
-            should_train = False
-            #for every observation/object of this spesific tag
-            for obs_id in tag_obs_ids:
-
-                object_matrix = []
-                T = questions.get_t(obs_id[0], qid)
-                if _game.id == 0:
-                    if T >= 3:
-                        should_train = True
-                        count = count + 1
-                        db.cursor.execute("SELECT COUNT(*) FROM FeatureInfo WHERE feature_id='0' AND observation_id='{0}' AND game_id='{1}' ".format(obs_id[0], _game.id))
-                        num_of_images_per_oservation=db.cursor.fetchall()
-
-                        db.cursor.execute("SELECT feature_id,feature_value FROM FeatureInfo WHERE observation_id='{0}' AND game_id='{1}'".format(obs_id[0],_game.id))
-                        feature_info=db.cursor.fetchall()
-
-                        vv_seperator=len(feature_info)/num_of_images_per_oservation[0][0]
-
-                        new_fv=0 #flag to show when a feature vector given a capture starts (index in feature_info tuple)
-                        end_of_fv=vv_seperator#flag to show when a feature vector given a capture ends (index in feature_info tuple)
-
-                        for capture_id in xrange(0,num_of_images_per_oservation[0][0]):
-                            feature_vector=RetrieveFeatureVector(feature_info,new_fv,end_of_fv) #create a feature vector given a capture
-                            #print len(feature_vector)
-                            new_fv=new_fv+vv_seperator #update starting index of the vector
-                            end_of_fv=end_of_fv+vv_seperator #update ending index of the vector
-                            feature_matrix.append(feature_vector) #insert feature vectors into a matrix for each tag
-
-                        feature_matrix_labels.append(1)
-                else:
-                #elif _game.id < 16:
-                    model_folder = os.getcwd() + '/GMM_model_777'
-                    listing = os.listdir(model_folder)
-                    has_model = []
-                    for mod in listing:
-                        if mod.endswith('.pkl'):
-                            model_clone = joblib.load(model_folder + '/' + mod)
-                            T = mod.split('_', 1)[0]
-                            T = T.lower()
-                            has_model.append(T)
-                    for game in range(0, _game.id+1):
-                        if tag.lower() in has_model:
-                            if game == 0:
-                                should_train = True
-                                count = count + 1
-                                db.cursor.execute("SELECT COUNT(*) FROM FeatureInfo WHERE feature_id='0' AND observation_id='{0}' AND game_id='{1}' ".format(obs_id[0], game))
-                                num_of_images_per_oservation=db.cursor.fetchall()
-
-                                db.cursor.execute("SELECT feature_id,feature_value FROM FeatureInfo WHERE observation_id='{0}' AND game_id='{1}'".format(obs_id[0],game))
-                                feature_info=db.cursor.fetchall()
-
-                                vv_seperator=len(feature_info)/num_of_images_per_oservation[0][0]
-
-                                new_fv=0 #flag to show when a feature vector given a capture starts (index in feature_info tuple)
-                                end_of_fv=vv_seperator#flag to show when a feature vector given a capture ends (index in feature_info tuple)
-
-                                for capture_id in xrange(0,num_of_images_per_oservation[0][0]):
-                                    feature_vector=RetrieveFeatureVector(feature_info,new_fv,end_of_fv) #create a feature vector given a capture
-                                    #print len(feature_vector)
-                                    new_fv=new_fv+vv_seperator #update starting index of the vector
-                                    end_of_fv=end_of_fv+vv_seperator #update ending index of the vector
-                                    feature_matrix.append(feature_vector) #insert feature vectors into a matrix for each tag
-
-                                feature_matrix_labels.append(1)
-                            else:
-                                answer_data = np.genfromtxt(os.getcwd()+'/Answers/Game'+str(game)+'.csv',dtype=str, delimiter='\t')
-                                #cursor.execute("SELECT id FROM Tags where tag ='{0}'".format(tag))
-                                #tag_id = cursor.fetchone()[0]
-                                if answer_data[int(obs_id[0])-1][qid-1] == 'yes' or answer_data[int(obs_id[0])-1][qid-1] is 'yes':
-                                    should_train = True
-                                    count = count + 1
-                                    db.cursor.execute("SELECT COUNT(*) FROM FeatureInfo WHERE feature_id='0' AND observation_id='{0}' AND game_id='{1}' ".format(obs_id[0], game))
-                                    num_of_images_per_oservation=db.cursor.fetchall()
-
-                                    db.cursor.execute("SELECT feature_id,feature_value FROM FeatureInfo WHERE observation_id='{0}' AND game_id='{1}'".format(obs_id[0],game))
-                                    feature_info=db.cursor.fetchall()
-
-                                    vv_seperator=len(feature_info)/num_of_images_per_oservation[0][0]
-
-                                    new_fv=0 #flag to show when a feature vector given a capture starts (index in feature_info tuple)
-                                    end_of_fv=vv_seperator#flag to show when a feature vector given a capture ends (index in feature_info tuple)
-
-                                    for capture_id in xrange(0,num_of_images_per_oservation[0][0]):
-                                        feature_vector=RetrieveFeatureVector(feature_info,new_fv,end_of_fv) #create a feature vector given a capture
-                                        #print len(feature_vector)
-                                        new_fv=new_fv+vv_seperator #update starting index of the vector
-                                        end_of_fv=end_of_fv+vv_seperator #update ending index of the vector
-                                        feature_matrix.append(feature_vector) #insert feature vectors into a matrix for each tag
-
-                                    feature_matrix_labels.append(1)
-
-            if should_train:
-                #print len(feature_matrix)
-                feature_matrix=np.asarray(feature_matrix)
-                model.ModelTraining(tag, feature_matrix, 777) #training the model
-    elif method == 2:
-        pass
-    # Up to game 15, uses images that received a yes as positive and no as negative (All questions)
-    # Beyond that, only uses keywords from the game (Much smaller subset)
-    elif method == 3:
+    # Builds models by using images where the answer set has a yes for the paring as a positive example        
+    if method == 3:
         #for each tag we select all the observation_ids that are related to it
         for tag in tags:
             if tag not in skip:
@@ -416,7 +307,7 @@ def build(_game, method, game_questions={}, game_answers={}, skip={}):
                                         index = game_questions[game][int(obs_id[0])].index(tag_id)
                                         #cursor.execute("SELECT id FROM Tags where tag ='{0}'".format(tag))
                                         #tag_id = cursor.fetchone()[0]
-                                        if game_answers[game][int(obs_id[0])][index] == 1:
+                                        if game_answers[int(obs_id[0])][index] == True:
                                             should_train = True
                                             count = count + 1
                                             db.cursor.execute("SELECT COUNT(*) FROM FeatureInfo WHERE feature_id='0' AND observation_id='{0}' AND game_id='{1}' ".format(obs_id[0], game))
@@ -438,7 +329,7 @@ def build(_game, method, game_questions={}, game_answers={}, skip={}):
                                                 feature_matrix.append(feature_vector) #insert feature vectors into a matrix for each tag
 
                                                 feature_matrix_labels.append(1)
-                                        elif game_answers[game][int(obs_id[0])][index] == 0:
+                                        elif game_answers[int(obs_id[0])][index] == False:
                                             should_train = True
                                             count = count + 1
                                             db.cursor.execute("SELECT COUNT(*) FROM FeatureInfo WHERE feature_id='0' AND observation_id='{0}' AND game_id='{1}' ".format(obs_id[0], game))

@@ -11,7 +11,7 @@ _questions = []
 _descriptions = []
 
 
-def ask(question_id, object, game, answer_data, answers, pO, Pi, p_tags, objects):
+def ask(question_id, object_we_play, game, answer_data, answers, pO, Pi, p_tags, objects):
 	"""
 	Ask a question
 	"""
@@ -21,7 +21,7 @@ def ask(question_id, object, game, answer_data, answers, pO, Pi, p_tags, objects
 	question_tag = tags.get(question_id)
 	#answer = raw_input("Does it have " + tags[question_id-1] + "? (yes/no) ")
 	#answer = answer.lower()
-	answer = answer_data[object.id-1][question_id-1]
+	answer = answer_data[object_we_play.id-1][question_id-1]
 	#print game_folder, object.id,objectlist[object.id-1][0],'qt->'+question_tag+' ' ,'ans->'+answer
 
 
@@ -126,6 +126,8 @@ def get_best(game, objects, asked_questions, pO, Pi, p_tags, start):
 					probabilities_no[i-1] = pO[i-1] * ((1 - tvals[T]) + (length - num_yes + 1.0)/(length + 2.0)) / 2
 				else:
 					print pO[i-1]
+					print T
+					print tvals
 					print tvals[T]
 					print Pi[i-1][j-1]
 					probabilities_yes[i-1] = pO[i-1] * (tvals[T] + (num_yes + 1.0)/(length + 2.0) + Pi[i-1][j-1]) / 3
