@@ -1,6 +1,7 @@
 import math
 import time
 import logging as log
+import sys
 
 import numpy as np
 
@@ -11,25 +12,27 @@ _questions = []
 _descriptions = []
 
 
-def ask(question_id, object, game, answer_data, answers, pO, Pi, p_tags, objects):
+def ask(question_id, object_we_play, game, answer_data, answers, pO, Pi, p_tags, objects):
 	"""
 	Ask a question
 	"""
 	# Takes best question and updates all object probabilies based on the answer
 
 	probabilityD = get_tval()
+	print probabilityD
 	question_tag = tags.get(question_id)
+	print question_tag
 	#answer = raw_input("Does it have " + tags[question_id-1] + "? (yes/no) ")
 	#answer = answer.lower()
-	answer = answer_data[object.id-1][question_id-1]
+	answer = answer_data[object_we_play.id-1][question_id-1]
 	#print game_folder, object.id,objectlist[object.id-1][0],'qt->'+question_tag+' ' ,'ans->'+answer
 
 
 	for objectID in range(0, 17):
 		T = get_t(objectID+1, question_id)
-		N = objects[objectID][question_id][0]
-		D = objects[objectID][question_id][1]
-
+		N = objects[objectID][question_id-1][0]
+		D = objects[objectID][question_id-1][1]
+		print objectID, T, N, D
 		if answer == 'yes':
 			answers.append(True)
 			K = probabilityD[T] + (N + 1)/(D + 2.0)
@@ -45,6 +48,7 @@ def ask(question_id, object, game, answer_data, answers, pO, Pi, p_tags, objects
 			else:
 				multiplier = (K + 1 - Pi[objectID][question_id-1]) / 3
 
+		print multiplier
 		pO[objectID] = pO[objectID] * multiplier
 	
 	# Normalize the probabilities so that all object probabilities will sum to 1
@@ -118,16 +122,13 @@ def get_best(game, objects, asked_questions, pO, Pi, p_tags, start):
 			for i in objects_considered:
 
 				T = get_t(i, j)
-				num_yes = objects[i-1][j][0]
-				length = objects[i-1][j][1]
+				num_yes = objects[i-1][j-1][0]
+				length = objects[i-1][j-1][1]
 
 				if Pi[i-1][j-1] == -1:
 					probabilities_yes[i-1] = pO[i-1] * (tvals[T] + (num_yes + 1.0)/(length + 2.0)) / 2
 					probabilities_no[i-1] = pO[i-1] * ((1 - tvals[T]) + (length - num_yes + 1.0)/(length + 2.0)) / 2
 				else:
-					print pO[i-1]
-					print tvals[T]
-					print Pi[i-1][j-1]
 					probabilities_yes[i-1] = pO[i-1] * (tvals[T] + (num_yes + 1.0)/(length + 2.0) + Pi[i-1][j-1]) / 3
 					probabilities_no[i-1] = pO[i-1] * ((1 - tvals[T]) + (length - num_yes + 1.0)/(length + 2.0) + 1 - Pi[i-1][j-1]) / 3
 
@@ -139,8 +140,8 @@ def get_best(game, objects, asked_questions, pO, Pi, p_tags, start):
 
 			# Do some fancy math to find out which tag lowers total entropy the most (AKA it gives us the most knowledge)
 			for i in objects_considered:
-				num_yes = objects[i-1][j][0]
-				length = objects[i-1][j][1]
+				num_yes = objects[i-1][j-1][0]
+				length = objects[i-1][j-1][1]
 
 				p_for_yes += pO[i-1] * num_yes / length
 				p_for_no += pO[i-1] * (length - num_yes) / length
@@ -228,8 +229,8 @@ def get_subset_split(pO):
 	pO_sorted = np.sort(pO)
 	pO_args_sorted = np.argsort(pO)
     
-       # for x in range(0,17):
-	    #print str(pO_args_sorted[x]) + " -> " + str(pO_sorted[x])
+        for x in range(0,17):
+	    print str(pO_args_sorted[x]) + " -> " + str(pO_sorted[x])
     
 	diff = 0
 	bestDiff = 0
