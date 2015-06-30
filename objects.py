@@ -85,12 +85,16 @@ class Object:
 		"""
 
 		log.info('Generating initial probabilities')
-		objects = [[]] * 17
+		objects = []
+		for i in range(0,17):
+			objects.append([])
+
+		obj = 0
 
 		db.cursor.execute('SELECT qid, oid, SUM(answer), COUNT(*) FROM answers GROUP BY oid, qid')
 		for row in db.cursor.fetchall():
-			objects[row[1]-1].append((int(row[2]), int(row[3])))
-
+			objects[int(row[1])-1].append((int(row[2]), int(row[3])))
+	
 		return objects
 
 
