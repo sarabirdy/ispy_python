@@ -354,10 +354,8 @@ def build(_game, method, game_questions={}, game_answers={}, skip={}):
 
                 if should_train:
                     feature_matrix=np.asarray(feature_matrix)
-                    #model.ModelTraining(tag, feature_matrix, 777) #training the model with GMM
-                    model.ModelTrainingSVM(tag, feature_matrix, feature_matrix_labels, 777) #training the model with SVM
-    #print count
-
+                    model.ModelTraining(tag, feature_matrix, 777) #training the model with GMM
+                    #model.ModelTrainingSVM(tag, feature_matrix, feature_matrix_labels, 777) #training the model with SVM
 
 def gen_image_probabilities(game):
 	# Collect all keyword classifiers and feature vectors of objects in the game space

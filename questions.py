@@ -32,7 +32,6 @@ def ask(question_id, object_we_play, game, answer_data, answers, pO, Pi, p_tags,
 		T = get_t(objectID+1, question_id)
 		N = objects[objectID][question_id-1][0]
 		D = objects[objectID][question_id-1][1]
-		print objectID, T, N, D
 		if answer == 'yes':
 			answers.append(True)
 			K = probabilityD[T] + (N + 1)/(D + 2.0)
@@ -47,8 +46,6 @@ def ask(question_id, object_we_play, game, answer_data, answers, pO, Pi, p_tags,
 				multiplier = K / 2
 			else:
 				multiplier = (K + 1 - Pi[objectID][question_id-1]) / 3
-
-		print multiplier
 		pO[objectID] = pO[objectID] * multiplier
 	
 	# Normalize the probabilities so that all object probabilities will sum to 1
@@ -216,7 +213,6 @@ def build_pqd():
 		#This puts the sum of the yes answers and the total answers into the row that corresponds with the T value
 		db.cursor.execute('INSERT INTO Pqd (t_value, yes_answers, total_answers) VALUES (%s, %s, %s)', (freq, probabilityD[freq], denominator[freq]))
 		db.connection.commit()
-		print probabilityD[freq]
 
 
 def get_subset_split(pO):
