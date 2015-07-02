@@ -21,4 +21,4 @@ Configuration ('config.py')
 - db: Database credentials
 - setup: Should the pre-simulation tasks be executed?
 
-I worked on this project while at [UNT](http://unt.edu) working in the [HiLT Lab](http://hilt.cse.unt.edu) as part of the [I Spy Project](http://hilt.cse.unt.edu/ispy.html). I graduated in 2015 and am now at [Texas A&M](http://tamu.edu) working on my PhD in computer science. This code will be maintained by [Jacob](http://github.com/jacobbrunson) during his time in the lab.
+I worked on this project while at [UNT](http://unt.edu) working in the [HiLT Lab](http://hilt.cse.unt.edu) as part of the [I Spy Project](http://hilt.cse.unt.edu/ispy.html). I graduated in 2015 and am now at [Texas A&M](http://tamu.edu) working on my PhD in computer science. This code will be maintained by [Jacob](http://github.com/jacobbrunson) during his time in the HiLT Lab.
