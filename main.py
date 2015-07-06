@@ -14,7 +14,7 @@ class Main:
 		"""
 		Entry point of the simulation
 		"""
-		
+		self.number_of_objects = 17 #will eventually be adding unknown objects, so this will change based on the number of objects in the field
 		self._init_logger()
 		
 		db.init_driver()
@@ -50,7 +50,7 @@ class Main:
 		for number in range(16, 31):
 			game = Game(number)
 
-			game_wins, game_losses, game_num_questions, game_win_avg, game_lose_avg, game_answers, game_questions = game.play()
+			game_wins, game_losses, game_num_questions, game_win_avg, game_lose_avg, game_answers, game_questions = game.playGame(self.number_of_objects)
 
 			questions_asked[game.id] = game_questions
 			question_answers = game_answers
@@ -70,15 +70,13 @@ class Main:
 		"""
 
 		log.info('Performing setup')
-		db.cursor.execute('DELETE FROM answers')
 		db.cursor.execute('DELETE FROM Pqd')
 		db.connection.commit()
 		questions.copy_into_answers()
-		questions.build_pqd()
-		models.build(Game(15), 1)
-		#This causes an error, I'm not entirely sure why yet, but I don't think it worked in the previous version, either
-		#for number in range(16, 31):
-		#	models.evaluation_1(Game(number))
+		questions.build_pqd(self.number_of_objects)
+		models.build(Game(15), 3)
+		for number in range(16, 31):
+			models.evaluation_1(Game(number), self.number_of_objects)
 
 
 	def _init_logger(self):
