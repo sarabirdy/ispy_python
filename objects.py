@@ -12,7 +12,7 @@ _objects = []
 
 class Object:
 
-	def play(self, game, Pi):
+	def playObject(self, game, Pi, number_of_objects):
 		"""
 		Play this object
 		"""
@@ -21,12 +21,12 @@ class Object:
 		# Generate dictionary of initial probabilities in the form of
 		# {object_id: {question_id: [0/1, 0/1]}}, e.g.:
 		# {1 : {1: [0 0 1], 2: [1 0 1], ... 289: [0 0 0 1]} ... 17: {...}}
-		objects = self.gen_init_prob()
+		objects = self.gen_init_prob(number_of_objects)
 
 		folder =  os.getcwd()
 
 		# Get values necessary to score tag/objects for a Pqd value
-		p_tags = questions.get_p_tags()
+		#p_tags = questions.get_p_tags()
 
 		# Get answer data for question/object pairs from specific games (1-30)
 		# Should really all be coming from DB since they're all there, anyway
@@ -38,7 +38,7 @@ class Object:
 
 		# All objects start as equally likely
 		# pO is an array of probabilities. Index corresponds to object value corresponds to probability [0, 1]
-		pO = np.array([1/17.0] * 17)
+		pO = np.array([1/float(number_of_objects)] * number_of_objects)
 
 		askedQuestions = []
 		answers = []
@@ -52,13 +52,13 @@ class Object:
 		log.info('Asking questions')
 		while np.sort(pO)[pO.size - 1] - np.sort(pO)[pO.size - 2] < 0.15:
 			# Find best question (aka gives most info)
-			best_question = questions.get_best(game, objects, askedQuestions, pO, Pi, p_tags, split)
+			best_question = questions.get_best(game, objects, askedQuestions, pO, Pi, split, number_of_objects) #p_tags
 			# Save under questions already asked
 			askedQuestions.append(best_question)
 			# Get updated probabilies based on the answer to the question
-			pO, answers = questions.ask(best_question, self, game, answer_data, answers, pO, Pi, p_tags, objects)
+			pO, answers = questions.ask(best_question, self, game, answer_data, answers, pO, Pi, objects, number_of_objects) #p_tags
 			# Split the current subset into two more subsets
-			split = questions.get_subset_split(pO)
+			split = questions.get_subset_split(pO, number_of_objects)
 		log.info('Finished asking %d questions', len(askedQuestions))
 
 		# Get most likely object
@@ -76,17 +76,17 @@ class Object:
 		return result, len(askedQuestions), answers, askedQuestions
 
 
-	def gen_init_prob(self):
+	def gen_init_prob(self, number_of_objects):
 		"""
 		Fetches the proportions of yes answers
-		Returns a list containing 17 sub-lists, each list corresponding to an object
+		Returns a list containing sub-lists, each corresponding to an object
 		Each sub-list contains 289 tuples, one per question
 		Each tuple is in the form of (yes_answers, total_answers)
 		"""
 
 		log.info('Generating initial probabilities')
 		objects = []
-		for i in range(0,17):
+		for i in range(number_of_objects):
 			objects.append([])
 
 		obj = 0
@@ -174,4 +174,3 @@ def get_all():
 		for obj in db.cursor.fetchall():
 			_objects.append(Object(obj[0], obj[1]))
 	return _objects
-			
