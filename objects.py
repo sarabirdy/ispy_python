@@ -50,7 +50,7 @@ class Object:
 		# Basically sorts the probabilities and gets the largest (pO.size - 1) and second-largest (pO.size - 2),
 		# and checks continues [asking questions]? until their difference is >= 0.15
 		log.info('Asking questions')
-		while np.sort(pO)[pO.size - 1] - np.sort(pO)[pO.size - 2] < 0.15:
+		while np.sort(pO)[pO.size - 1] - np.sort(pO)[pO.size - 2] < 0.15 and len(askedQuestions) < 15:
 			# Find best question (aka gives most info)
 			best_question = questions.get_best(game, objects, askedQuestions, pO, Pi, split, number_of_objects) #p_tags
 			# Save under questions already asked
@@ -71,7 +71,7 @@ class Object:
 		result = self._guess_object(guess)
 
 		# Save results
-		self._record_results(game, answers, askedQuestions, guess, result)
+		self._record_results(game, answers, askedQuestions, guess, result, number_of_objects)
 
 		return result, len(askedQuestions), answers, askedQuestions
 
@@ -98,14 +98,14 @@ class Object:
 		return objects
 
 
-	def _record_results(self, game, game_answers, game_questions, guess, result):
+	def _record_results(self, game, game_answers, game_questions, guess, result, number_of_objects):
 		"""
 		Puts results into the DB as well as writing them to file for examination
 		"""
 
 		log.info('Recording object results')
 		for i in range(0, len(game_questions)):
-			T = questions.get_t(self.id, game_questions[i])
+			T = questions.get_t(self.id, game_questions[i], number_of_objects)
 			if game_answers[i] == True:
 				db.cursor.execute("SELECT yes_answers FROM Pqd where t_value = %s", (T,))
 				yes_count = db.cursor.fetchone()[0]
@@ -127,7 +127,7 @@ class Object:
 			result = 'win'
 
 		with open("game.txt", "a") as myfile:
-			myfile.write(str(game.id)+','+ str(self.id) +','+ str(guess.name)+"," + str(len(game_questions)) + "," + result  +  "\n")
+			myfile.write(str(game.id)+','+ str(self.id) +','+ str(guess.name)+"," + str(self.name) + "," + str(len(game_questions)) + "," + result  +  "\n")
 		myfile.close()
 
 		with open("answers.txt", "a") as answerfile:

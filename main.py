@@ -61,7 +61,7 @@ class Main:
 			avg_win += game_win_avg
 			avg_lose += game_lose_avg
 
-			models.build(game, 3, questions_asked, question_answers)
+			models.build(game, 3, self.number_of_objects, questions_asked, question_answers)
 
 
 	def setup(self):
@@ -74,7 +74,7 @@ class Main:
 		db.connection.commit()
 		questions.copy_into_answers()
 		questions.build_pqd(self.number_of_objects)
-		models.build(Game(15), 3)
+		models.build(Game(15), 3, self.number_of_objects)
 		for number in range(16, 31):
 			models.evaluation_1(Game(number), self.number_of_objects)
 

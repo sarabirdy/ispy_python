@@ -21,25 +21,30 @@ def ask(question_id, object_we_play, game, answer_data, answers, pO, Pi, objects
 	probabilityD = get_tval()
 	#print "probabilityD:", probabilityD
 	question_tag = tags.get(question_id)
-	#print "question_tag:", question_tag
+	print "question_tag:", question_tag
 	#answer = raw_input("Does it have " + tags[question_id-1] + "? (yes/no) ")
 	#answer = answer.lower()
 	answer = answer_data[object_we_play.id-1][question_id-1]
+	print "answer:", answer
 	#print game_folder, object.id,objectlist[object.id-1][0],'qt->'+question_tag+' ' ,'ans->'+answer
-
+	multipliers = []
 
 	for objectID in range(number_of_objects):
-		T = get_t(objectID+1, question_id)
+		T = get_t(objectID+1, question_id, number_of_objects)
 		N = objects[objectID][question_id-1][0]
 		D = objects[objectID][question_id-1][1]
-		#print "objectID, T, N, D:", objectID, T, N, D
-		if answer == 'yes':
+		#print "objectID, T, N, D, answer:", objectID, T, N, D, answer
+		#if the object is unknown
+			#pass
+		if answer == 'yes': #elif
 			answers.append(True)
 			K = probabilityD[T] + (N + 1)/(D + 2.0)
 			if Pi[0][question_id-1] == -1:
 				multiplier = K / 2
+				multipliers.append(multiplier)
 			else:
 				multiplier = (K + Pi[objectID][question_id-1]) / 3
+				multipliers.append(multiplier)
 		else:
 			answers.append(False)
 			K = (1 - probabilityD[T]) + (D - N + 1)/(D + 2.0)
@@ -48,15 +53,20 @@ def ask(question_id, object_we_play, game, answer_data, answers, pO, Pi, objects
 			else:
 				multiplier = (K + 1 - Pi[objectID][question_id-1]) / 3
 
+		#print "K, multiplier:", K, multiplier
 		#print "multiplier:", multiplier
-		pO[objectID] = pO[objectID] * multiplier
+		pO[objectID] *= multiplier
 	
+	#if object is unknown
+		# multiplier = np.mean(multipliers)
+		# pO[objectID] *= multiplier
+
 	# Normalize the probabilities so that all object probabilities will sum to 1
 	pO /= np.sum(pO)
 
-	# Save the qustions to each answer and the updated probabilities
+	# Save the questions to each answer and the updated probabilities
 	with open("example.txt", "a") as myfile:
-		myfile.write(question_tag + " -> " + answer+ " \n")
+		myfile.write(str(question_tag) + " -> " + str(answer)  + " \n")
 		myfile.write(str(pO) + "\n")
 
 	return pO, answers
@@ -123,7 +133,7 @@ def get_best(game, objects, asked_questions, pO, Pi, start, number_of_objects): 
 			# Only look at objects in the correct subset
 			for i in objects_considered:
 
-				T = get_t(i, j)
+				T = get_t(i, j, number_of_objects)
 				num_yes = objects[i-1][j-1][0]
 				length = objects[i-1][j-1][1]
 
@@ -261,16 +271,28 @@ def get_tval():
 	return tvals
 
 
-def get_t(object_id, question_id):
+def get_t(object_id, question_id, number_of_objects):
 	"""
 	Returns the number of descriptions that an object has that contains a specific tag
 	"""
 
+	global _descriptions
+
+	if not _descriptions:
+		_descriptions = [{} for _ in range(number_of_objects)]
+		all_tags = tags.get_all()
+		db.cursor.execute('SELECT description, objectID, descNum FROM Descriptions')
+		for row in db.cursor.fetchall():
+			for tag in all_tags:
+				if tag in row[0]:
+					if not tag in _descriptions[row[1]-1]:
+						_descriptions[row[1]-1][tag] = 1
+					else:
+						_descriptions[row[1]-1][tag] += 1
+
 	tag = tags.get(question_id)
-
-	db.cursor.execute('SELECT COUNT(*) \
-					FROM Descriptions \
-					WHERE description LIKE %s \
-					AND objectID = %s', ('%{0}%'.format(tag), str(object_id)))
-
-	return db.cursor.fetchone()[0]
+	object_id = int(object_id)
+	o = _descriptions[object_id-1]
+	if not tag in o:
+		return 0
+	return o[tag]

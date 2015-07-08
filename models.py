@@ -6,7 +6,7 @@ import database as db
 from sklearn.externals import joblib
 import gmm_training as model
 
-def build(_game, method, game_questions={}, game_answers={}, skip={}):
+def build(_game, method, number_of_objects, game_questions={}, game_answers={}, skip={}):
     """
     Builds the model for all keywords
     """
@@ -40,7 +40,7 @@ def build(_game, method, game_questions={}, game_answers={}, skip={}):
                 #for every observation/object of this specific tag
                 for obs_id in tag_obs_ids:
 
-                    T = questions.get_t(obs_id[0], qid)
+                    T = questions.get_t(obs_id[0], qid, number_of_objects)
                     # For game 0, if a tag has been used 3 or more times in the object descriptions, that object is used as a positive example
                     
                     if _game.id == 0:
@@ -281,8 +281,8 @@ def info(game, number_of_objects):
         for capture_id in xrange(0, num_of_images_per_observation[0][0]):
             feature_vector = RetrieveFeatureVector(feature_info, new_fv, end_of_fv) # create a feature vector given a capture
             #print len(feature_vector)
-            new_fv = new_fv + vv_seperator # update starting index of the vector
-            end_of_fv = end_of_fv + vv_seperator # update ending index of the vector
+            new_fv += vv_seperator # update starting index of the vector
+            end_of_fv += vv_seperator # update ending index of the vector
             matrix.append(feature_vector) # insert feature vectors into a matrix for each tag
             matrix_labels.append(1)
         feature_matrix.append(matrix)
@@ -310,7 +310,6 @@ def info(game, number_of_objects):
 
 def RetrieveFeatureVector(feature_info, start, end):
     feature_vector=[]
-    print "start:", start, "end:", end
     for index in xrange(start,end):  
         feature_vector.append(feature_info[index][1])
     return feature_vector
