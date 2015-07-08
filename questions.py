@@ -19,9 +19,7 @@ def ask(question_id, object_we_play, game, answer_data, answers, pO, Pi, p_tags,
 	# Takes best question and updates all object probabilies based on the answer
 
 	probabilityD = get_tval()
-	print probabilityD
 	question_tag = tags.get(question_id)
-	print question_tag
 	#answer = raw_input("Does it have " + tags[question_id-1] + "? (yes/no) ")
 	#answer = answer.lower()
 	answer = answer_data[object_we_play.id-1][question_id-1]
@@ -225,8 +223,8 @@ def get_subset_split(pO):
 	pO_sorted = np.sort(pO)
 	pO_args_sorted = np.argsort(pO)
     
-        for x in range(0,17):
-	    print str(pO_args_sorted[x]) + " -> " + str(pO_sorted[x])
+#        for x in range(0,17):
+#	    print str(pO_args_sorted[x]) + " -> " + str(pO_sorted[x])
     
 	diff = 0
 	bestDiff = 0

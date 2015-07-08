@@ -6,4 +6,4 @@ db = {
 	'socket': '/var/run/mysqld/mysqld.sock'
 }
 
-setup = False
+setup = True

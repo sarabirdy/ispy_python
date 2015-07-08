@@ -132,7 +132,7 @@ def build(_game, method, game_questions={}, game_answers={}, skip={}):
                                         num_of_images_per_oservation=db.cursor.fetchall()
 
                                         db.cursor.execute("SELECT feature_id,feature_value FROM FeatureInfo WHERE observation_id='{0}' AND game_id='{1}'".format(obs_id[0],game))
-                                        feature_info=cursor.fetchall()
+                                        feature_info=db.cursor.fetchall()
 
                                         vv_seperator=len(feature_info)/num_of_images_per_oservation[0][0]
 
@@ -197,7 +197,7 @@ def build(_game, method, game_questions={}, game_answers={}, skip={}):
                                             feature_matrix_labels.append(0)
                     # Otherwise, use only questions from gameplay
                     else:
-                        model_folder = os.getcwd() + '/GMM_model_777'
+                        model_folder = os.getcwd() + '/SVM_model_777'
                         listing = os.listdir(model_folder)
                         has_model = []
                         for mod in listing:
@@ -353,9 +353,68 @@ def build(_game, method, game_questions={}, game_answers={}, skip={}):
                                                 feature_matrix_labels.append(0)
 
                 if should_train:
-                    feature_matrix=np.asarray(feature_matrix)
-                    model.ModelTraining(tag, feature_matrix, 777) #training the model with GMM
-                    #model.ModelTrainingSVM(tag, feature_matrix, feature_matrix_labels, 777) #training the model with SVM
+                    training_matrix, training_labels = select_training_data(feature_matrix_labels, feature_matrix)
+                    training_matrix=np.asarray(training_matrix)
+                    #model.ModelTraining(tag, feature_matrix, 777) #training the model with GMM
+                    model.ModelTrainingSVM(tag, training_matrix, training_labels, 777) #training the model with SVM
+
+
+def select_training_data(labels, features):
+    '''
+    Function to select an equal number of positive and negative training examples
+    '''
+    
+    positive = sum(labels)
+    negative = len(labels) - positive
+    
+    if positive < negative:
+        even_matrix = []
+        even_labels = []
+        skip = []
+        
+        # Gather all positive examples
+        for i in range(0, len(labels)):
+            if labels[i] == 1:
+                even_matrix.append(features[i])
+                even_labels.append(1)
+                skip.append(i)
+        
+        # Gather the same number of negative examples as positive examples
+        while len(even_labels) < 2*positive:
+            index = np.random.randint(0, len(labels))
+            if index not in skip:
+                skip.append(index)
+                even_matrix.append(features[index])
+                even_labels.append(0)
+        
+        return even_matrix, even_labels
+        
+    elif negative < positive:
+        even_matrix = []
+        even_labels = []
+        skip = []
+        
+        # Gather all negative examples
+        for i in range(0, len(labels)):
+            if labels[i] == 0:
+                even_matrix.append(features[i])
+                even_labels.append(0)
+                skip.append(i)
+                
+        # Gather the same number of positive examples as negative examples
+        while len(even_labels) < 2*negative:
+            index = np.random.randint(0, len(labels))
+            if index not in skip:
+                skip.append(index)
+                even_matrix.append(features[index])
+                even_labels.append(1)
+                
+        return even_matrix, even_labels        
+        
+    else:
+        # Unlikely this will ever happen, both positive and negative are already equal
+        return features, labels
+    
 
 def gen_image_probabilities(game):
 	# Collect all keyword classifiers and feature vectors of objects in the game space
@@ -368,10 +427,7 @@ def gen_image_probabilities(game):
 			if j in models:
 				# Score feature vector against keyword classifier and save the probability
 				probability.append(models[j].score(feature_vectors[i], labels[i]))
-				available_models.append(j-1)
-				beans = models[j].score(feature_vectors[i], labels[i])
-				if beans > 0:
-					print j, beans
+				available_models.append(j-1)				
 			else:
 				# If no keyword classifier is available, score as -1 so we can skip later
 				probability.append(-1)

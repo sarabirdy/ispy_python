@@ -75,7 +75,7 @@ class Main:
 		db.connection.commit()
 		questions.copy_into_answers()
 		questions.build_pqd()
-		models.build(Game(15), 1)
+		models.build(Game(15), 3)
 		#This causes an error, I'm not entirely sure why yet, but I don't think it worked in the previous version, either
 		#for number in range(16, 31):
 		#	models.evaluation_1(Game(number))
