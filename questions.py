@@ -24,7 +24,7 @@ def ask(question_id, object_we_play, game, answer_data, answers, pO, Pi, objects
 	#answer = raw_input("Does it have " + tags[question_id-1] + "? (yes/no) ")
 	#answer = answer.lower()
 	answer = answer_data[object_we_play.id-1][question_id-1]
-	print "answer:", answer
+	#print "answer:", answer
 	#print game_folder, object.id,objectlist[object.id-1][0],'qt->'+question_tag+' ' ,'ans->'+answer
 	multipliers = []
 

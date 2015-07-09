@@ -35,6 +35,8 @@ def build(_game, method, number_of_objects, game_questions={}, game_answers={}, 
                 tag_obs_ids=db.cursor.fetchall()
                 db.cursor.execute('SELECT id FROM Tags WHERE tag = %s', (tag,))
                 qid = db.cursor.fetchone()[0]
+                should_train_over_3 = False
+                should_train_zero = False
                 should_train = False
 
                 #for every observation/object of this specific tag
@@ -42,16 +44,15 @@ def build(_game, method, number_of_objects, game_questions={}, game_answers={}, 
 
                     T = questions.get_t(obs_id[0], qid, number_of_objects)
                     # For game 0, if a tag has been used 3 or more times in the object descriptions, that object is used as a positive example
-                    
                     if _game.id == 0:
                         if T >= 3:
-                            should_train = True
+                            should_train_over_3 = True
                             count += 1
                             label = 1
                             feature_matrix, feature_matrix_labels = updateFeatureMatrix(feature_matrix, feature_matrix_labels, obs_id, _game, label)
                         # An object is only a negative example if it is used 0 times
                         elif T == 0:
-                            should_train = True
+                            should_train_zero = True
                             count += 1
                             label = 0
                             feature_matrix, feature_matrix_labels = updateFeatureMatrix(feature_matrix, feature_matrix_labels, obs_id, _game, label)
@@ -82,24 +83,6 @@ def build(_game, method, number_of_objects, game_questions={}, game_answers={}, 
                                         feature_matrix, feature_matrix_labels = updateFeatureMatrix(feature_matrix, feature_matrix_labels, obs_id, _game, label)
                                     elif T == 0:
                                         should_train = True
-                                        count = count + 1
-                                        db.cursor.execute("SELECT COUNT(*) FROM FeatureInfo WHERE feature_id='0' AND observation_id='{0}' AND game_id='{1}' ".format(obs_id[0], game))
-                                        num_of_images_per_oservation=db.cursor.fetchall()
-
-                                        db.cursor.execute("SELECT feature_id,feature_value FROM FeatureInfo WHERE observation_id='{0}' AND game_id='{1}'".format(obs_id[0],game))
-                                        feature_info=db.cursor.fetchall()
-
-                                        vv_seperator=len(feature_info)/num_of_images_per_oservation[0][0]
-
-                                        new_fv=0 #flag to show when a feature vector given a capture starts (index in feature_info tuple)
-                                        end_of_fv=vv_seperator#flag to show when a feature vector given a capture ends (index in feature_info tuple)
-
-                                        for capture_id in xrange(0,num_of_images_per_oservation[0][0]):
-                                            feature_vector=RetrieveFeatureVector(feature_info,new_fv,end_of_fv) #create a feature vector given a capture
-                                            #print len(feature_vector)
-                                            new_fv=new_fv+vv_seperator #update starting index of the vector
-                                            end_of_fv=end_of_fv+vv_seperator #update ending index of the vector
-                                            feature_matrix.append(feature_vector) #insert feature vectors into a matrix for each tag
                                         count += 1
                                         label = 0
                                         feature_matrix, feature_matrix_labels = updateFeatureMatrix(feature_matrix, feature_matrix_labels, obs_id, _game, label)
@@ -181,10 +164,11 @@ def build(_game, method, number_of_objects, game_questions={}, game_answers={}, 
                                             label = 0
                                             feature_matrix, feature_matrix_labels = updateFeatureMatrix(feature_matrix, feature_matrix_labels, obs_id, _game, label)
 
-                if should_train:
-                    feature_matrix=np.asarray(feature_matrix)
+                if should_train or (should_train_over_3 and should_train_zero):
+                    training_matrix, training_labels = select_training_data(feature_matrix_labels, feature_matrix)
+                    training_matrix=np.asarray(training_matrix)
                     #model.ModelTraining(tag, feature_matrix, 777) #training the model with GMM
-                    model.ModelTrainingSVM(tag, feature_matrix, feature_matrix_labels, 777) #training the model with SVM
+                    model.ModelTrainingSVM(tag, training_matrix, training_labels, 777) #training the model with SVM
     #print count
 
 
@@ -193,11 +177,25 @@ def updateFeatureMatrix(feature_matrix, feature_matrix_labels, obs_id, _game, la
     Appends feature_matrix with feature vectors, and feature_matrix_labels with either 0 or 1 depending on if it's a positive or negative example
     """
 
-    if should_train:
-        training_matrix, training_labels = select_training_data(feature_matrix_labels, feature_matrix)
-        training_matrix=np.asarray(training_matrix)
-        #model.ModelTraining(tag, feature_matrix, 777) #training the model with GMM
-        model.ModelTrainingSVM(tag, training_matrix, training_labels, 777) #training the model with SVM
+    db.cursor.execute("SELECT COUNT(*) FROM FeatureInfo WHERE feature_id = '0' AND observation_id = '{0}' AND game_id = '{1}'".format(obs_id[0], _game.id))
+    num_of_images_per_observation = db.cursor.fetchall()
+
+    db.cursor.execute("SELECT feature_id,feature_value FROM FeatureInfo WHERE observation_id = '{0}' AND game_id = '{1}'".format(obs_id[0], _game.id))
+    feature_info = db.cursor.fetchall()
+
+    vv_seperator = len(feature_info)/num_of_images_per_observation[0][0]
+
+    new_fv = 0 #flag to show when a feature vector given a capture starts (index in feature_info tuple)
+    end_of_fv = vv_seperator #flag to show when a feature vector given a capture ends (index in feature_info tuple)
+
+    for capture_id in xrange(0, num_of_images_per_observation[0][0]):
+        feature_vector = RetrieveFeatureVector(feature_info, new_fv, end_of_fv) #create a feature vector given a capture
+        new_fv += vv_seperator #update starting index of the vector
+        end_of_fv += vv_seperator #update ending index of the vector
+        feature_matrix.append(feature_vector) #insert feature vectors into a matrix for each tag
+        feature_matrix_labels.append(label)
+
+    return feature_matrix, feature_matrix_labels
 
 
 def select_training_data(labels, features):
@@ -227,7 +225,7 @@ def select_training_data(labels, features):
                 skip.append(index)
                 even_matrix.append(features[index])
                 even_labels.append(0)
-        
+                
         return even_matrix, even_labels
         
     elif negative < positive:

@@ -9,6 +9,7 @@ A (very) rough description of how the simulation works can be found [here](http:
 Setup:
 
 1. Make sure the database settings in config.py match your local database
+3. Create a folder within the repo named 'SVM_model_777'. This is where the image models reside
 2. If running for the first time, make sure that 'setup = True' is set in config.py. This will clean the database and build the initial models
 3. If not the first time, you can change setup to False, but that won't clean out the old answers/start fresh
 

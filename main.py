@@ -69,14 +69,21 @@ class Main:
 		Perform optional pre-simulation tasks
 		"""
 
-		log.info('Performing setup')
-		db.cursor.execute('DELETE FROM Pqd')
-		db.connection.commit()
-		questions.copy_into_answers()
-		questions.build_pqd(self.number_of_objects)
+		#log.info('Performing setup')
+		#db.cursor.execute('DELETE FROM Pqd')
+		#db.connection.commit()
+		#questions.copy_into_answers()
+		#questions.build_pqd(self.number_of_objects)
+		
+		# Necessary to build the very first models
+		models.build(Game(0), 3, self.number_of_objects)
+		
+		# We then train the models using games 1-15
 		models.build(Game(15), 3, self.number_of_objects)
-		for number in range(16, 31):
-			models.evaluation_1(Game(number), self.number_of_objects)
+
+		
+		#for number in range(16, 31):
+		#	models.evaluation_1(Game(number), self.number_of_objects)
 
 	def _init_logger(self):
 		"""
