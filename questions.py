@@ -182,9 +182,9 @@ def copy_into_answers():
 	results = db.cursor.fetchall()
 
 	for result in results:
-		db.cursor.execute('SELECT id from Tags where tag = %s', (result[0],))
+		db.cursor.execute("SELECT id from Tags where tag = '{0}'".format(result[0],))
 		qid = db.cursor.fetchone()[0]
-		db.cursor.execute('INSERT INTO answers (qid, oid, answer) VALUES (%s, %s, %s)', (qid, result[2], result[1]))
+		db.cursor.execute("INSERT INTO answers (qid, oid, answer) VALUES ('{0}', '{1}', '{2}')".format(qid, result[2], result[1]))
 
 	db.connection.commit()
 
@@ -225,7 +225,7 @@ def build_pqd(number_of_objects):
 		    
 	for freq in range(0,7):
 		#This puts the sum of the yes answers and the total answers into the row that corresponds with the T value
-		db.cursor.execute('INSERT INTO Pqd (t_value, yes_answers, total_answers) VALUES (%s, %s, %s)', (freq, probabilityD[freq], denominator[freq]))
+		db.cursor.execute("INSERT INTO Pqd (t_value, yes_answers, total_answers) VALUES ('{0}', '{1}', '{2}')".format(freq, probabilityD[freq], denominator[freq]))
 		db.connection.commit()
 		#print "probabilityD[freq]:", probabilityD[freq]
 

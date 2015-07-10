@@ -107,17 +107,22 @@ class Object:
 		for i in range(0, len(game_questions)):
 			T = questions.get_t(self.id, game_questions[i], number_of_objects)
 			if game_answers[i] == True:
-				db.cursor.execute("SELECT yes_answers FROM Pqd where t_value = %s", (T,))
+				db.cursor.execute("SELECT yes_answers FROM Pqd where t_value = '{0}'".format(T))
 				yes_count = db.cursor.fetchone()[0]
 				#print yes_count, 'yes'
-				db.cursor.execute("UPDATE Pqd SET yes_answers = %s WHERE t_value = %s", (yes_count + 1, T))
+				db.cursor.execute("UPDATE Pqd SET yes_answers = '{0}' WHERE t_value = '{1}'".format(yes_count + 1, T))
 
-			db.cursor.execute("SELECT total_answers FROM Pqd where t_value = %s", (T,))
+			db.cursor.execute("SELECT total_answers FROM Pqd where t_value = '{0}'".format(T))
 			total_count = db.cursor.fetchone()[0]
 			#print total_count
-			db.cursor.execute("UPDATE Pqd SET total_answers = %s WHERE t_value = %s", (total_count + 1, T))
-
-			db.cursor.execute("INSERT INTO answers (oid, qid, answer) VALUES (%s, %s, %s)", (str(self.id), game_questions[i], game_answers[i]))
+			db.cursor.execute("UPDATE Pqd SET total_answers = '{0}' WHERE t_value = '{1}'".format(total_count + 1, T))
+			
+			# Previously the database took True and False as 1 and 0 values, but now it's complaining, so just use int values instead of bools
+			if game_answers[i] == True:
+				answer = 1
+			else:
+				answer = 0
+			db.cursor.execute("INSERT INTO answers (oid, qid, answer) VALUES ('{0}', '{1}', '{2}')".format(str(self.id), game_questions[i], answer))
 
 			db.connection.commit()
 

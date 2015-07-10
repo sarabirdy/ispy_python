@@ -11,12 +11,14 @@ Setup:
 1. Make sure the database settings in config.py match your local database
 3. Create a folder within the repo named 'SVM_model_777'. This is where the image models reside
 2. If running for the first time, make sure that 'setup = True' is set in config.py. This will clean the database and build the initial models
-3. If not the first time, you can change setup to False, but that won't clean out the old answers/start fresh
+3. The setup function in main.py needs to run models.build with game 0 and then game 15 to first determine which tags get models and then build a more robust model
+4. If not the first time, you can change setup to False, but that won't clean out the old answers/start fresh
 
 Run: 
 - Execute 'python main.py' from within the ispy_python directory
 
 Dependencies:
+- Python Setup Tools
 - MySQL server
 - mysql-python or pymysql
 - opencv
@@ -25,5 +27,5 @@ Dependencies:
 - numpy
 
 Configuration ('config.py')
-- db: Database credentials
-- setup: Should the pre-simulation tasks be executed?
+- db: Local database credentials
+- setup: Must be True the on the first ever run. After that, can be False. Set to True whenever you want to start fresh.

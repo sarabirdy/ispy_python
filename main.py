@@ -69,11 +69,11 @@ class Main:
 		Perform optional pre-simulation tasks
 		"""
 
-		#log.info('Performing setup')
-		#db.cursor.execute('DELETE FROM Pqd')
-		#db.connection.commit()
-		#questions.copy_into_answers()
-		#questions.build_pqd(self.number_of_objects)
+		log.info('Performing setup')
+		db.cursor.execute('DELETE FROM Pqd')
+		db.connection.commit()
+		questions.copy_into_answers()
+		questions.build_pqd(self.number_of_objects)
 		
 		# Necessary to build the very first models
 		models.build(Game(0), 3, self.number_of_objects)

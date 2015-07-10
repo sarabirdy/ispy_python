@@ -394,7 +394,7 @@ def info(game, number_of_objects):
             model_clone = joblib.load(model_folder + '/' + model)
             T = model.split('_', 1)[0]
             T = T.lower()
-            db.cursor.execute('SELECT id FROM Tags WHERE tag = %s', (T))
+            db.cursor.execute("SELECT id FROM Tags WHERE tag = '{0}'".format(T))
             qid = db.cursor.fetchone()[0]
             models[qid] = model_clone
 

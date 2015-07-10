@@ -1,9 +1,9 @@
 db = {
 	'address': 'localhost',
-	'username': 'iSpy_team',
-	'password': 'password',
+	'username': 'root',
+	'password': 'root',
 	'database': 'iSpy_features',
 	'socket': '/var/run/mysqld/mysqld.sock'
 }
 
-setup = True
+setup = False
