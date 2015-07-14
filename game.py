@@ -47,20 +47,20 @@ class Game:
 			# Save questions and answers for later
 			questions_asked[obj.id] = askedQuestions
 			question_answers[obj.id] = answers
-
+			#print "questions_asked[obj.id]", questions_asked[obj.id]
 		# Save results
 		self._record(round_wins, round_losses, NoOfQuestions, number_of_objects)
 
 		end = time.time()
 		log.info("Game %d complete (Took %ds)", self.id, int(end - start))
-
+		#print question_answers
 		return round_wins, round_losses, NoOfQuestions, avg_win, avg_lose, question_answers, questions_asked
 
 	def _record(self, wins, losses, num_questions, number_of_objects):
 		"""
 		Record game data
 		"""
-		
+
 		with open("game.txt", "a") as myfile:
 			myfile.write("Round " + str(self.id) + ": ")
 			myfile.write("Wins=" + str(wins) + ', Losses='+str(losses))
