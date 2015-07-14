@@ -16,7 +16,7 @@ class Main:
 		"""
 		self.number_of_objects = 17 #will eventually be adding unknown objects, so this will change based on the number of objects in the field
 		self._init_logger()
-		
+
 		db.init_driver()
 		db.connect(config.db['address'], config.db['username'], config.db['password'], config.db['database'], unix_socket=config.db['socket'])
 
@@ -53,8 +53,7 @@ class Main:
 			game_wins, game_losses, game_num_questions, game_win_avg, game_lose_avg, game_answers, game_questions = game.playGame(self.number_of_objects)
 
 			questions_asked[game.id] = game_questions
-			question_answers = game_answers
-
+			question_answers[game.id] = game_answers
 			wins += game_wins
 			losses += game_losses
 			num_questions += game_num_questions
@@ -74,14 +73,14 @@ class Main:
 		db.connection.commit()
 		questions.copy_into_answers()
 		questions.build_pqd(self.number_of_objects)
-		
+
 		# Necessary to build the very first models
 		models.build(Game(0), 3, self.number_of_objects)
-		
+
 		# We then train the models using games 1-15
 		models.build(Game(15), 3, self.number_of_objects)
 
-		
+
 		#for number in range(16, 31):
 		#	models.evaluation_1(Game(number), self.number_of_objects)
 

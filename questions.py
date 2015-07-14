@@ -55,7 +55,7 @@ def ask(question_id, object_we_play, game, answer_data, answers, pO, Pi, objects
 		#print "K, multiplier:", K, multiplier
 		#print "multiplier:", multiplier
 		pO[objectID] *= multiplier
-	
+
 	#if object is unknown
 		# multiplier = np.mean(multipliers)
 		# pO[objectID] *= multiplier
@@ -140,6 +140,7 @@ def get_best(game, objects, asked_questions, pO, Pi, start, number_of_objects): 
 					probabilities_yes[i-1] = pO[i-1] * (tvals[T] + (num_yes + 1.0)/(length + 2.0)) / 2
 					probabilities_no[i-1] = pO[i-1] * ((1 - tvals[T]) + (length - num_yes + 1.0)/(length + 2.0)) / 2
 				else:
+					#print T
 					probabilities_yes[i-1] = pO[i-1] * (tvals[T] + (num_yes + 1.0)/(length + 2.0) + Pi[i-1][j-1]) / 3
 					probabilities_no[i-1] = pO[i-1] * ((1 - tvals[T]) + (length - num_yes + 1.0)/(length + 2.0) + 1 - Pi[i-1][j-1]) / 3
 
@@ -222,7 +223,7 @@ def build_pqd(number_of_objects):
 			probabilityD[T] += count
 			denominator[T] += D
 		#For the T value based on th specific tag/object pair, update the probability of all tag/object pairs with the same T value
-		    
+
 	for freq in range(0,7):
 		#This puts the sum of the yes answers and the total answers into the row that corresponds with the T value
 		db.cursor.execute("INSERT INTO Pqd (t_value, yes_answers, total_answers) VALUES ('{0}', '{1}', '{2}')".format(freq, probabilityD[freq], denominator[freq]))
@@ -234,20 +235,20 @@ def get_subset_split(pO, number_of_objects):
 	"""
 	When probabilities ordered least to greatest, returns index of largest difference between probabilities
 	System asks questions to try to split subset in half each time, so the split should move closer to the max probability each time
-	"""    
+	"""
 	bestDifference = 0
-    
+
 	pO_sorted = np.sort(pO)
 	pO_args_sorted = np.argsort(pO)
-    
+
 	diff = 0
 	bestDiff = 0
-    
+
 	for x in range(0, pO_sorted.size-1):
 	    if pO_sorted[x+1] - pO_sorted[x] > diff:
 			diff = pO_sorted[x+1] - pO_sorted[x]
 			bestDiff = x
-    
+
 	return bestDiff
 
 
@@ -255,7 +256,7 @@ def get_tval():
 	"""
 	Returns a list of 14 proportions of yes answers. 1 entry per t_value
 	"""
-	
+
 	db.cursor.execute('SELECT yes_answers/total_answers FROM Pqd')
 
 	result = db.cursor.fetchall()
