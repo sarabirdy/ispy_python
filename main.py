@@ -5,7 +5,6 @@ import logging as log
 from game import Game
 import models
 import questions
-import config
 import database as db
 
 class Main:
@@ -14,6 +13,10 @@ class Main:
 		"""
 		Entry point of the simulation
 		"""
+
+		self._config()
+		import config
+
 		self.number_of_objects = 17 #will eventually be adding unknown objects, so this will change based on the number of objects in the field
 		self._init_logger()
 
@@ -98,6 +101,20 @@ class Main:
 		rootLogger.addHandler(fileHandler)
 
 		log.info('\n'*8 + '='*31 + '| NEW SIMULATION |' + '='*31 + '\n')
+
+	def _config(self):
+		"""
+		Imports config.py or generates a default one if it doesn't exist
+		"""
+
+		try:
+			import config
+		except ImportError:
+			import pprint
+			f = open('config.py', 'w')
+			f.write("db = {\n\t'address': 'localhost',\n\t'username': 'root',\n\t'password': 'root',\n\t'database': 'iSpy_features',\n\t'socket': '/var/run/mysqld/mysqld.sock'\n}\n\nsetup = False")
+			f.close()
+
 
 
 if __name__ == '__main__':
