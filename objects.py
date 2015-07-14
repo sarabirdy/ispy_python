@@ -1,9 +1,7 @@
 import os
 import time
 import logging as log
-
 import numpy as np
-
 import questions
 import tags
 import database as db
@@ -94,7 +92,7 @@ class Object:
 		db.cursor.execute('SELECT qid, oid, SUM(answer), COUNT(*) FROM answers GROUP BY oid, qid')
 		for row in db.cursor.fetchall():
 			objects[int(row[1])-1].append((int(row[2]), int(row[3])))
-	
+
 		return objects
 
 
@@ -163,7 +161,7 @@ def get(object_id):
 	"""
 	Get a specific object based on id
 	"""
-	
+
 	global _objects
 	return get_all()[object_id-1]
 
