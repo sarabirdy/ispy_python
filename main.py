@@ -1,4 +1,5 @@
 import os
+import sys
 import time
 import logging as log
 
@@ -110,10 +111,12 @@ class Main:
 		try:
 			import config
 		except ImportError:
-			import pprint
+			print "config.py doesn't exist. Generating..."
 			f = open('config.py', 'w')
 			f.write("db = {\n\t'address': 'localhost',\n\t'username': 'root',\n\t'password': 'root',\n\t'database': 'iSpy_features',\n\t'socket': '/var/run/mysqld/mysqld.sock'\n}\n\nsetup = False")
 			f.close()
+			print 'Edit config.py and restart'
+			sys.exit(0)
 
 
 
