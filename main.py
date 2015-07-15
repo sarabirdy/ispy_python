@@ -16,12 +16,16 @@ parser.add_argument("-n", "--notsimulated", action = "store_true", help = "user 
 parser.add_argument("-u", "--username", help = "database username", default = "root")
 parser.add_argument("-p", "--password", action = "store_true", help = "database password")
 parser.add_argument("-d", "--database", help = "choose which database to use", default = "iSpy_features")
+parser.add_argument("-r", "--robot", action = "store_true", help = "run the code on the robot")
 args = parser.parse_args()
 
 if args.password:
 	password = getpass.getpass()
 else:
 	password = "root"
+
+if args.robot:
+	args.notsimulated = True
 
 class Main:
 
@@ -72,7 +76,7 @@ class Main:
 		for number in range(16, 31):
 			game = Game(number)
 
-			game_wins, game_losses, game_num_questions, game_win_avg, game_lose_avg, game_answers, game_questions = game.playGame(self.number_of_objects, sim, self.use_image_models)
+			game_wins, game_losses, game_num_questions, game_win_avg, game_lose_avg, game_answers, game_questions = game.playGame(self.number_of_objects, sim, self.use_image_models, args.robot)
 
 			questions_asked[game.id] = game_questions
 			question_answers[game.id] = game_answers
@@ -88,8 +92,11 @@ class Main:
 			if sim:
 				quit = None
 				while quit != "yes" and quit != "no":
-					quit = raw_input("Would you like to stop playing completely? (yes/no) \nThere are %d games left. " % (30 - number))
-					quit = quit.lower()
+					if args.robot:
+						quit = robotAsk("Would you like to stop playing?")
+					else:
+						quit = raw_input("Would you like to stop playing completely? (yes/no) \nThere are %d games left. " % (30 - number))
+						quit = quit.lower()
 
 				if quit == "yes":
 					break
@@ -132,6 +139,16 @@ class Main:
 
 		log.info('\n'*8 + '='*31 + '| NEW SIMULATION |' + '='*31 + '\n')
 
+def robotAsk(question):
+	"""
+	Has the robot ask a question and returns the answer
+	"""
+	tts.say(question)
+	asr.subscribe()
+	data = mem.getData("WordRecognized")
+	ans = data[0]
+	asr.unsubscribe()
+	return ans
 
 if __name__ == '__main__':
 	Main()
