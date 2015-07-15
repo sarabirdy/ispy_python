@@ -9,42 +9,24 @@ import models
 import questions
 import database as db
 
-parser = argparse.ArgumentParser()
-parser.add_argument("-i", "--imagemodels", action = "store_true", help = "use image models")
-parser.add_argument("-s", "--setup", action = "store_true", help = "run setup")
-parser.add_argument("-n", "--notsimulated", action = "store_true", help = "user provides responses")
-parser.add_argument("-u", "--username", help = "database username", default = "root")
-parser.add_argument("-p", "--password", action = "store_true", help = "database password")
-parser.add_argument("-d", "--database", help = "choose which database to use", default = "iSpy_features")
-parser.add_argument("-r", "--robot", action = "store_true", help = "run the code on the robot")
-args = parser.parse_args()
-
-if args.password:
-	password = getpass.getpass()
-else:
-	password = "root"
-
-if args.robot:
-	args.notsimulated = True
-
 class Main:
 
 	def __init__(self):
 		"""
 		Entry point of the simulation
 		"""
+
+		self.args = self._config()
+
 		self.number_of_objects = 17 #will eventually be adding unknown objects, so this will change based on the number of objects in the field
-		self.use_image_models = args.imagemodels
+		self.use_image_models = self.args.imagemodels
+
 		self._init_logger()
-		address = "localhost"
-		username = args.username
-		database = args.database
-		socket = '/var/run/mysqld/mysqld.sock'
 
 		db.init_driver()
-		db.connect(address, username, password, database, unix_socket = socket)
+		db.connect(self.args.address, self.args.username, self.args.password, self.args.database, unix_socket=self.args.socket)
 
-		if args.setup:
+		if self.args.setup:
 			self.setup()
 
 		start = time.time()
@@ -63,7 +45,7 @@ class Main:
 
 		games_folder = os.getcwd() + '/Human_Games'
 
-		sim = args.notsimulated
+		sim = self.args.notsimulated
 
 		wins = 0
 		losses = 0
@@ -76,7 +58,7 @@ class Main:
 		for number in range(16, 31):
 			game = Game(number)
 
-			game_wins, game_losses, game_num_questions, game_win_avg, game_lose_avg, game_answers, game_questions = game.playGame(self.number_of_objects, sim, self.use_image_models, args.robot)
+			game_wins, game_losses, game_num_questions, game_win_avg, game_lose_avg, game_answers, game_questions = game.playGame(self.number_of_objects, sim, self.use_image_models)
 
 			questions_asked[game.id] = game_questions
 			question_answers[game.id] = game_answers
@@ -92,11 +74,8 @@ class Main:
 			if sim:
 				quit = None
 				while quit != "yes" and quit != "no":
-					if args.robot:
-						quit = robotAsk("Would you like to stop playing?")
-					else:
-						quit = raw_input("Would you like to stop playing completely? (yes/no) \nThere are %d games left. " % (30 - number))
-						quit = quit.lower()
+					quit = raw_input("Would you like to stop playing completely? (yes/no) \nThere are %d games left. " % (30 - number))
+					quit = quit.lower()
 
 				if quit == "yes":
 					break
@@ -139,16 +118,32 @@ class Main:
 
 		log.info('\n'*8 + '='*31 + '| NEW SIMULATION |' + '='*31 + '\n')
 
-def robotAsk(question):
-	"""
-	Has the robot ask a question and returns the answer
-	"""
-	tts.say(question)
-	asr.subscribe()
-	data = mem.getData("WordRecognized")
-	ans = data[0]
-	asr.unsubscribe()
-	return ans
+	def _config(self):
+		"""
+		Imports config.py or generates a default one if it doesn't exist
+		Also parses command line arguments
+		"""
+
+		try:
+			import config
+		except ImportError:
+			import pprint
+			f = open('config.py', 'w')
+			f.write("db = {\n\t'address': 'localhost',\n\t'username': 'root',\n\t'password': 'root',\n\t'database': 'iSpy_features',\n\t'socket': '/var/run/mysqld/mysqld.sock'\n}\n\nsetup = False\nimage_models = False\nsimulated = True")
+			f.close()
+			import config
+
+		parser = argparse.ArgumentParser()
+		parser.add_argument("-i", "--imagemodels", action="store_true", help="use image models", default=config.image_models)
+		parser.add_argument("-s", "--setup", action="store_true", help="run setup", default=config.setup)
+		parser.add_argument("-n", "--notsimulated", action="store_true", help="user provides responses", default=(not config.simulated))
+		parser.add_argument("-u", "--username", help="database username", default=config.db["username"])
+		parser.add_argument("-p", "--password", help="database password", default=config.db["password"])
+		parser.add_argument("-d", "--database", help="choose which database to use", default=config.db["database"])
+		parser.add_argument("-a", "--address", help="address of MySQL server", default=config.db["address"])
+		parser.add_argument("-t", "--socket", help="path to MySQL socket", default=config.db["socket"])
+		parser.add_argument("-r", "--robot", action = "store_true", help ="runs code using robot",)
+		return parser.parse_args()
 
 if __name__ == '__main__':
 	Main()
