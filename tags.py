@@ -1,6 +1,7 @@
 import database as db
 
 _tags = []
+_questions = []
 
 def get(question_id):
 	"""
@@ -22,4 +23,16 @@ def get_all():
 		for tag in result:
 			_tags.append(tag[0])
 	return _tags
-			
+
+def get_questions():
+	"""
+	Gets list of all questions
+	"""
+
+	global _questions
+	if not _questions:
+		db.cursor.execute('SELECT question FROM questions')
+		qs = db.cursor.fetchall()
+		for question in qs:
+			_questions.append(question[0])
+	return _questions

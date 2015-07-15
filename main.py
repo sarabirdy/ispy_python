@@ -1,12 +1,27 @@
 import os
-import sys
 import time
 import logging as log
+import getpass
+import argparse
 
 from game import Game
 import models
 import questions
 import database as db
+
+parser = argparse.ArgumentParser()
+parser.add_argument("-i", "--imagemodels", action = "store_true", help = "use image models")
+parser.add_argument("-s", "--setup", action = "store_true", help = "run setup")
+parser.add_argument("-n", "--notsimulated", action = "store_true", help = "user provides responses")
+parser.add_argument("-u", "--username", help = "database username", default = "root")
+parser.add_argument("-p", "--password", action = "store_true", help = "database password")
+parser.add_argument("-d", "--database", help = "choose which database to use", default = "iSpy_features")
+args = parser.parse_args()
+
+if args.password:
+	password = getpass.getpass()
+else:
+	password = "root"
 
 class Main:
 
@@ -14,17 +29,18 @@ class Main:
 		"""
 		Entry point of the simulation
 		"""
-
-		self._config()
-		import config
-
 		self.number_of_objects = 17 #will eventually be adding unknown objects, so this will change based on the number of objects in the field
+		self.use_image_models = args.imagemodels
 		self._init_logger()
+		address = "localhost"
+		username = args.username
+		database = args.database
+		socket = '/var/run/mysqld/mysqld.sock'
 
 		db.init_driver()
-		db.connect(config.db['address'], config.db['username'], config.db['password'], config.db['database'], unix_socket=config.db['socket'])
+		db.connect(address, username, password, database, unix_socket = socket)
 
-		if config.setup:
+		if args.setup:
 			self.setup()
 
 		start = time.time()
@@ -43,6 +59,8 @@ class Main:
 
 		games_folder = os.getcwd() + '/Human_Games'
 
+		sim = args.notsimulated
+
 		wins = 0
 		losses = 0
 		num_questions = 0
@@ -54,17 +72,33 @@ class Main:
 		for number in range(16, 31):
 			game = Game(number)
 
-			game_wins, game_losses, game_num_questions, game_win_avg, game_lose_avg, game_answers, game_questions = game.playGame(self.number_of_objects)
+			game_wins, game_losses, game_num_questions, game_win_avg, game_lose_avg, game_answers, game_questions = game.playGame(self.number_of_objects, sim, self.use_image_models)
 
 			questions_asked[game.id] = game_questions
 			question_answers[game.id] = game_answers
+
 			wins += game_wins
 			losses += game_losses
 			num_questions += game_num_questions
 			avg_win += game_win_avg
 			avg_lose += game_lose_avg
 
-			models.build(game, 3, self.number_of_objects, questions_asked, question_answers)
+			if self.use_image_models:
+				models.build(game, 3, self.number_of_objects, questions_asked, question_answers)
+			if sim:
+				quit = None
+				while quit != "yes" and quit != "no":
+					quit = raw_input("Would you like to stop playing completely? (yes/no) \nThere are %d games left. " % (30 - number))
+					quit = quit.lower()
+
+				if quit == "yes":
+					break
+		log.info("Overall Wins: %d Overall Losses: %d", wins, losses)
+		log.info("Overall Accuracy: %d%%", int((float(wins)/(wins + losses)) * 100))
+		if wins != 0:
+			log.info("Average number of questions for a win: %.2f", float(avg_win)/wins)
+		if losses != 0:
+			log.info("Average number of questions for a loss: %.2f", float(avg_lose)/losses)
 
 
 	def setup(self):
@@ -75,18 +109,13 @@ class Main:
 		log.info('Performing setup')
 		db.cursor.execute('DELETE FROM Pqd')
 		db.connection.commit()
+		db.cursor.execute('DELETE FROM answers')
 		questions.copy_into_answers()
 		questions.build_pqd(self.number_of_objects)
+		if self.use_image_models:
+			models.build(Game(0), 3, self.number_of_objects)
+			models.build(Game(15), 3, self.number_of_objects)
 
-		# Necessary to build the very first models
-		models.build(Game(0), 3, self.number_of_objects)
-
-		# We then train the models using games 1-15
-		models.build(Game(15), 3, self.number_of_objects)
-
-
-		#for number in range(16, 31):
-		#	models.evaluation_1(Game(number), self.number_of_objects)
 
 	def _init_logger(self):
 		"""
@@ -102,22 +131,6 @@ class Main:
 		rootLogger.addHandler(fileHandler)
 
 		log.info('\n'*8 + '='*31 + '| NEW SIMULATION |' + '='*31 + '\n')
-
-	def _config(self):
-		"""
-		Imports config.py or generates a default one if it doesn't exist
-		"""
-
-		try:
-			import config
-		except ImportError:
-			print "config.py doesn't exist. Generating..."
-			f = open('config.py', 'w')
-			f.write("db = {\n\t'address': 'localhost',\n\t'username': 'root',\n\t'password': 'root',\n\t'database': 'iSpy_features',\n\t'socket': '/var/run/mysqld/mysqld.sock'\n}\n\nsetup = False")
-			f.close()
-			print 'Edit config.py and restart'
-			sys.exit(0)
-
 
 
 if __name__ == '__main__':

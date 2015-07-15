@@ -1,60 +1,43 @@
 import os
 import time
 import logging as log
+
 import numpy as np
+
 import questions
 import tags
 import database as db
 
 _objects = []
+_answers = []
 
 class Object:
 
-	def playObject(self, game, Pi, number_of_objects):
+	def playObject(self, game, Pi, number_of_objects, sim):
 		"""
 		Play this object
 		"""
 
 		log.info('Playing object %d in game %d', self.id, game.id)
-		# Generate dictionary of initial probabilities in the form of
-		# {object_id: {question_id: [0/1, 0/1]}}, e.g.:
-		# {1 : {1: [0 0 1], 2: [1 0 1], ... 289: [0 0 0 1]} ... 17: {...}}
 		objects = self.gen_init_prob(number_of_objects)
 
 		folder =  os.getcwd()
-
-		# Get values necessary to score tag/objects for a Pqd value
-		#p_tags = questions.get_p_tags()
-
-		# Get answer data for question/object pairs from specific games (1-30)
-		# Should really all be coming from DB since they're all there, anyway
-		answer_data = np.genfromtxt(folder+'/Answers/Game'+str(game.id)+'.csv',dtype=str, delimiter='\t')
+		answer_data = get_all_answers(number_of_objects)
 		NoOfQuestions = 0
-		#game_folder = all_games + '/Game' + str(gameID)
 
-		#print "+++++++++++++++" + game_folder + "+++++++++++++++"
-
-		# All objects start as equally likely
-		# pO is an array of probabilities. Index corresponds to object value corresponds to probability [0, 1]
 		pO = np.array([1/float(number_of_objects)] * number_of_objects)
 
 		askedQuestions = []
 		answers = []
 		split = 0
-		#answer_data = np.genfromtxt('/local2/awh0047/iSpy/ispy_python/Answers/Game' + str(gameID) + '.csv',dtype=str, delimiter='\t')
 
-		# The most likely object must be .15 more likely than the second most likely object before the system will make a guess
-		# We call this the 'confidence threshold'
-		# Basically sorts the probabilities and gets the largest (pO.size - 1) and second-largest (pO.size - 2),
-		# and checks continues [asking questions]? until their difference is >= 0.15
-		log.info('Asking questions')
 		while np.sort(pO)[pO.size - 1] - np.sort(pO)[pO.size - 2] < 0.15 and len(askedQuestions) < 15:
 			# Find best question (aka gives most info)
-			best_question = questions.get_best(game, objects, askedQuestions, pO, Pi, split, number_of_objects) #p_tags
+			best_question = questions.get_best(game, objects, askedQuestions, pO, Pi, split, number_of_objects)
 			# Save under questions already asked
 			askedQuestions.append(best_question)
 			# Get updated probabilies based on the answer to the question
-			pO, answers = questions.ask(best_question, self, game, answer_data, answers, pO, Pi, objects, number_of_objects) #p_tags
+			pO, answers = questions.ask(best_question, self, game, answers, pO, Pi, objects, number_of_objects, answer_data, sim)
 			# Split the current subset into two more subsets
 			split = questions.get_subset_split(pO, number_of_objects)
 		log.info('Finished asking %d questions', len(askedQuestions))
@@ -66,7 +49,7 @@ class Object:
 		guess = A[itemindexes][0][0]
 
 		# Guess object (Compare what the system thinks is most likely to object currenly in play)
-		result = self._guess_object(guess)
+		result = self._guess_object(guess, sim)
 
 		# Save results
 		self._record_results(game, answers, askedQuestions, guess, result, number_of_objects)
@@ -82,7 +65,6 @@ class Object:
 		Each tuple is in the form of (yes_answers, total_answers)
 		"""
 
-		log.info('Generating initial probabilities')
 		objects = []
 		for i in range(number_of_objects):
 			objects.append([])
@@ -101,26 +83,21 @@ class Object:
 		Puts results into the DB as well as writing them to file for examination
 		"""
 
-		log.info('Recording object results')
+		log.info('Recording object results to the database')
 		for i in range(0, len(game_questions)):
 			T = questions.get_t(self.id, game_questions[i], number_of_objects)
 			if game_answers[i] == True:
-				db.cursor.execute("SELECT yes_answers FROM Pqd where t_value = '{0}'".format(T))
+				db.cursor.execute("SELECT yes_answers FROM Pqd where t_value = %s", (T,))
 				yes_count = db.cursor.fetchone()[0]
 				#print yes_count, 'yes'
-				db.cursor.execute("UPDATE Pqd SET yes_answers = '{0}' WHERE t_value = '{1}'".format(yes_count + 1, T))
+				db.cursor.execute("UPDATE Pqd SET yes_answers = %s WHERE t_value = %s", (yes_count + 1, T))
 
-			db.cursor.execute("SELECT total_answers FROM Pqd where t_value = '{0}'".format(T))
+			db.cursor.execute("SELECT total_answers FROM Pqd where t_value = %s", (T,))
 			total_count = db.cursor.fetchone()[0]
 			#print total_count
-			db.cursor.execute("UPDATE Pqd SET total_answers = '{0}' WHERE t_value = '{1}'".format(total_count + 1, T))
-			
-			# Previously the database took True and False as 1 and 0 values, but now it's complaining, so just use int values instead of bools
-			if game_answers[i] == True:
-				answer = 1
-			else:
-				answer = 0
-			db.cursor.execute("INSERT INTO answers (oid, qid, answer) VALUES ('{0}', '{1}', '{2}')".format(str(self.id), game_questions[i], answer))
+			db.cursor.execute("UPDATE Pqd SET total_answers = %s WHERE t_value = %s", (total_count + 1, T))
+
+			db.cursor.execute("INSERT INTO answers (oid, qid, answer) VALUES (%s, %s, %s)", (str(self.id), game_questions[i], game_answers[i]))
 
 			db.connection.commit()
 
@@ -140,16 +117,20 @@ class Object:
 		answerfile.close()
 
 
-	def _guess_object(self, guess):
+	def _guess_object(self, guess, sim):
 		"""
 		Compare the object that the system thinks is most likely to the object currently in play
 		"""
-
-		if self.id == guess.id:
-			log.info('Win [Guess: %s | Actual: %s]', guess.name, self.name)
+		if sim:
+			obj_id, obj_name = get_actual(guess)
+		else:
+			obj_id = self.id
+			obj_name = self.name
+		if obj_id == guess.id:
+			log.info('Win [Guess: %s | Actual: %s]', guess.name, obj_name)
 			return 1
 		else:
-			log.info('Lose [Guess: %s | Actual: %s]', guess.name, self.name)
+			log.info('Lose [Guess: %s | Actual: %s]', guess.name, obj_name)
 			return 0
 
 	def __init__(self, id, name):
@@ -177,3 +158,63 @@ def get_all():
 		for obj in db.cursor.fetchall():
 			_objects.append(Object(obj[0], obj[1]))
 	return _objects
+
+def get_actual(guess):
+
+	global _objects
+	yn = raw_input("My guess is %s. Was I right? (yes/no) " % guess.name)
+	yn = yn.lower()
+	while yn != "yes" and yn != "no":
+		yn = raw_input("Try typing that again. ")
+	if yn == "yes":
+		obj_name = guess.name
+		obj_id = guess.id
+	else:
+		obj_name = raw_input("What was your object? Remember to type it exactly as you saw above. ")
+		while True:
+			for i in range(17):
+				if _objects[i].name == obj_name:
+					check = True
+					obj_id = _objects[i].id
+					break
+			if check == True:
+				break
+			obj_name = raw_input("It seems as though you mistyped. Please try typing the name of your object again. ")
+	return obj_id, obj_name
+
+def get_all_answers(number_of_objects):
+	"""
+	Returns a list of sublists pertaining to each game
+	For each game's sublist there is a sublist for each object
+	Each object's sublist contains the answers for all 289 possible questions about the object
+	"""
+
+	global _answers
+	if not _answers:
+		#_answers = [[[[]] * 289]*number_of_objects] * 15 #number of games
+		_answers = []
+		#print _answers
+		db.cursor.execute('SELECT answer FROM QuestionAnswers')
+		questionanswers = db.cursor.fetchall()
+		#questionanswers = ((1,),(2,),(3,),(4,),(5,),(6,),(7,),(8,),(9,),(10,),(11,),(12,),(13,),(14,),(15,))
+		#print questionanswers
+		answercnt = 0
+
+		for gamecnt in range(15):
+			_answers.append([])
+			for objcnt in range(17):
+				_answers[gamecnt].append([])
+				for tagcnt in range(289):
+					#print "gamecnt, objcnt, tagcnt, answercnt", gamecnt, objcnt, tagcnt, answercnt
+					_answers[gamecnt][objcnt].append(int(questionanswers[answercnt][0]))
+					#print _answers[gamecnt][objcnt][tagcnt]
+					#tagcnt += 1
+					answercnt += 1
+					#print _answers
+
+		total_length = 0
+		for i in range(15):
+			for j in range(number_of_objects):
+				total_length += len(_answers[i][j])
+
+	return _answers
