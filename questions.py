@@ -12,7 +12,7 @@ _questions = []
 _descriptions = []
 
 
-def ask(question_id, object_we_play, game, answer_data, answers, pO, Pi, objects, number_of_objects): #p_tags
+def ask(question_id, object_we_play, game, answers, pO, Pi, objects, number_of_objects, answer_data, sim):
 	"""
 	Ask a question
 	"""
@@ -20,22 +20,29 @@ def ask(question_id, object_we_play, game, answer_data, answers, pO, Pi, objects
 
 	probabilityD = get_tval()
 	question_tag = tags.get(question_id)
-
-	#answer = raw_input("Does it have " + tags[question_id-1] + "? (yes/no) ")
-	#answer = answer.lower()
-	answer = answer_data[object_we_play.id-1][question_id-1]
-	#print "answer:", answer
-	#print game_folder, object.id,objectlist[object.id-1][0],'qt->'+question_tag+' ' ,'ans->'+answer
+	quests = tags.get_questions()
+	question = quests[question_id - 1]
+	if sim:
+		answer = None
+		while answer != 0 and answer != 1:
+			answer = raw_input(question + " (yes/no) ")
+			answer = answer.lower()
+			if answer == "yes":
+				answer = 1
+			elif answer == "no":
+				answer = 0
+	else:
+		answer = answer_data[game.id-16][object_we_play.id-1][question_id-1]
+		print question, answer
 	multipliers = []
 
 	for objectID in range(number_of_objects):
 		T = get_t(objectID+1, question_id, number_of_objects)
 		N = objects[objectID][question_id-1][0]
 		D = objects[objectID][question_id-1][1]
-		#print "objectID, T, N, D, answer:", objectID, T, N, D, answer
 		#if the object is unknown
-			#pass
-		if answer == 'yes': #elif
+		#	pass
+		if answer == 1: #elif
 			answers.append(True)
 			K = probabilityD[T] + (N + 1)/(D + 2.0)
 			if Pi[0][question_id-1] == -1:
@@ -52,8 +59,6 @@ def ask(question_id, object_we_play, game, answer_data, answers, pO, Pi, objects
 			else:
 				multiplier = (K + 1 - Pi[objectID][question_id-1]) / 3
 
-		#print "K, multiplier:", K, multiplier
-		#print "multiplier:", multiplier
 		pO[objectID] *= multiplier
 
 	#if object is unknown
@@ -69,25 +74,6 @@ def ask(question_id, object_we_play, game, answer_data, answers, pO, Pi, objects
 		myfile.write(str(pO) + "\n")
 
 	return pO, answers
-
-
-# def get_p_tags():
-# 	"""
-# 	The P tag is the number of times a question has been answered true for a specific object
-# 	IE black and scissors has its own P tag
-# 	"""
-
-# 	p_tags = []
-
-# 	db.cursor.execute('SELECT qid, answer, COUNT(*) FROM answers GROUP BY qid, answer')
-# 	rows = db.cursor.fetchall()
-# 	for row in rows:
-# 		if row[0] != 0:
-# 			if len(p_tags) == row[0]-1:
-# 				p_tags.append({0: 0, 1: 0})
-# 			p_tags[row[0]-1][row[1]] = row[2]
-
-# 	return p_tags
 
 
 def get_best(game, objects, asked_questions, pO, Pi, start, number_of_objects): #p_tags
@@ -135,12 +121,10 @@ def get_best(game, objects, asked_questions, pO, Pi, start, number_of_objects): 
 				T = get_t(i, j, number_of_objects)
 				num_yes = objects[i-1][j-1][0]
 				length = objects[i-1][j-1][1]
-
 				if Pi[i-1][j-1] == -1:
 					probabilities_yes[i-1] = pO[i-1] * (tvals[T] + (num_yes + 1.0)/(length + 2.0)) / 2
 					probabilities_no[i-1] = pO[i-1] * ((1 - tvals[T]) + (length - num_yes + 1.0)/(length + 2.0)) / 2
 				else:
-					#print T
 					probabilities_yes[i-1] = pO[i-1] * (tvals[T] + (num_yes + 1.0)/(length + 2.0) + Pi[i-1][j-1]) / 3
 					probabilities_no[i-1] = pO[i-1] * ((1 - tvals[T]) + (length - num_yes + 1.0)/(length + 2.0) + 1 - Pi[i-1][j-1]) / 3
 
@@ -183,9 +167,9 @@ def copy_into_answers():
 	results = db.cursor.fetchall()
 
 	for result in results:
-		db.cursor.execute("SELECT id from Tags where tag = '{0}'".format(result[0],))
+		db.cursor.execute('SELECT id from Tags where tag = %s', (result[0],))
 		qid = db.cursor.fetchone()[0]
-		db.cursor.execute("INSERT INTO answers (qid, oid, answer) VALUES ('{0}', '{1}', '{2}')".format(qid, result[2], result[1]))
+		db.cursor.execute('INSERT INTO answers (qid, oid, answer) VALUES (%s, %s, %s)', (qid, result[2], result[1]))
 
 	db.connection.commit()
 
@@ -226,7 +210,7 @@ def build_pqd(number_of_objects):
 
 	for freq in range(0,7):
 		#This puts the sum of the yes answers and the total answers into the row that corresponds with the T value
-		db.cursor.execute("INSERT INTO Pqd (t_value, yes_answers, total_answers) VALUES ('{0}', '{1}', '{2}')".format(freq, probabilityD[freq], denominator[freq]))
+		db.cursor.execute('INSERT INTO Pqd (t_value, yes_answers, total_answers) VALUES (%s, %s, %s)', (freq, probabilityD[freq], denominator[freq]))
 		db.connection.commit()
 		#print "probabilityD[freq]:", probabilityD[freq]
 
@@ -240,6 +224,9 @@ def get_subset_split(pO, number_of_objects):
 
 	pO_sorted = np.sort(pO)
 	pO_args_sorted = np.argsort(pO)
+
+    # for x in range(number_of_objects):
+    # 	print "pO_args_sorted[x]:" + str(pO_args_sorted[x]) + " -> " + "pO_sorted[x]:" + str(pO_sorted[x])
 
 	diff = 0
 	bestDiff = 0

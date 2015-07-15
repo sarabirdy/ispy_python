@@ -26,7 +26,7 @@ def build(_game, method, number_of_objects, game_questions={}, game_answers={}, 
 	if method == 3:
 		#for each tag we select all the observation_ids that are related to it
 		for tag in tags:
-			print tag
+			print "Training tag:", tag
 			if tag not in skip:
 
 				feature_matrix=[]#initialize feature matrix for each different tag
@@ -163,6 +163,7 @@ def build(_game, method, number_of_objects, game_questions={}, game_answers={}, 
 											feature_matrix, feature_matrix_labels = updateFeatureMatrix(feature_matrix, feature_matrix_labels, obs_id, _game, label)
 
 				if should_train or (should_train_over_3 and should_train_zero):
+					print "Training image models"
 					training_matrix, training_labels = select_training_data(feature_matrix_labels, feature_matrix)
 					training_matrix=np.asarray(training_matrix)
 					#model.ModelTraining(tag, feature_matrix, 777) #training the model with GMM
@@ -253,39 +254,6 @@ def select_training_data(labels, features):
 		return features, labels
 
 
-def gen_image_probabilities(game):
-	# Collect all keyword classifiers and feature vectors of objects in the game space
-	models, feature_vectors, labels = info(game)
-	available_models = []
-	probabilities = {}
-	for i in range(0, 17):
-		probability = []
-		for j in range(1, 290):
-			if j in models:
-				# Score feature vector against keyword classifier and save the probability
-				probability.append(models[j].score(feature_vectors[i], labels[i]))
-				available_models.append(j-1)
-			else:
-				# If no keyword classifier is available, score as -1 so we can skip later
-				probability.append(-1)
-		probabilities[i] = probability
-	log.info("Image %d processed for game %d", i + 1, game.id)
-
-	return probabilities
-
-
-def evaluation_1(game):
-	Pi = gen_image_probabilities_evaluation(game)
-	with open("evaluation1.txt", "a") as myfile:
-		myfile.write(str(game.id) + " game: \n")
-		for obj in range(0, 17):
-			for tag in range(0, 289):
-				if Pi[obj][tag] >= 0:
-					myfile.write(str(obj + 1) + " object: " + str(tag+1) + " -> " + get_tag(tag+1,cursor) + " tag: " + str(Pi[obj][tag]) + " score \n")
-		myfile.write("\n")
-	myfile.close()
-
-
 def gen_image_probabilities(game, number_of_objects):
 	# Collect all keyword classifiers and feature vectors of objects in the game space
 	models, feature_vectors, labels = info(game, number_of_objects)
@@ -298,14 +266,11 @@ def gen_image_probabilities(game, number_of_objects):
 				# Score feature vector against keyword classifier and save the probability
 				probability.append(models[j].score(feature_vectors[i], labels[i]))
 				available_models.append(j-1)
-				# beans = models[j].score(feature_vectors[i], labels[i])
-				# if beans > 0:
-				#	 print j, beans
 			else:
 				# If no keyword classifier is available, score as -1 so we can skip later
 				probability.append(-1)
 		probabilities[i] = probability
-	log.info("Image %d processed for game %d", i + 1, game.id)
+	log.info("Images processed for game %d", i + 1, game.id)
 
 	return probabilities
 
@@ -350,7 +315,7 @@ def info(game, number_of_objects):
 	Gets model info
 	"""
 
-	log.info("Getting model info for Game %d", game.id)
+	log.info("Getting model info for Game %d" % game.id)
 
 	# Get all of the model vectors from the database
 	feature_matrix = []
@@ -378,9 +343,7 @@ def info(game, number_of_objects):
 			matrix_labels.append(1)
 		feature_matrix.append(matrix)
 		feature_matrix_labels.append(matrix_labels)
-		#image_path = os.getcwd() + "/GAMES/Game" + str(game_id) + '/obj' + str(i) + '.jpg'
-		#image = cv2.imread(image_path)
-		#feature_vectors.append(test_ft.FeatureExtraction(image))
+
 
 	models = {}
 	model_folder = os.getcwd() + '/SVM_model_777'
@@ -397,7 +360,6 @@ def info(game, number_of_objects):
 			models[qid] = model_clone
 
 	return models, feature_matrix, feature_matrix_labels
-
 
 def RetrieveFeatureVector(feature_info, start, end):
 	feature_vector=[]
