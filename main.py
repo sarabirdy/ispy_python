@@ -10,6 +10,8 @@ import questions
 import database as db
 import robot
 
+config = None
+
 class Main:
 
 	def __init__(self):
@@ -17,20 +19,21 @@ class Main:
 		Entry point of the simulation
 		"""
 
-		self.args = self._config()
+		global config
+		config = self._config()
 
 		self.number_of_objects = 17 #will eventually be adding unknown objects, so this will change based on the number of objects in the field
-		self.use_image_models = self.args.imagemodels
+		self.use_image_models = config.args.imagemodels
 
-		if self.args.robot:
-			robot.connect(self.args.address)
+		if config.args.robot:
+			robot.connect(config.args.address)
 
 		self._init_logger()
 
 		db.init_driver()
-		db.connect(self.args.dbaddress, self.args.username, self.args.password, self.args.database, unix_socket=self.args.socket)
+		db.connect(config.args.dbaddress, config.args.username, config.args.password, config.args.database, unix_socket=config.args.socket)
 
-		if self.args.setup:
+		if config.args.setup:
 			self.setup()
 
 		start = time.time()
@@ -49,8 +52,8 @@ class Main:
 
 		games_folder = os.getcwd() + '/Human_Games'
 
-		sim = self.args.notsimulated
-		using_robot = self.args.robot
+		sim = config.args.notsimulated
+		using_robot = config.args.robot
 
 		wins = 0
 		losses = 0
@@ -63,7 +66,7 @@ class Main:
 		for number in range(16, 31):
 			game = Game(number)
 
-			game_wins, game_losses, game_num_questions, game_win_avg, game_lose_avg, game_answers, game_questions = game.playGame(self.number_of_objects, sim, self.use_image_models, using_robot)
+			game_wins, game_losses, game_num_questions, game_win_avg, game_lose_avg, game_answers, game_questions = game.playGame(self.number_of_objects)
 
 			questions_asked[game.id] = game_questions
 			question_answers[game.id] = game_answers
@@ -157,7 +160,9 @@ class Main:
 		if args.robot:
 			args.notsimulated = True
 
-		return args
+		config.args = args
+
+		return config
 
 if __name__ == '__main__':
 	Main()
