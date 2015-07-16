@@ -7,8 +7,6 @@ import database as db
 import config
 from robot import robot
 
-global _objects
-
 class Game:
 	"""
 	Main class that handles game logic

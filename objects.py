@@ -124,7 +124,7 @@ class Object:
 		Compare the object that the system thinks is most likely to the object currently in play
 		"""
 		if config.args.notsimulated:
-			obj_id, obj_name = get_actual(guess, robot)
+			obj_id, obj_name = get_actual(guess)
 		else:
 			obj_id = self.id
 			obj_name = self.name
