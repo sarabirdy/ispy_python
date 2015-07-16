@@ -9,6 +9,7 @@ import tags
 import database as db
 import config
 from robot import robot
+import interface
 
 _questions = []
 _descriptions = []
@@ -25,13 +26,8 @@ def ask(question_id, object_we_play, game, answers, pO, Pi, objects, number_of_o
 	quests = tags.get_questions()
 	question = quests[question_id - 1]
 	if config.args.notsimulated:
-		if robot:
-			answer = robot().ask(question)
-		else:
-			answer = None
-			while answer != "yes" and answer != "no":
-				answer = raw_input(question + " (yes/no) ")
-				answer = answer.lower()
+		answer = interface.ask(question)
+		
 		if answer == "yes":
 			answer = 1
 		elif answer == "no":

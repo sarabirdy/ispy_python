@@ -21,8 +21,8 @@ class Robot():
 		self.asr.setLanguage("English")
 
 		self.vocab = {
-			"yes": ["yes", "yeah", "yep", "yup"],
-			"no": ["no", "nope", "nah"]
+			"yes": ["yes", "ya", "yep", "yup", "sure", "definitely"],
+			"no": ["no", "nope"]
 		}
 		self.asr.setVocabulary([j for i in self.vocab.values() for j in i], False)
 

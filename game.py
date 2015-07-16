@@ -6,6 +6,7 @@ import models
 import database as db
 import config
 from robot import robot
+import interface
 
 global _objects
 
@@ -42,15 +43,10 @@ class Game:
 
 		for i in objlist:
 			if config.args.notsimulated:
-				if robot:
-					robot().say("Choose an object, but don't tell me.")
-				else:
-					print "\nPlease choose an object. Your choices are:\n"
-					for j in range(len(objlist)):
-						print objlist[j].name
-					chosen = raw_input("\nAre you ready to play now? (yes/no) ")
-					while chosen.lower() != "yes":
-						chosen = raw_input("Now are you ready? (yes/no) ")
+				for j in range(len(objlist)):
+					print objlist[j].name
+				interface.say("Choose an object. Don't tell me!")
+				time.sleep(5)
 			result, number_of_questions, answers, askedQuestions = i.playObject(self, Pi, number_of_objects)
 			log.info("Game %d, object %d complete, updating stats", self.id, i.id)
 			if result == 0: # Loss
@@ -68,13 +64,7 @@ class Game:
 			count += 1
 
 			if config.args.notsimulated == True and count != 0:
-				if robot:
-					quit = robot().ask("Would you like to quit this game early? There are %d rounds left." % (17 - count))
-				else:
-					quit = None
-					while quit != "yes" and quit != "no":
-						quit = raw_input("Would you like to quit this game early? (yes/no) \nThere are %d rounds left. " % (17 - count))
-						quit = quit.lower()
+				quit = interfact.ask("Would you like to quit this game early? \nThere are %d rounds left. " % (17 - count))
 				if quit == "yes":
 					break
 		# Save results
