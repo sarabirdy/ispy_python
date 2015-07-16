@@ -1,9 +1,17 @@
 *.pyc
 *~
 GMM_model_*
+<<<<<<< HEAD
+SVM_model_*
+=======
+>>>>>>> 495419c2c6a9d2ae51c7f0a6596ab7e5cd01340b
 log.txt
 answers.txt
 example.txt
 .DS_STORE
 game.txt
+<<<<<<< HEAD
 config.py
+=======
+config.py
+>>>>>>> 495419c2c6a9d2ae51c7f0a6596ab7e5cd01340b

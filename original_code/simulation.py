@@ -1048,26 +1048,41 @@ def get_tval(cursor):
  
     
 def get_questions_answers(object_id, cursor):
+<<<<<<< HEAD
+    cursor.execute('SELECT qid, oid, answer from answers where oid = %s', (object_id))
+=======
     cursor.execute('SELECT qid, oid, answer from answers where oid = "{0}"'.format(object_id))
+>>>>>>> 495419c2c6a9d2ae51c7f0a6596ab7e5cd01340b
 
     results = cursor.fetchall()
 
     questions_answers = {}
     for i in range(1, 290):
         questions_answers[i] = []
+<<<<<<< HEAD
+
+=======
     x = 0
+>>>>>>> 495419c2c6a9d2ae51c7f0a6596ab7e5cd01340b
     for qid, oid, answer in results:
         for i in range(1, 290):
             if int(qid) == i:
                 questions_answers[i].append(int(answer))
+<<<<<<< HEAD
+=======
 	    x+=1
     print x
+>>>>>>> 495419c2c6a9d2ae51c7f0a6596ab7e5cd01340b
 
     return questions_answers
 
 
 def get_tag(question_id, cursor):
+<<<<<<< HEAD
+    cursor.execute('SELECT tag from Tags where id = %s', (question_id))
+=======
     cursor.execute('SELECT tag from Tags where id = "{0}"'.format(question_id))
+>>>>>>> 495419c2c6a9d2ae51c7f0a6596ab7e5cd01340b
 
     return cursor.fetchone()[0]
 
@@ -1079,9 +1094,15 @@ def get_p_tag(cursor):
     tags = get_tags(cursor)
     for tag in range(1,290):
 	answers = {}
+<<<<<<< HEAD
+	cursor.execute("SELECT COUNT(*) FROM answers WHERE qid = %s and answer = TRUE", tag)
+	answers[1] = cursor.fetchone()[0]
+	cursor.execute("SELECT COUNT(*) FROM answers WHERE qid = %s and answer = FALSE", tag)
+=======
 	cursor.execute('SELECT COUNT(*) FROM answers WHERE qid = "{0}" and answer = TRUE'.format(tag))
 	answers[1] = cursor.fetchone()[0]
 	cursor.execute('SELECT COUNT(*) FROM answers WHERE qid = "{0}" and answer = FALSE'.format(tag))
+>>>>>>> 495419c2c6a9d2ae51c7f0a6596ab7e5cd01340b
 	answers[0] = cursor.fetchone()[0]
 	p_tags.append(answers)
 	#print tags[tag-1] + " prob yes: " + str(p_tags[tag-1][1]/ (float(p_tags[tag-1][0] + p_tags[tag-1][1]))) + " prob no: " +  str(p_tags[tag-1][0]/ (float(p_tags[tag-1][0] + p_tags[tag-1][1])))
@@ -1211,7 +1232,11 @@ def get_model_info(cursor, game_id):
 	    model_clone = joblib.load(model_folder + '/' + model)
 	    T = model.split('_', 1)[0]
 	    T = T.lower()
+<<<<<<< HEAD
+	    cursor.execute("SELECT id FROM Tags WHERE tag = %s", (T))
+=======
 	    cursor.execute('SELECT id FROM Tags WHERE tag = "{0}"'.format(T))
+>>>>>>> 495419c2c6a9d2ae51c7f0a6596ab7e5cd01340b
 	    qid = cursor.fetchone()[0]
 	    models[qid] = model_clone
 
@@ -1500,11 +1525,17 @@ def get_subset_split(pO):
 
 def ask_question(cursor, answer_data, OBJECT_WE_PLAY, bestD, answers, pO, tags, game_folder, objectlist, objects, Pi, p_tags):
     # Takes best question and updates all object probabilies based on the answer
+<<<<<<< HEAD
+    
+    probabilityD = get_tval(cursor)
+    question_tag = tags[bestD-1]
+=======
         
     probabilityD = get_tval(cursor)
     print probabilityD
     question_tag = tags[bestD-1]
     print question_tag
+>>>>>>> 495419c2c6a9d2ae51c7f0a6596ab7e5cd01340b
     #answer = raw_input("Does it have " + tags[bestD-1] + "? (yes/no) ")
     #answer = answer.lower()
     answer = answer_data[OBJECT_WE_PLAY-1][bestD-1]
@@ -1525,17 +1556,25 @@ def ask_question(cursor, answer_data, OBJECT_WE_PLAY, bestD, answers, pO, tags, 
 		    T = get_t(objectID+1, bestD, cursor)
 		    N = sum(objects[objectID+1][bestD])
 		    D = len(objects[objectID+1][bestD])
+<<<<<<< HEAD
+		    pO[objectID] = pO[objectID] * (probabilityD[T] + (N + 1)/(D + 2.0)) / 2 #/((p_tags[bestD-1][1] + 1) / float(p_tags[bestD-1][1] + p_tags[bestD-1][0] + 2))	
+=======
 		    print T, N, D
 		    pO[objectID] = pO[objectID] * (probabilityD[T] + (N + 1)/(D + 2.0)) / 2 #/((p_tags[bestD-1][1] + 1) / float(p_tags[bestD-1][1] + p_tags[bestD-1][0] + 2))
 		    print pO[objectID] * (probabilityD[T] + (N + 1)/(D + 2.0)) / 2
+>>>>>>> 495419c2c6a9d2ae51c7f0a6596ab7e5cd01340b
 	    else:
 		for objectID in range(0,17):
 		    T = get_t(objectID+1, bestD, cursor)
 		    N = sum(objects[objectID+1][bestD])
 		    D = len(objects[objectID+1][bestD])
+<<<<<<< HEAD
+		    pO[objectID] = pO[objectID] * ((probabilityD[T] + (N + 1)/(D + 2.0) + Pi[objectID][bestD-1])) / 3 #/((p_tags[bestD-1][1] + 1) / float(p_tags[bestD-1][1] + p_tags[bestD-1][0] + 2))
+=======
 		    print T, N, D
 		    pO[objectID] = pO[objectID] * ((probabilityD[T] + (N + 1)/(D + 2.0) + Pi[objectID][bestD-1])) / 3 #/((p_tags[bestD-1][1] + 1) / float(p_tags[bestD-1][1] + p_tags[bestD-1][0] + 2))
 		    print ((probabilityD[T] + (N + 1)/(D + 2.0) + Pi[objectID][bestD-1])) / 3
+>>>>>>> 495419c2c6a9d2ae51c7f0a6596ab7e5cd01340b
 
     else:
 	    if answer =='no' or answer is 'no':
@@ -1547,17 +1586,25 @@ def ask_question(cursor, answer_data, OBJECT_WE_PLAY, bestD, answers, pO, tags, 
 				T = get_t(objectID+1, bestD, cursor)
 				N = sum(objects[objectID+1][bestD])
 				D = len(objects[objectID+1][bestD])
+<<<<<<< HEAD
+				pO[objectID] = pO[objectID] * ((1 - probabilityD[T]) + (D - N + 1)/(D + 2.0)) / 2 #/((p_tags[bestD-1][1] + 1) / float(p_tags[bestD-1][0] + p_tags[bestD-1][0] + 2))	    
+=======
 				print T, N, D
 				pO[objectID] = pO[objectID] * ((1 - probabilityD[T]) + (D - N + 1)/(D + 2.0)) / 2 #/((p_tags[bestD-1][1] + 1) / float(p_tags[bestD-1][0] + p_tags[bestD-1][0] + 2))
 				print ((1 - probabilityD[T]) + (D - N + 1)/(D + 2.0)) / 2
+>>>>>>> 495419c2c6a9d2ae51c7f0a6596ab7e5cd01340b
 			else:
 			    for objectID in range(0,17):
 				T = get_t(objectID+1, bestD, cursor)
 				N = sum(objects[objectID+1][bestD])
 				D = len(objects[objectID+1][bestD])
+<<<<<<< HEAD
+				pO[objectID] = pO[objectID] * (((1 - probabilityD[T]) + (D - N + 1)/(D + 2.0) + 1 - Pi[objectID][bestD-1])) / 3 #/((p_tags[bestD-1][0] + 1) / float(p_tags[bestD-1][1] + p_tags[bestD-1][0] + 2))
+=======
 				print T, N, D
 				pO[objectID] = pO[objectID] * (((1 - probabilityD[T]) + (D - N + 1)/(D + 2.0) + 1 - Pi[objectID][bestD-1])) / 3 #/((p_tags[bestD-1][0] + 1) / float(p_tags[bestD-1][1] + p_tags[bestD-1][0] + 2))
 				print (((1 - probabilityD[T]) + (D - N + 1)/(D + 2.0) + 1 - Pi[objectID][bestD-1])) / 3
+>>>>>>> 495419c2c6a9d2ae51c7f0a6596ab7e5cd01340b
 	
     # Normalize the probabilities so that all object probabilities will sum to 1				
     pO = pO / np.sum(pO)
@@ -1566,7 +1613,11 @@ def ask_question(cursor, answer_data, OBJECT_WE_PLAY, bestD, answers, pO, tags, 
     with open("example.txt", "a") as myfile:
 	    myfile.write(question_tag + " -> " + answer+ " \n")
 	    myfile.write(str(pO) + "\n")
+<<<<<<< HEAD
+	
+=======
         	
+>>>>>>> 495419c2c6a9d2ae51c7f0a6596ab7e5cd01340b
     return pO, answers
 
 
@@ -1672,6 +1723,19 @@ def record_object_results(cursor, object_id, answers, questions, con, guess2say,
 	T = get_t(object_id, questions[i], cursor)
 	#print object_id, questions[i], answers[i]
 	if answers[i] == True:
+<<<<<<< HEAD
+	    cursor.execute("SELECT yes_answers FROM Pqd where t_value = %s", T)
+	    yes_count = cursor.fetchone()[0]
+	    #print yes_count, 'yes'
+	    cursor.execute("UPDATE Pqd SET yes_answers = %s WHERE t_value = %s", (yes_count + 1, T))
+	    
+	cursor.execute("SELECT total_answers FROM Pqd where t_value = %s", (T))
+	total_count = cursor.fetchone()[0]
+	#print total_count
+	cursor.execute("UPDATE Pqd SET total_answers = %s WHERE t_value = %s", (total_count + 1, T))
+
+	cursor.execute("INSERT INTO answers (oid, qid, answer) VALUES (%s, %s, %s)", (str(object_id), questions[i], answers[i]))
+=======
 	    cursor.execute('SELECT yes_answers FROM Pqd where t_value = "{0}"'.format(T))
 	    yes_count = cursor.fetchone()[0]
 	    #print yes_count, 'yes'
@@ -1683,6 +1747,7 @@ def record_object_results(cursor, object_id, answers, questions, con, guess2say,
 	cursor.execute('UPDATE Pqd SET total_answers ="{0}" WHERE t_value = "{1}"'.format(total_count + 1, T))
 
 	cursor.execute('INSERT INTO answers (oid, qid, answer) VALUES ("{0}", "{1}", "{2}")'.format(str(object_id), questions[i], answers[i]))
+>>>>>>> 495419c2c6a9d2ae51c7f0a6596ab7e5cd01340b
 	    
 	con.commit()
 

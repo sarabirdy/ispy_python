@@ -4,7 +4,7 @@ import logging as log
 import objects
 import models
 import database as db
-
+from robot import robot
 global _objects
 
 class Game:
@@ -12,7 +12,7 @@ class Game:
 	Main class that handles game logic
 	"""
 
-	def playGame(self, number_of_objects, sim, use_image_models):
+	def playGame(self, number_of_objects, sim, use_image_models, using_robot):
 		"""
 		Play the game
 		"""
@@ -40,13 +40,16 @@ class Game:
 
 		for i in objlist:
 			if sim:
-				print "\nPlease choose an object. Your choices are:\n"
-				for j in range(len(objlist)):
-					print objlist[j].name
-				chosen = raw_input("\nAre you ready to play now? (yes/no) ")
-				while chosen.lower() != "yes":
-					chosen = raw_input("Now are you ready? (yes/no) ")
-			result, number_of_questions, answers, askedQuestions = i.playObject(self, Pi, number_of_objects, sim)
+				if using_robot:
+					robot().say("Choose an object, but don't tell me.")
+				else:
+					print "\nPlease choose an object. Your choices are:\n"
+					for j in range(len(objlist)):
+						print objlist[j].name
+					chosen = raw_input("\nAre you ready to play now? (yes/no) ")
+					while chosen.lower() != "yes":
+						chosen = raw_input("Now are you ready? (yes/no) ")
+			result, number_of_questions, answers, askedQuestions = i.playObject(self, Pi, number_of_objects, sim, using_robot)
 			log.info("Game %d, object %d complete, updating stats", self.id, i.id)
 			if result == 0: # Loss
 				round_losses += 1
@@ -63,10 +66,13 @@ class Game:
 			count += 1
 
 			if sim == True and count != 0:
-				quit = None
-				while quit != "yes" and quit != "no":
-					quit = raw_input("Would you like to quit this game early? (yes/no) \nThere are %d rounds left. " % (17 - count))
-					quit = quit.lower()
+				if using_robot:
+					quit = robot().ask("Would you like to quit this game early? There are %d rounds left." % (17 - count))
+				else:
+					quit = None
+					while quit != "yes" and quit != "no":
+						quit = raw_input("Would you like to quit this game early? (yes/no) \nThere are %d rounds left. " % (17 - count))
+						quit = quit.lower()
 				if quit == "yes":
 					break
 		# Save results

@@ -8,6 +8,7 @@ from game import Game
 import models
 import questions
 import database as db
+import robot
 
 class Main:
 
@@ -21,10 +22,13 @@ class Main:
 		self.number_of_objects = 17 #will eventually be adding unknown objects, so this will change based on the number of objects in the field
 		self.use_image_models = self.args.imagemodels
 
+		if self.args.robot:
+			robot.connect(self.args.address)
+
 		self._init_logger()
 
 		db.init_driver()
-		db.connect(self.args.address, self.args.username, self.args.password, self.args.database, unix_socket=self.args.socket)
+		db.connect(self.args.dbaddress, self.args.username, self.args.password, self.args.database, unix_socket=self.args.socket)
 
 		if self.args.setup:
 			self.setup()
@@ -46,6 +50,7 @@ class Main:
 		games_folder = os.getcwd() + '/Human_Games'
 
 		sim = self.args.notsimulated
+		using_robot = self.args.robot
 
 		wins = 0
 		losses = 0
@@ -58,7 +63,7 @@ class Main:
 		for number in range(16, 31):
 			game = Game(number)
 
-			game_wins, game_losses, game_num_questions, game_win_avg, game_lose_avg, game_answers, game_questions = game.playGame(self.number_of_objects, sim, self.use_image_models)
+			game_wins, game_losses, game_num_questions, game_win_avg, game_lose_avg, game_answers, game_questions = game.playGame(self.number_of_objects, sim, self.use_image_models, using_robot)
 
 			questions_asked[game.id] = game_questions
 			question_answers[game.id] = game_answers
@@ -74,8 +79,11 @@ class Main:
 			if sim:
 				quit = None
 				while quit != "yes" and quit != "no":
-					quit = raw_input("Would you like to stop playing completely? (yes/no) \nThere are %d games left. " % (30 - number))
-					quit = quit.lower()
+					if using_robot:
+						quit = robot.r.ask("Would you like to stop playing completely? There are %d games left. " % (30 - number))
+					else:
+						quit = raw_input("Would you like to stop playing completely? (yes/no) \nThere are %d games left. " % (30 - number))
+						quit = quit.lower()
 
 				if quit == "yes":
 					break
@@ -127,22 +135,29 @@ class Main:
 		try:
 			import config
 		except ImportError:
-			import pprint
 			f = open('config.py', 'w')
-			f.write("db = {\n\t'address': 'localhost',\n\t'username': 'root',\n\t'password': 'root',\n\t'database': 'iSpy_features',\n\t'socket': '/var/run/mysqld/mysqld.sock'\n}\n\nsetup = False\nimage_models = False\nsimulated = True")
+			f.write("db = {\n\t'address': 'localhost',\n\t'username': 'root',\n\t'password': 'root',\n\t'database': 'iSpy_features',\n\t'socket': '/var/run/mysqld/mysqld.sock'\n}\n\nrobot = {\n\t'address': 'bobby.local'\n}")
 			f.close()
 			import config
 
 		parser = argparse.ArgumentParser()
-		parser.add_argument("-i", "--imagemodels", action="store_true", help="use image models", default=config.image_models)
-		parser.add_argument("-s", "--setup", action="store_true", help="run setup", default=config.setup)
-		parser.add_argument("-n", "--notsimulated", action="store_true", help="user provides responses", default=(not config.simulated))
+		parser.add_argument("-i", "--imagemodels", action="store_true", help="use image models")
+		parser.add_argument("-s", "--setup", action="store_true", help="run setup")
+		parser.add_argument("-n", "--notsimulated", action="store_true", help="user provides responses")
 		parser.add_argument("-u", "--username", help="database username", default=config.db["username"])
 		parser.add_argument("-p", "--password", help="database password", default=config.db["password"])
 		parser.add_argument("-d", "--database", help="choose which database to use", default=config.db["database"])
-		parser.add_argument("-a", "--address", help="address of MySQL server", default=config.db["address"])
+		parser.add_argument("-a", "--dbaddress", help="address of MySQL server", default=config.db["address"])
 		parser.add_argument("-t", "--socket", help="path to MySQL socket", default=config.db["socket"])
-		return parser.parse_args()
+		parser.add_argument("-r", "--robot", action="store_true", help="runs code using robot")
+		parser.add_argument("--address", help="the robot's ip address", default=config.robot["address"])
+
+		args = parser.parse_args()
+
+		if args.robot:
+			args.notsimulated = True
+
+		return args
 
 if __name__ == '__main__':
 	Main()
