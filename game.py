@@ -46,7 +46,7 @@ class Game:
 				for j in range(len(objlist)):
 					print objlist[j].name
 				interface.say("Choose an object. Don't tell me!")
-				time.sleep(5)
+				time.sleep(2.5)
 			result, number_of_questions, answers, askedQuestions = i.playObject(self, Pi, number_of_objects)
 			log.info("Game %d, object %d complete, updating stats", self.id, i.id)
 			if result == 0: # Loss
@@ -64,7 +64,7 @@ class Game:
 			count += 1
 
 			if config.args.notsimulated == True and count != 0:
-				quit = interfact.ask("Would you like to quit this game early? \nThere are %d rounds left. " % (17 - count))
+				quit = interface.ask("Would you like to quit this game early? \nThere are %d rounds left. " % (17 - count))
 				if quit == "yes":
 					break
 		# Save results

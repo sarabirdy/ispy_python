@@ -14,6 +14,6 @@ def ask(question):
 
 def say(text):
 	if robot():
-		robot.say(text)
+		robot().say(text)
 	else:
 		print text
