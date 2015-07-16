@@ -23,7 +23,10 @@ class Robot():
 		self.yes_no_vocab = {
 			"yes": ["yes", "ya", "yep", "yup", "sure"],
 			"no": ["no", "nope", "nah"]
-		}
+			
+		self.vocab = {
+			"yes": ["yes", "ya", "yep", "yup", "sure", "definitely"],
+			"no": ["no", "nope"]
 
 		self.vocab = self.yes_no_vocab
 		self.asr.setVocabulary([j for i in self.vocab.values() for j in i], False)

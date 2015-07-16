@@ -9,6 +9,7 @@ import tags
 import database as db
 import config
 from robot import robot
+import interface
 
 _objects = []
 _answers = []
@@ -164,19 +165,13 @@ def get_all():
 def get_actual(guess):
 
 	global _objects
-	if robot:
-		yn = robot().ask("My guess is %s. Was I right?" % guess.name)
-	else:
-		yn = raw_input("My guess is %s. Was I right? (yes/no) " % guess.name)
-		yn = yn.lower()
-		while yn != "yes" and yn != "no":
-			yn = raw_input("Try typing that again. ")
+	yn = interface.ask("My guess is %s. Was I right?" % guess.name)
 
 	if yn == "yes":
 		obj_name = guess.name
 		obj_id = guess.id
 	else:
-		if robot:
+		if robot():
 			robot().askObject()
 			print "\nObject names:\n"
 			for j in range(len(_objects)):

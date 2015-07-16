@@ -9,6 +9,7 @@ import models
 import questions
 import database as db
 import robot
+import interface
 
 config = None
 
@@ -80,16 +81,10 @@ class Main:
 			if self.use_image_models:
 				models.build(game, 3, self.number_of_objects, questions_asked, question_answers)
 			if sim:
-				quit = None
-				while quit != "yes" and quit != "no":
-					if using_robot:
-						quit = robot.r.ask("Would you like to stop playing completely? There are %d games left. " % (30 - number))
-					else:
-						quit = raw_input("Would you like to stop playing completely? (yes/no) \nThere are %d games left. " % (30 - number))
-						quit = quit.lower()
-
+				quit = interface.ask("Would you like to stop playing completely? \nThere are %d games left." % (30 - number))
 				if quit == "yes":
 					break
+					
 		log.info("Overall Wins: %d Overall Losses: %d", wins, losses)
 		log.info("Overall Accuracy: %d%%", int((float(wins)/(wins + losses)) * 100))
 		if wins != 0:
