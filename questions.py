@@ -7,13 +7,14 @@ import numpy as np
 
 import tags
 import database as db
+import config
 from robot import robot
 
 _questions = []
 _descriptions = []
 
 
-def ask(question_id, object_we_play, game, answers, pO, Pi, objects, number_of_objects, answer_data, sim, using_robot):
+def ask(question_id, object_we_play, game, answers, pO, Pi, objects, number_of_objects, answer_data):
 	"""
 	Ask a question
 	"""
@@ -23,8 +24,8 @@ def ask(question_id, object_we_play, game, answers, pO, Pi, objects, number_of_o
 	question_tag = tags.get(question_id)
 	quests = tags.get_questions()
 	question = quests[question_id - 1]
-	if sim:
-		if using_robot:
+	if config.args.notsimulated:
+		if robot:
 			answer = robot().ask(question)
 		else:
 			answer = None

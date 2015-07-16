@@ -4,7 +4,9 @@ import logging as log
 import objects
 import models
 import database as db
+import config
 from robot import robot
+
 global _objects
 
 class Game:
@@ -12,7 +14,7 @@ class Game:
 	Main class that handles game logic
 	"""
 
-	def playGame(self, number_of_objects, sim, use_image_models, using_robot):
+	def playGame(self, number_of_objects):
 		"""
 		Play the game
 		"""
@@ -22,7 +24,7 @@ class Game:
 		start = time.time()
 
 		# Generate all image probabilities at once since this takes a little while
-		if use_image_models:
+		if config.args.imagemodels:
 			Pi = models.gen_image_probabilities(self, number_of_objects)
 		else:
 			Pi = [[-1] * 289] * 17
@@ -39,8 +41,8 @@ class Game:
 		count = 0
 
 		for i in objlist:
-			if sim:
-				if using_robot:
+			if config.args.notsimulated:
+				if robot:
 					robot().say("Choose an object, but don't tell me.")
 				else:
 					print "\nPlease choose an object. Your choices are:\n"
@@ -49,7 +51,7 @@ class Game:
 					chosen = raw_input("\nAre you ready to play now? (yes/no) ")
 					while chosen.lower() != "yes":
 						chosen = raw_input("Now are you ready? (yes/no) ")
-			result, number_of_questions, answers, askedQuestions = i.playObject(self, Pi, number_of_objects, sim, using_robot)
+			result, number_of_questions, answers, askedQuestions = i.playObject(self, Pi, number_of_objects)
 			log.info("Game %d, object %d complete, updating stats", self.id, i.id)
 			if result == 0: # Loss
 				round_losses += 1
@@ -65,8 +67,8 @@ class Game:
 
 			count += 1
 
-			if sim == True and count != 0:
-				if using_robot:
+			if config.args.notsimulated == True and count != 0:
+				if robot:
 					quit = robot().ask("Would you like to quit this game early? There are %d rounds left." % (17 - count))
 				else:
 					quit = None

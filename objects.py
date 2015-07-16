@@ -7,6 +7,7 @@ import numpy as np
 import questions
 import tags
 import database as db
+import config
 from robot import robot
 
 _objects = []
@@ -14,7 +15,7 @@ _answers = []
 
 class Object:
 
-	def playObject(self, game, Pi, number_of_objects, sim, using_robot):
+	def playObject(self, game, Pi, number_of_objects):
 		"""
 		Play this object
 		"""
@@ -38,7 +39,7 @@ class Object:
 			# Save under questions already asked
 			askedQuestions.append(best_question)
 			# Get updated probabilies based on the answer to the question
-			pO, answers = questions.ask(best_question, self, game, answers, pO, Pi, objects, number_of_objects, answer_data, sim, using_robot)
+			pO, answers = questions.ask(best_question, self, game, answers, pO, Pi, objects, number_of_objects, answer_data)
 			# Split the current subset into two more subsets
 			split = questions.get_subset_split(pO, number_of_objects)
 		log.info('Finished asking %d questions', len(askedQuestions))
@@ -50,7 +51,7 @@ class Object:
 		guess = A[itemindexes][0][0]
 
 		# Guess object (Compare what the system thinks is most likely to object currenly in play)
-		result = self._guess_object(guess, sim, using_robot)
+		result = self._guess_object(guess)
 
 		# Save results
 		self._record_results(game, answers, askedQuestions, guess, result, number_of_objects)
@@ -118,12 +119,12 @@ class Object:
 		answerfile.close()
 
 
-	def _guess_object(self, guess, sim, using_robot):
+	def _guess_object(self, guess):
 		"""
 		Compare the object that the system thinks is most likely to the object currently in play
 		"""
-		if sim:
-			obj_id, obj_name = get_actual(guess, using_robot)
+		if config.args.notsimulated:
+			obj_id, obj_name = get_actual(guess, robot)
 		else:
 			obj_id = self.id
 			obj_name = self.name
@@ -160,10 +161,10 @@ def get_all():
 			_objects.append(Object(obj[0], obj[1]))
 	return _objects
 
-def get_actual(guess, using_robot):
+def get_actual(guess):
 
 	global _objects
-	if using_robot:
+	if robot:
 		yn = robot().ask("My guess is %s. Was I right?" % guess.name)
 	else:
 		yn = raw_input("My guess is %s. Was I right? (yes/no) " % guess.name)
@@ -175,7 +176,7 @@ def get_actual(guess, using_robot):
 		obj_name = guess.name
 		obj_id = guess.id
 	else:
-		if using_robot:
+		if robot:
 			robot().askObject()
 			print "\nObject names:\n"
 			for j in range(len(_objects)):
