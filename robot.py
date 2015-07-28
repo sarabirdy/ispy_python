@@ -32,6 +32,8 @@ class Robot():
 		}
 		self.asr.setVocabulary([j for i in self.vocab.values() for j in i], False)
 
+		self.__initCamera()
+
 	def say(self, text):
 		"""
 		Uses ALTextToSpeech to vocalize the given string
@@ -61,7 +63,7 @@ class Robot():
 
 	def stiffen(self, body_part = "Body"):
 		"""
-		Turns stiffnesses of specified robot body part all the way on over 1 second
+		Turns stiffnesses of specified robot body part completely on over 1 second
 		"""
 
 		self.motion.stiffnessInterpolation(body_part, 1.0, 1.0)
@@ -73,7 +75,7 @@ class Robot():
 		"""
 		self.motion.rest()
 
-	def initCamera(self):
+	def __initCamera(self):
 		"""
 		Subscribes to robot cameras
 		"""
@@ -101,3 +103,14 @@ class Robot():
 		image = (numpy.reshape(numpy.frombuffer(nao_image[6], dtype = '%iuint8' % nao_image[2]), (nao_image[1], nao_image[0], nao_image[2])))
 
 		return image
+
+	def turnHead(yaw = None, pitch = None, speed = 0.3):
+		"""
+		Turns robot head to the specified yaw and/or pitch in radians at the given speed.
+		Yaw can range from 119.5 deg (left) to -119.5 deg (right) and pitch can range from 38.5 deg (up) to -29.5 deg (down).
+		"""
+
+		if not yaw is None:
+       		motion.setAngles("HeadYaw", yaw, speed)
+       	if not pitch is None:
+       		motion.setAngles("HeadPitch", pitch, speed)
