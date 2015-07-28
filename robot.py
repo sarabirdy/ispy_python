@@ -120,35 +120,35 @@ class Robot(ALModule):
 		"""
 		Has the robot ask a question and returns the answer
 		"""
-		# global count
-		# print question
-		# count += 1
-		# if count == 1:
-		# 	return "no"
-		# elif count == 2:
-		# 	return "yes"
-		# elif count == 3:
-		# 	return "yes"
-		# elif count == 4:
-		# 	return "yes"
-		# elif count == 5:
-		# 	return "no"
-		# elif count == 6 or count == 7:
-		# 	return "yes"
+		global count
+		print question
+		count += 1
+		if count == 1:
+			return "no"
+		elif count == 2:
+			return "yes"
+		elif count == 3:
+			return "yes"
+		elif count == 4:
+			return "yes"
+		elif count == 5:
+			return "no"
+		elif count == 6 or count == 7:
+			return "yes"
 
-		self.say(question)
-		self.asr.subscribe("TEST_ASR")
-		data = (None, 0)
-		while not data[0]:
-			data = self.mem.getData("WordRecognized")
-		self.asr.unsubscribe("TEST_ASR")
-
-		print data
-
-		for word in self.yes_no_vocab:
-			for syn in self.yes_no_vocab[word]:
-				if data[0] == syn:
-					return word
+		# self.say(question)
+		# self.asr.subscribe("TEST_ASR")
+		# data = (None, 0)
+		# while not data[0]:
+		# 	data = self.mem.getData("WordRecognized")
+		# self.asr.unsubscribe("TEST_ASR")
+		#
+		# print data
+		#
+		# for word in self.yes_no_vocab:
+		# 	for syn in self.yes_no_vocab[word]:
+		# 		if data[0] == syn:
+		# 			return word
 
 	def ask_object(self):
 		self.start()

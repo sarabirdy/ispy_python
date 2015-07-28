@@ -172,12 +172,12 @@ def get_actual(guess):
 		obj_name = guess.name
 		obj_id = guess.id
 	else:
-		if False: #if robot()
-			# global count
-			# broker2 = ALBroker("broker2", "0.0.0.0", 0, "bobby.local", 9559)
-			# r2 = Robot("r2")
-			# obj_name = r2.ask_object()
-			# broker2.shutdown()
+		if True: #if robot()
+			global count
+			broker1 = ALBroker("broker1", "0.0.0.0", 0, "bobby.local", 9559)
+			r2 = Robot("r2")
+			print r2.ask_object()
+			broker1.shutdown()
 			pass
 
 		else:
@@ -186,6 +186,7 @@ def get_actual(guess):
 				print _objects[j].name
 			obj_name = raw_input("\nWhat was your object? Remember to type it exactly as you saw above. ")
 		while True:
+			check = False
 			for i in range(len(_objects)):
 				if _objects[i].name == obj_name:
 					check = True
