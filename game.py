@@ -43,7 +43,7 @@ class Game:
 			if config.args.notsimulated:
 				for j in range(len(objlist)):
 					print objlist[j].name
-				interface.say("Choose an object. Don't tell me!")
+				#interface.say("Choose an object. Don't tell me! ")
 				time.sleep(2.5)
 			result, number_of_questions, answers, askedQuestions = i.playObject(self, Pi, number_of_objects)
 			log.info("Game %d, object %d complete, updating stats", self.id, i.id)
