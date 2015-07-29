@@ -10,11 +10,11 @@ snd = None
 #r = None
 #broker = None
 
-def connect(address, port=9559, name="r", brokername="broker"):
+def connect(address="bobby.local", port=9559, name="r", brokername="broker"):
 	global broker
-	broker = ALBroker("broker", "0.0.0.0", 0, "bobby.local", 9559)
+	broker = ALBroker("broker", "0.0.0.0", 0, address, 9559)
 	global r
-	r = Robot(name, "bobby.local", 9559)
+	r = Robot(name, address, 9559)
 
 def robot():
 	global r
@@ -40,23 +40,23 @@ class Robot(ALModule):
 		}
 
 		self.object_vocab = {
-		"digital_clock": ["digital clock", "blue clock", "black alarm clock"],
-		"analog_clock": ["analog clock", "black clock", "black alarm clock"],
-		"red_soccer_ball": ["red soccer ball", "red ball"],
-		"basketball": ["basketball", "orange ball"],
-		"football": ["football"],
-		"yellow_book": ["yellow book"],
-		"yellow_flashlight": ["yellow flashlight"],
-		"blue_soccer_ball": ["blue soccer ball", "blue ball"],
-		"apple": ["apple"],
-		"black_mug": ["black mug"],
-		"blue_book": ["blue book"],
-		"blue_flashlight": ["blue flashlight"],
-		"cardboard_box": ["cardboard box"],
-		"pepper": ["pepper", "jalapeno"],
-		"green_mug": ["green mug"],
-		"polka_dot_box": ["polka dot box"],
-		"scissors": ["scissors"]
+			"digital_clock": ["digital clock", "blue clock", "black alarm clock"],
+			"analog_clock": ["analog clock", "black clock", "black alarm clock"],
+			"red_soccer_ball": ["red soccer ball", "red ball"],
+			"basketball": ["basketball", "orange ball"],
+			"football": ["football"],
+			"yellow_book": ["yellow book"],
+			"yellow_flashlight": ["yellow flashlight"],
+			"blue_soccer_ball": ["blue soccer ball", "blue ball"],
+			"apple": ["apple"],
+			"black_mug": ["black mug"],
+			"blue_book": ["blue book"],
+			"blue_flashlight": ["blue flashlight"],
+			"cardboard_box": ["cardboard box"],
+			"pepper": ["pepper", "jalapeno"],
+			"green_mug": ["green mug"],
+			"polka_dot_box": ["polka dot box"],
+			"scissors": ["scissors"]
 		}
 
 		self.audio = ALProxy("ALAudioDevice", address, port)
@@ -87,8 +87,6 @@ class Robot(ALModule):
 		if self.outfile != None:
 			self.outfile.close()
 
-		self.__initCamera()
-
 	def processRemote(self, input_channels, input_samples, timestamp, input_buffer):
 		print "listening"
 		sound_data_interlaced = np.fromstring(str(input_buffer), dtype=np.int16)
@@ -116,12 +114,17 @@ class Robot(ALModule):
 		sound_data[0].tofile(self.outfile)
 		print "sent data to outfile"
 
-	def say(self, text):
+	def say(self, text, block = True):
 		"""
-		Uses ALTextToSpeech to vocalize the given string
+		Uses ALTextToSpeech to vocalize the given string.
+		If "block" argument is False, makes call asynchronous.
 		"""
 
-		self.tts.say(text)
+		if block:
+			self.tts.say(text)
+
+		else:
+			self.tts.post.say(text)
 
 	def ask(self, question):
 		"""
@@ -201,38 +204,9 @@ class Robot(ALModule):
 	def rest(self):
 		"""
 		Goes to Crouch position and turns robot stiffnesses off
-
 		"""
+
 		self.motion.rest()
-
-	def __initCamera(self):
-		"""
-		Subscribes to robot cameras
-		"""
-
-		resolution = 2
-		colorspace = 13
-		fps = 10
-
-		self.top_cam_client = camera.subscribeCamera("python_client", 0, resolution, colorspace, fps)
-		self.bottom_cam_client = camera.subscribeCamera("python_client", 1, resolution, colorspace, fps)
-	
-	def getImage(self, camera):
-		"""
-		Returns image from either top or bottom camera on NAO robot converted to Numpy array.
-		The "camera" parameter takes either "top" or "0" to use the top camera, and the bottom camera is the default.
-		"""
-
-		if camera == "top" or camera == 0:
-			nao_image = self.cam.getImageRemote(self.top_cam_client)
-
-		else:
-			nao_image = self.cam.getImageRemote(self.bottom_cam_client)
-
-		# convert to numpy array for OpenCV
-		image = (numpy.reshape(numpy.frombuffer(nao_image[6], dtype = '%iuint8' % nao_image[2]), (nao_image[1], nao_image[0], nao_image[2])))
-
-		return image
 
 	def turnHead(yaw = None, pitch = None, speed = 0.3):
 		"""
@@ -241,9 +215,72 @@ class Robot(ALModule):
 		"""
 
 		if not yaw is None:
-       		motion.setAngles("HeadYaw", yaw, speed)
+       		self.motion.setAngles("HeadYaw", yaw, speed)
        	if not pitch is None:
-       		motion.setAngles("HeadPitch", pitch, speed)
+       		self.motion.setAngles("HeadPitch", pitch, speed)
+
+    def trackFace():
+    	"""
+    	Sets face tracker to just head and starts.
+    	"""
+
+		# start face tracker
+		self.track.setWholeBodyOn(False)
+		self.track.startTracker()
+
+	def subscribeGaze():
+		"""
+		Subscribes to gaze analysis module so that robot starts writing gaze data to memory.
+		Also sets the highest tolerance for determining if people are looking at the robot because those people's IDs are the only ones stored.
+		"""
+
+        self.gaze.subscribe("_")
+        self.gaze.setTolerance(1)
+
+    def getPeopleIDs():
+    	"""
+    	Retrieves people IDs from robot memory. If list of IDs was empty, return None.
+    	"""
+
+        people_ids = self.mem.getData("GazeAnalysis/PeopleLookingAtRobot")
+
+        if len(people_ids) == 0:
+        	return None
+
+        return people_ids
+
+    def getRawPersonGaze(person_id):
+        """
+        Returns person's gaze as a list of yaw (left -, right +) and pitch (up pi, down 0) in radians, respectively.
+        Bases gaze on both eye and head angles. Does not compensate for variable robot head position.
+        """
+
+        try:
+            # retrieve GazeDirection and HeadAngles values
+            gaze_dir = self.mem.getData("PeoplePerception/Person/" + str(person_id) + "/GazeDirection")
+            head_angles =  self.mem.getData("PeoplePerception/Person/" + str(person_id) + "/HeadAngles")
+            
+            # extract gaze direction and head angles data
+            person_eye_yaw = gaze_dir[0]
+            person_eye_pitch = gaze_dir[1]
+            
+            person_head_yaw = head_angles[0]
+            person_head_pitch = head_angles[1]
+
+        # RuntimeError: if gaze data can't be retrieved for that person ID anymore (e.g. if bot entirely loses track of person)
+        # IndexError: if gaze direction or head angles are empty lists (e.g. if person's gaze is too steep)
+        except (RuntimeError, IndexError):
+            return None
+
+        else:
+            # combine eye and head gaze values
+            person_gaze_yaw = -(person_eye_yaw + person_head_yaw) # person's left is (-), person's right is (+)
+            person_gaze_pitch = person_eye_pitch + person_head_pitch + math.pi / 2 # all the way up is pi, all the way down is 0
+
+            return [person_gaze_yaw, person_gaze_pitch]
+
+
+
 
 #------------------------Main------------------------#
 if __name__ == "__main__":
