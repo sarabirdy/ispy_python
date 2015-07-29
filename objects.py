@@ -8,7 +8,8 @@ import questions
 import tags
 import database as db
 import config
-from robot import robot
+from robot import robot, Robot, broker, connect
+from naoqi import ALBroker
 import interface
 
 _objects = []
@@ -165,19 +166,27 @@ def get_all():
 def get_actual(guess):
 
 	global _objects
-	yn = interface.ask("My guess is %s. Was I right?" % guess.name)
+	yn = interface.ask("My guess is %s. Was I right? " % guess.name)
 
 	if yn == "yes":
 		obj_name = guess.name
 		obj_id = guess.id
 	else:
-		if robot():
-			robot().askObject()
+		if True: #if robot()
+			global count
+			broker1 = ALBroker("broker1", "0.0.0.0", 0, "bobby.local", 9559)
+			r2 = Robot("r2")
+			print r2.ask_object()
+			broker1.shutdown()
+			pass
+
+		else:
 			print "\nObject names:\n"
 			for j in range(len(_objects)):
 				print _objects[j].name
-		obj_name = raw_input("\nWhat was your object? Remember to type it exactly as you saw above. ")
+			obj_name = raw_input("\nWhat was your object? Remember to type it exactly as you saw above. ")
 		while True:
+			check = False
 			for i in range(len(_objects)):
 				if _objects[i].name == obj_name:
 					check = True

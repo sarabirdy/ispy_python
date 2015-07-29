@@ -1,21 +1,71 @@
 import time
-import numpy
-from naoqi import ALProxy
+import os
 
-r = None
+import numpy as np
+import speech_recognition as sr
+from naoqi import ALModule, ALProxy, ALBroker
 
-def connect(address, port=9559):
+count = 0
+snd = None
+#r = None
+#broker = None
+
+def connect(address, port=9559, name="r", brokername="broker"):
+	global broker
+	broker = ALBroker("broker", "0.0.0.0", 0, "bobby.local", 9559)
 	global r
-	r = Robot(address, port)
+	r = Robot(name, "bobby.local", 9559)
 
 def robot():
 	global r
 	return r
 
-class Robot():
+def broker():
+	global broker
+	if not broker:
+		broker = ALBroker("broker", "0.0.0.0", 0, "bobby.local", 9559)
+	return broker
 
-	def __init__(self, address, port=9559):
+class Robot(ALModule):
+	def __init__( self, strName, address = "bobby.local", port = 9559):
+		ALModule.__init__( self, strName )
+		self.outfile = None
+		self.outfiles = [None]*(3)
+		self.count = 99999999
+		self.check = False
+
+		self.yes_no_vocab = {
+			"yes": ["yes", "ya", "sure", "definitely"],
+			"no": ["no", "nope", "nah"]
+		}
+
+		self.object_vocab = {
+		"digital_clock": ["digital clock", "blue clock", "black alarm clock"],
+		"analog_clock": ["analog clock", "black clock", "black alarm clock"],
+		"red_soccer_ball": ["red soccer ball", "red ball"],
+		"basketball": ["basketball", "orange ball"],
+		"football": ["football"],
+		"yellow_book": ["yellow book"],
+		"yellow_flashlight": ["yellow flashlight"],
+		"blue_soccer_ball": ["blue soccer ball", "blue ball"],
+		"apple": ["apple"],
+		"black_mug": ["black mug"],
+		"blue_book": ["blue book"],
+		"blue_flashlight": ["blue flashlight"],
+		"cardboard_box": ["cardboard box"],
+		"pepper": ["pepper", "jalapeno"],
+		"green_mug": ["green mug"],
+		"polka_dot_box": ["polka dot box"],
+		"scissors": ["scissors"]
+		}
+
+		self.audio = ALProxy("ALAudioDevice", address, port)
+		self.audio.setClientPreferences(self.getName(), 48000, [1,1,1,1], 0, 0)
+
 		self.asr = ALProxy("ALSpeechRecognition", address, port)
+		self.asr.setLanguage("English")
+		self.asr.setVocabulary([j for i in self.yes_no_vocab.values() for j in i], False)
+
 		self.tts = ALProxy("ALTextToSpeech", address, port)
 		self.mem = ALProxy("ALMemory", address, port)
 		self.motion = ALProxy("ALMotion", address, port)
@@ -24,15 +74,47 @@ class Robot():
 		self.gaze = ALProxy("ALGazeAnalysis", address, port)
 		self.cam = ALProxy("ALVideoDevice", address, port)
 
-		self.asr.setLanguage("English")
+	def __del__(self):
+		print "End Robot Class"
 
-		self.vocab = {
-			"yes": ["yes", "ya", "yep", "yup", "sure", "definitely"],
-			"no": ["no", "nope"]
-		}
-		self.asr.setVocabulary([j for i in self.vocab.values() for j in i], False)
+	def start(self):
+		print "Starting Transcriber"
+		self.audio.subscribe(self.getName())
+
+	def stop(self):
+		print "Stopping Transcriber"
+		self.audio.unsubscribe(self.getName())
+		if self.outfile != None:
+			self.outfile.close()
 
 		self.__initCamera()
+
+	def processRemote(self, input_channels, input_samples, timestamp, input_buffer):
+		print "listening"
+		sound_data_interlaced = np.fromstring(str(input_buffer), dtype=np.int16)
+		sound_data = np.reshape(sound_data_interlaced, (input_channels, input_samples), 'F')
+		peak_value = np.max(sound_data)
+		print "got peak value"
+		if peak_value > 7500:
+			print "Peak:", peak_value
+			self.count = 30
+		print "subtracting count"
+		self.count -= 1
+		if self.count == 0:
+			print "STOP"*50
+			self.check = True
+		print "checked"
+		if self.outfile == None:
+			print "outfile was none"
+			filename = "output.raw"
+			self.outfile = open(filename, "wb")
+		if self.outfile.closed:
+			print "outfile was closed"
+			filename = "output.raw"
+			self.outfile = open(filename, "wb")
+		print self.outfile
+		sound_data[0].tofile(self.outfile)
+		print "sent data to outfile"
 
 	def say(self, text):
 		"""
@@ -45,21 +127,69 @@ class Robot():
 		"""
 		Has the robot ask a question and returns the answer
 		"""
+		global count
+		print question
+		count += 1
+		if count == 1:
+			return "no"
+		elif count == 2:
+			return "yes"
+		elif count == 3:
+			return "yes"
+		elif count == 4:
+			return "yes"
+		elif count == 5:
+			return "no"
+		elif count == 6 or count == 7:
+			return "yes"
 
-		self.say(question)
-		self.asr.subscribe("TEST_ASR")
-		data = (None, None)
-		while not data[0]:
-			data = self.mem.getData("WordRecognized")
-		self.asr.unsubscribe("TEST_ASR")
+		# self.say(question)
+		# self.asr.subscribe("TEST_ASR")
+		# data = (None, 0)
+		# while not data[0]:
+		# 	data = self.mem.getData("WordRecognized")
+		# self.asr.unsubscribe("TEST_ASR")
+		#
+		# print data
+		#
+		# for word in self.yes_no_vocab:
+		# 	for syn in self.yes_no_vocab[word]:
+		# 		if data[0] == syn:
+		# 			return word
 
-		for word in self.vocab:
-			for syn in self.vocab[word]:
-				if data[0] == syn:
-					return word
+	def ask_object(self):
+		self.start()
+		print "asking object"
+		while True:
+			if self.check:
+				break
+			time.sleep(1)
+		self.stop()
+		os.system("sox -r 48000 -e signed -b 16 -c 1 output.raw speech.wav")
 
-	def askObject(self):
-		self.say("Please go to the computer and type in the name of the object that you were thinking of.")
+		r = sr.Recognizer()
+		with sr.WavFile("speech.wav") as source:
+			speech = r.record(source)
+		try:
+			possibilities = r.recognize(speech, True)
+			print possibilities
+			for possibility in possibilities:
+				for word in self.object_vocab:
+					for syn in self.object_vocab[word]:
+						if possibility["text"] == syn:
+							# global broker
+							# broker.shutdown()
+							# exit(0)
+							return possibility
+			raise LookupError
+		except LookupError:
+			self.say("I couldn't understand what you said. Please go to the computer and type the name of your object.")
+			print "Type the name of your object exactly as you see here."
+			print self.object_vocab.keys()
+			# global broker
+			# broker.shutdown()
+			# exit(0)
+			return raw_input("What object were you thinking of?")
 
 	def stiffen(self, body_part = "Body"):
 		"""
@@ -114,3 +244,14 @@ class Robot():
        		motion.setAngles("HeadYaw", yaw, speed)
        	if not pitch is None:
        		motion.setAngles("HeadPitch", pitch, speed)
+
+#------------------------Main------------------------#
+if __name__ == "__main__":
+	print "#----------Audio Script----------#"
+
+	connect("bobby.local")
+	obj_name = r.ask_object()
+	print obj_name
+
+	broker.shutdown()
+	exit(0)

@@ -3,6 +3,7 @@ from robot import robot
 
 def ask(question):
 	if robot():
+		print "yolo"
 		return robot().ask(question)
 	else:
 		while True:

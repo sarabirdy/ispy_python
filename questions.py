@@ -20,14 +20,14 @@ def ask(question_id, object_we_play, game, answers, pO, Pi, objects, number_of_o
 	Ask a question
 	"""
 	# Takes best question and updates all object probabilies based on the answer
-
+	print "pls"
 	probabilityD = get_tval()
 	question_tag = tags.get(question_id)
 	quests = tags.get_questions()
 	question = quests[question_id - 1]
 	if config.args.notsimulated:
-		answer = interface.ask(question)
-		
+		answer = interface.ask(question + " ")
+
 		if answer == "yes":
 			answer = 1
 		elif answer == "no":

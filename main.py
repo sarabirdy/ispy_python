@@ -81,10 +81,10 @@ class Main:
 			if self.use_image_models:
 				models.build(game, 3, self.number_of_objects, questions_asked, question_answers)
 			if sim:
-				quit = interface.ask("Would you like to stop playing completely? \nThere are %d games left." % (30 - number))
+				quit = interface.ask("Would you like to stop playing completely? \nThere are %d games left. " % (30 - number))
 				if quit == "yes":
 					break
-					
+
 		log.info("Overall Wins: %d Overall Losses: %d", wins, losses)
 		log.info("Overall Accuracy: %d%%", int((float(wins)/(wins + losses)) * 100))
 		if wins != 0:
@@ -92,6 +92,8 @@ class Main:
 		if losses != 0:
 			log.info("Average number of questions for a loss: %.2f", float(avg_lose)/losses)
 
+		if config.args.robot:
+			robot.broker.shutdown()
 
 	def setup(self):
 		"""
