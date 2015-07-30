@@ -7,8 +7,6 @@ from naoqi import ALModule, ALProxy, ALBroker
 
 count = 0
 snd = None
-#r = None
-#broker = None
 
 def connect(address, port=9559, name="r", brokername="broker"):
 	global broker
@@ -39,24 +37,26 @@ class Robot(ALModule):
 			"no": ["no", "nope", "nah"]
 		}
 
+		# TODO: add unknown object names into this somehow
+		# also add other names for objects dynamically??????
 		self.object_vocab = {
-		"digital_clock": ["digital clock", "blue clock", "black alarm clock"],
-		"analog_clock": ["analog clock", "black clock", "black alarm clock"],
-		"red_soccer_ball": ["red soccer ball", "red ball"],
-		"basketball": ["basketball", "orange ball"],
-		"football": ["football"],
-		"yellow_book": ["yellow book"],
-		"yellow_flashlight": ["yellow flashlight"],
-		"blue_soccer_ball": ["blue soccer ball", "blue ball"],
-		"apple": ["apple"],
-		"black_mug": ["black mug"],
-		"blue_book": ["blue book"],
-		"blue_flashlight": ["blue flashlight"],
-		"cardboard_box": ["cardboard box"],
-		"pepper": ["pepper", "jalapeno"],
-		"green_mug": ["green mug"],
-		"polka_dot_box": ["polka dot box"],
-		"scissors": ["scissors"]
+			"digital_clock": ["digital clock", "blue clock", "black alarm clock"],
+			"analog_clock": ["analog clock", "black clock", "black alarm clock"],
+			"red_soccer_ball": ["red soccer ball", "red ball"],
+			"basketball": ["basketball", "orange ball"],
+			"football": ["football"],
+			"yellow_book": ["yellow book"],
+			"yellow_flashlight": ["yellow flashlight"],
+			"blue_soccer_ball": ["blue soccer ball", "blue ball"],
+			"apple": ["apple"],
+			"black_mug": ["black mug"],
+			"blue_book": ["blue book"],
+			"blue_flashlight": ["blue flashlight"],
+			"cardboard_box": ["cardboard box"],
+			"pepper": ["pepper", "jalapeno"],
+			"green_mug": ["green mug"],
+			"polka_dot_box": ["polka dot box", "polka dotted box", "spotted box", "brown and white box"],
+			"scissors": ["scissors"]
 		}
 
 		self.audio = ALProxy("ALAudioDevice", address, port)
@@ -109,6 +109,7 @@ class Robot(ALModule):
 		print self.outfile
 		sound_data[0].tofile(self.outfile)
 		print "sent data to outfile"
+
 	def say(self, text):
 		"""
 		Uses ALTextToSpeech to vocalize the given string
@@ -120,35 +121,31 @@ class Robot(ALModule):
 		"""
 		Has the robot ask a question and returns the answer
 		"""
-		global count
-		print question
-		count += 1
-		if count == 1:
-			return "no"
-		elif count == 2:
-			return "yes"
-		elif count == 3:
-			return "yes"
-		elif count == 4:
-			return "yes"
-		elif count == 5:
-			return "no"
-		elif count == 6 or count == 7:
-			return "yes"
+		# If you're just trying to test voice detection, you can uncomment
+		# the following 5 lines. Bobby will guess "yellow flashlight" and will prompt
+		# you to correct him by saying "blue flashlight"
 
-		# self.say(question)
-		# self.asr.subscribe("TEST_ASR")
-		# data = (None, 0)
-		# while not data[0]:
-		# 	data = self.mem.getData("WordRecognized")
-		# self.asr.unsubscribe("TEST_ASR")
-		#
-		# print data
-		#
-		# for word in self.yes_no_vocab:
-		# 	for syn in self.yes_no_vocab[word]:
-		# 		if data[0] == syn:
-		# 			return word
+		# fake_answers = ["no", "yes", "yes", "yes", "no", "yes", "yes"]
+		# global count
+		# count += 1
+		# print question
+		# return fake_answers[count]
+
+		self.say(question)
+		#starts listening for an answer
+		self.asr.subscribe("TEST_ASR")
+		data = (None, 0)
+		while not data[0]:
+			data = self.mem.getData("WordRecognized")
+		#stops listening after he hears yes or no
+		self.asr.unsubscribe("TEST_ASR")
+
+		print data
+
+		for word in self.yes_no_vocab:
+			for syn in self.yes_no_vocab[word]:
+				if data[0] == syn:
+					return word
 
 	def ask_object(self):
 		self.start()
@@ -158,6 +155,7 @@ class Robot(ALModule):
 				break
 			time.sleep(1)
 		self.stop()
+		#uses sox to convert raw files to wav files
 		os.system("sox -r 48000 -e signed -b 16 -c 1 output.raw speech.wav")
 
 		r = sr.Recognizer()

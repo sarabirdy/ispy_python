@@ -17,14 +17,17 @@ _descriptions = []
 
 def ask(question_id, object_we_play, game, answers, pO, Pi, objects, number_of_objects, answer_data):
 	"""
-	Ask a question
+	Asks a question and updates probabilities based on the answer
 	"""
-	# Takes best question and updates all object probabilies based on the answer
-	print "pls"
+
+	# gets a list of 7 proportions corresponding to each T-value
 	probabilityD = get_tval()
+
+	# gets the correct question for the given tag
 	question_tag = tags.get(question_id)
 	quests = tags.get_questions()
 	question = quests[question_id - 1]
+
 	if config.args.notsimulated:
 		answer = interface.ask(question + " ")
 
@@ -33,19 +36,24 @@ def ask(question_id, object_we_play, game, answers, pO, Pi, objects, number_of_o
 		elif answer == "no":
 			answer = 0
 	else:
-		answer = answer_data[game.id-16][object_we_play.id-1][question_id-1]
+		answer = answer_data[game.id-1][object_we_play.id-1][question_id-1]
 		print question, answer
+
+	if answer == 1:
+		answers.append(True)
+	else:
+		answers.append(False)
 	multipliers = []
 
-	for objectID in range(number_of_objects):
+	for objectID in range(17): # for all known objects
 		T = get_t(objectID+1, question_id, number_of_objects)
 		N = objects[objectID][question_id-1][0]
 		D = objects[objectID][question_id-1][1]
-		#if the object is unknown
-		#	pass
-		if answer == 1: #elif
-			answers.append(True)
+
+		if answer == 1:
+			# fancy math from Dr. Nielsen
 			K = probabilityD[T] + (N + 1)/(D + 2.0)
+			# if Pi is -1 then it means we're skipping the image models for that tag
 			if Pi[0][question_id-1] == -1:
 				multiplier = K / 2
 				multipliers.append(multiplier)
@@ -53,7 +61,6 @@ def ask(question_id, object_we_play, game, answers, pO, Pi, objects, number_of_o
 				multiplier = (K + Pi[objectID][question_id-1]) / 3
 				multipliers.append(multiplier)
 		else:
-			answers.append(False)
 			K = (1 - probabilityD[T]) + (D - N + 1)/(D + 2.0)
 			if Pi[0][question_id-1] == -1:
 				multiplier = K / 2
@@ -62,9 +69,14 @@ def ask(question_id, object_we_play, game, answers, pO, Pi, objects, number_of_o
 
 		pO[objectID] *= multiplier
 
-	#if object is unknown
-		# multiplier = np.mean(multipliers)
-		# pO[objectID] *= multiplier
+	for objectID in range(17,number_of_objects): # TODO: for all new objects/unknown tags for a new object
+		# this assigns a probability to unknown objects based on the idea that
+		# an object is about as likely as the rest of the objects to have the quality
+		# of a certain tag - i.e. many objects are balls, but not many objects are polka dotted
+		# TODO: make more sophisticated - some tags are opposites, so if we know an opposite then we
+		# can take that into consideration when finding the multiplier
+		multiplier = np.mean(multipliers)
+		pO[objectID] *= multiplier
 
 	# Normalize the probabilities so that all object probabilities will sum to 1
 	pO /= np.sum(pO)
@@ -74,6 +86,7 @@ def ask(question_id, object_we_play, game, answers, pO, Pi, objects, number_of_o
 		myfile.write(str(question_tag) + " -> " + str(answer)  + " \n")
 		myfile.write(str(pO) + "\n")
 
+	print answers
 	return pO, answers
 
 
@@ -193,28 +206,26 @@ def build_pqd(number_of_objects):
 			db.cursor.execute('SELECT * FROM Descriptions WHERE description like "%' + all_tags[tag] + '%" AND objectID = ' + str(objectID))
 			T = len(db.cursor.fetchall())
 
-			#T is a based on a tag and an object description. T is how many times a tag is used in an object's description. It can be 0-6
+			# T is a based on a tag and an object description. T is how many times a tag is used in an object's description. It can be 0-6
 
 			db.cursor.execute('SELECT * FROM QuestionAnswers WHERE tag = "' + all_tags[tag] + '" AND object = ' + str(objectID) + ' AND answer = TRUE')
 			count = len(db.cursor.fetchall())
 
-			#count is the number of times someone answered yes to a tag/object pair
+			# count is the number of times someone answered yes to a tag/object pair
 
 			db.cursor.execute('SELECT * FROM QuestionAnswers WHERE tag = "' + all_tags[tag] + '" AND object = ' + str(objectID))
 			D = len(db.cursor.fetchall())
 
-			#D is the total number of times a tag/object pair has been asked (yesses and nos)
+			# D is the total number of times a tag/object pair has been asked (yesses and nos)
 
 			probabilityD[T] += count
 			denominator[T] += D
-		#For the T value based on th specific tag/object pair, update the probability of all tag/object pairs with the same T value
+		# For the T value based on th specific tag/object pair, update the probability of all tag/object pairs with the same T value
 
 	for freq in range(0,7):
-		#This puts the sum of the yes answers and the total answers into the row that corresponds with the T value
+		# This puts the sum of the yes answers and the total answers into the row that corresponds with the T value
 		db.cursor.execute('INSERT INTO Pqd (t_value, yes_answers, total_answers) VALUES (%s, %s, %s)', (freq, probabilityD[freq], denominator[freq]))
 		db.connection.commit()
-		#print "probabilityD[freq]:", probabilityD[freq]
-
 
 def get_subset_split(pO, number_of_objects):
 	"""
@@ -226,13 +237,10 @@ def get_subset_split(pO, number_of_objects):
 	pO_sorted = np.sort(pO)
 	pO_args_sorted = np.argsort(pO)
 
-    # for x in range(number_of_objects):
-    # 	print "pO_args_sorted[x]:" + str(pO_args_sorted[x]) + " -> " + "pO_sorted[x]:" + str(pO_sorted[x])
-
 	diff = 0
 	bestDiff = 0
 
-	for x in range(0, pO_sorted.size-1):
+	for x in range(pO_sorted.size-1):
 	    if pO_sorted[x+1] - pO_sorted[x] > diff:
 			diff = pO_sorted[x+1] - pO_sorted[x]
 			bestDiff = x
@@ -242,7 +250,7 @@ def get_subset_split(pO, number_of_objects):
 
 def get_tval():
 	"""
-	Returns a list of 14 proportions of yes answers. 1 entry per t_value
+	Returns a list of 7 proportions of yes answers. 1 entry per t_value
 	"""
 
 	db.cursor.execute('SELECT yes_answers/total_answers FROM Pqd')

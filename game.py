@@ -26,7 +26,9 @@ class Game:
 		if config.args.imagemodels:
 			Pi = models.gen_image_probabilities(self, number_of_objects)
 		else:
+			#we use -1 to say that we'll skip that tag, so this skips all tags for all objects
 			Pi = [[-1] * 289] * 17
+
 		# Initialize game stats to empty
 		NoOfQuestions = 0
 		round_wins = 0
@@ -43,10 +45,14 @@ class Game:
 			if config.args.notsimulated:
 				for j in range(len(objlist)):
 					print objlist[j].name
-				#interface.say("Choose an object. Don't tell me! ")
+				interface.say("Choose an object. Don't tell me! ")
 				time.sleep(2.5)
+			#TODO: ask if the person is ready???
+
 			result, number_of_questions, answers, askedQuestions = i.playObject(self, Pi, number_of_objects)
 			log.info("Game %d, object %d complete, updating stats", self.id, i.id)
+
+			#averages are calculated later (in main) using these sums
 			if result == 0: # Loss
 				round_losses += 1
 				avg_lose += number_of_questions
@@ -61,7 +67,7 @@ class Game:
 
 			count += 1
 
-			if config.args.notsimulated == True and count != 0:
+			if config.args.notsimulated == True:
 				quit = interface.ask("Would you like to quit this game early? \nThere are %d rounds left. " % (17 - count))
 				if quit == "yes":
 					break
@@ -75,7 +81,7 @@ class Game:
 
 	def _record(self, wins, losses, num_questions, number_of_objects_played):
 		"""
-		Record game data
+		Record data for each game
 		"""
 
 		with open("game.txt", "a") as myfile:

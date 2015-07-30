@@ -5,6 +5,7 @@ import questions
 import database as db
 from sklearn.externals import joblib
 import gmm_training as model
+import objects
 
 def build(_game, method, number_of_objects, game_questions={}, game_answers={}, skip={}):
 	"""
@@ -17,6 +18,9 @@ def build(_game, method, number_of_objects, game_questions={}, game_answers={}, 
 	db.cursor.execute("SELECT DISTINCT(tag) FROM TagInfoBk")
 	results = db.cursor.fetchall()
 
+	all_answers = objects.get_all_answers(number_of_objects)
+	answer_data = all_answers[_game.id-1]
+
 	tags = []
 	for result in results:
 		tags.append(result[0])
@@ -24,6 +28,7 @@ def build(_game, method, number_of_objects, game_questions={}, game_answers={}, 
 	count = 0
 	#print game_answers
 	if method == 3:
+
 		#for each tag we select all the observation_ids that are related to it
 		for tag in tags:
 			print "Training tag:", tag
@@ -31,8 +36,7 @@ def build(_game, method, number_of_objects, game_questions={}, game_answers={}, 
 
 				feature_matrix=[]#initialize feature matrix for each different tag
 				feature_matrix_labels = [] # Labels to indicate if the example is positive or negative
-				db.cursor.execute("SELECT DISTINCT(observation_id) FROM TagInfoBk")
-				tag_obs_ids=db.cursor.fetchall()
+				tag_obs_ids = range(1,18)
 				db.cursor.execute('SELECT id FROM Tags WHERE tag = %s', (tag,))
 				qid = db.cursor.fetchone()[0]
 				should_train_over_3 = False
@@ -42,7 +46,7 @@ def build(_game, method, number_of_objects, game_questions={}, game_answers={}, 
 				#for every observation/object of this specific tag
 				for obs_id in tag_obs_ids:
 
-					T = questions.get_t(obs_id[0], qid, number_of_objects)
+					T = questions.get_t(obs_id, qid, number_of_objects)
 					# For game 0, if a tag has been used 3 or more times in the object descriptions, that object is used as a positive example
 					if _game.id == 0:
 						if T >= 3:
@@ -59,8 +63,6 @@ def build(_game, method, number_of_objects, game_questions={}, game_answers={}, 
 
 					# games up to 15 trained using all available answer data
 					elif _game.id < 16:
-
-						answer_data = np.genfromtxt(os.getcwd()+'/Answers/Game'+str(_game.id)+'.csv',dtype=str, delimiter='\t')
 						model_folder = os.getcwd() + '/SVM_model_777'
 						listing = os.listdir(model_folder)
 						has_model = []
@@ -88,9 +90,8 @@ def build(_game, method, number_of_objects, game_questions={}, game_answers={}, 
 										feature_matrix, feature_matrix_labels = updateFeatureMatrix(feature_matrix, feature_matrix_labels, obs_id, _game, label)
 
 								else:
-									answer_data = np.genfromtxt(os.getcwd()+'/Answers/Game'+str(game)+'.csv',dtype=str, delimiter='\t')
 
-									if answer_data[int(obs_id[0])-1][qid-1] == 'yes' or answer_data[int(obs_id[0])-1][qid-1] is 'yes':
+									if answer_data[obs_id-1][qid-1] == 1:
 										should_train = True
 										count += 1
 										label = 1
@@ -130,14 +131,14 @@ def build(_game, method, number_of_objects, game_questions={}, game_answers={}, 
 										feature_matrix, feature_matrix_labels = updateFeatureMatrix(feature_matrix, feature_matrix_labels, obs_id, _game, label)
 
 								elif game < 16:
-									answer_data = np.genfromtxt(os.getcwd()+'/Answers/Game'+str(game)+'.csv',dtype=str, delimiter='\t')
-									if answer_data[int(obs_id[0])-1][qid-1] == 'yes' or answer_data[int(obs_id[0])-1][qid-1] is 'yes':
+
+									if answer_data[obs_id-1][qid-1] == 1:
 										should_train = True
 										count += 1
 										label = 1
 										feature_matrix, feature_matrix_labels = updateFeatureMatrix(feature_matrix, feature_matrix_labels, obs_id, _game, label)
 
-									elif answer_data[int(obs_id[0])-1][qid-1] == 'no' or answer_data[int(obs_id[0])-1][qid-1] is 'no':
+									elif answer_data[obs_id-1][qid-1] == 0:
 										should_train = True
 										count += 1
 										label = 0
@@ -147,16 +148,16 @@ def build(_game, method, number_of_objects, game_questions={}, game_answers={}, 
 
 									db.cursor.execute("SELECT id FROM Tags WHERE tag = '{0}'".format(tag))
 									tag_id = db.cursor.fetchone()[0]
-
-									if tag_id in game_questions[game][int(obs_id[0])]:
-
-										index = game_questions[game][int(obs_id[0])].index(tag_id)
-										if game_answers[game][int(obs_id[0])][index] == 1:
+									#TODO: double check that it being just obs_id and not obs_id - 1 is correct
+									if tag_id in game_questions[game][obs_id]:
+										print game_questions
+										index = game_questions[game][obs_id].index(tag_id)
+										if game_answers[game][obs_id][index] == 1:
 											should_train = True
 											count += 1
 											label = 1
 											feature_matrix, feature_matrix_labels = updateFeatureMatrix(feature_matrix, feature_matrix_labels, obs_id, _game, label)
-										elif game_answers[game][int(obs_id[0])][index] == 0:
+										elif game_answers[game][obs_id][index] == 0:
 											should_train = True
 											count += 1
 											label = 0
@@ -176,10 +177,10 @@ def updateFeatureMatrix(feature_matrix, feature_matrix_labels, obs_id, _game, la
 	Appends feature_matrix with feature vectors, and feature_matrix_labels with either 0 or 1 depending on if it's a positive or negative example
 	"""
 
-	db.cursor.execute("SELECT COUNT(*) FROM FeatureInfo WHERE feature_id = '0' AND observation_id = '{0}' AND game_id = '{1}'".format(obs_id[0], _game.id))
+	db.cursor.execute("SELECT COUNT(*) FROM FeatureInfo WHERE feature_id = '0' AND observation_id = '{0}' AND game_id = '{1}'".format(obs_id, _game.id))
 	num_of_images_per_observation = db.cursor.fetchall()
 
-	db.cursor.execute("SELECT feature_id,feature_value FROM FeatureInfo WHERE observation_id = '{0}' AND game_id = '{1}'".format(obs_id[0], _game.id))
+	db.cursor.execute("SELECT feature_id,feature_value FROM FeatureInfo WHERE observation_id = '{0}' AND game_id = '{1}'".format(obs_id, _game.id))
 	feature_info = db.cursor.fetchall()
 
 	vv_seperator = len(feature_info)/num_of_images_per_observation[0][0]

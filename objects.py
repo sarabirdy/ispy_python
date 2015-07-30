@@ -29,6 +29,7 @@ class Object:
 		answer_data = get_all_answers(number_of_objects)
 		NoOfQuestions = 0
 
+		#at the very beginning of a round, each object has an equal chance of getting picked
 		pO = np.array([1/float(number_of_objects)] * number_of_objects)
 
 		askedQuestions = []
@@ -73,8 +74,6 @@ class Object:
 		for i in range(number_of_objects):
 			objects.append([])
 
-		obj = 0
-
 		db.cursor.execute('SELECT qid, oid, SUM(answer), COUNT(*) FROM answers GROUP BY oid, qid')
 		for row in db.cursor.fetchall():
 			objects[int(row[1])-1].append((int(row[2]), int(row[3])))
@@ -86,6 +85,7 @@ class Object:
 		"""
 		Puts results into the DB as well as writing them to file for examination
 		"""
+		# TODO: make sure this can be used for new objects and when playing with the human's choice of object
 
 		log.info('Recording object results to the database')
 		for i in range(0, len(game_questions)):
@@ -110,6 +110,8 @@ class Object:
 		else:
 			result = 'win'
 
+
+		# TODO: clean up all the text files because this is kind of ridiculous
 		with open("game.txt", "a") as myfile:
 			myfile.write(str(game.id)+','+ str(self.id) +','+ str(guess.name)+"," + str(self.name) + "," + str(len(game_questions)) + "," + result  +  "\n")
 		myfile.close()
@@ -126,18 +128,19 @@ class Object:
 		Compare the object that the system thinks is most likely to the object currently in play
 		"""
 		if config.args.notsimulated:
-			obj_id, obj_name = get_actual(guess)
-		else:
-			obj_id = self.id
-			obj_name = self.name
-		if obj_id == guess.id:
-			log.info('Win [Guess: %s | Actual: %s]', guess.name, obj_name)
+			self.id, self.name = get_actual(guess)
+		if self.id == guess.id:
+			log.info('Win [Guess: %s | Actual: %s]', guess.name, self.name)
 			return 1
 		else:
-			log.info('Lose [Guess: %s | Actual: %s]', guess.name, obj_name)
+			log.info('Lose [Guess: %s | Actual: %s]', guess.name, self.name)
 			return 0
 
 	def __init__(self, id, name):
+		# assigns an ID as a placeholder because we can't read the person's mind
+		# in order to assign an id for the purposes of initialization
+		# however, the id picked here does end up getting used if the computer
+		# generates the objects/answers
 		self.id = id
 		self.name = name
 
@@ -155,7 +158,7 @@ def get_all():
 	"""
 	Returns a list of all objects
 	"""
-
+	# TODO: make sure new objects have already been written into the database
 	global _objects
 	if not _objects:
 		db.cursor.execute('SELECT DISTINCT(observation_id), name FROM NameInfo')
@@ -164,6 +167,9 @@ def get_all():
 	return _objects
 
 def get_actual(guess):
+	"""
+	Returns the object the human player was thinking of
+	"""
 
 	global _objects
 	yn = interface.ask("My guess is %s. Was I right? " % guess.name)
@@ -172,12 +178,13 @@ def get_actual(guess):
 		obj_name = guess.name
 		obj_id = guess.id
 	else:
-		if True: #if robot()
-			global count
-			broker1 = ALBroker("broker1", "0.0.0.0", 0, "bobby.local", 9559)
-			r2 = Robot("r2")
-			print r2.ask_object()
-			broker1.shutdown()
+		if False: #if robot()
+		# TODO: replace with whatever Jacob's doing
+			# global count
+			# broker1 = ALBroker("broker1", "0.0.0.0", 0, "bobby.local", 9559)
+			# r2 = Robot("r2")
+			# print r2.ask_object()
+			# broker1.shutdown()
 			pass
 
 		else:
@@ -206,30 +213,24 @@ def get_all_answers(number_of_objects):
 
 	global _answers
 	if not _answers:
-		#_answers = [[[[]] * 289]*number_of_objects] * 15 #number of games
 		_answers = []
-		#print _answers
-		db.cursor.execute('SELECT answer FROM QuestionAnswers')
+
+		db.cursor.execute('SELECT answer FROM Answers')
 		questionanswers = db.cursor.fetchall()
-		#questionanswers = ((1,),(2,),(3,),(4,),(5,),(6,),(7,),(8,),(9,),(10,),(11,),(12,),(13,),(14,),(15,))
-		#print questionanswers
+
 		answercnt = 0
 
-		for gamecnt in range(15):
+		for gamecnt in range(30):
 			_answers.append([])
 			for objcnt in range(17):
 				_answers[gamecnt].append([])
 				for tagcnt in range(289):
-					#print "gamecnt, objcnt, tagcnt, answercnt", gamecnt, objcnt, tagcnt, answercnt
 					_answers[gamecnt][objcnt].append(int(questionanswers[answercnt][0]))
-					#print _answers[gamecnt][objcnt][tagcnt]
-					#tagcnt += 1
 					answercnt += 1
-					#print _answers
 
-		total_length = 0
-		for i in range(15):
-			for j in range(number_of_objects):
-				total_length += len(_answers[i][j])
+		# total_length = 0
+		# for i in range(30):
+		# 	for j in range(number_of_objects):
+		# 		total_length += len(_answers[i][j])
 
 	return _answers
