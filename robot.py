@@ -34,6 +34,14 @@ class Robot(ALModule):
 		self.count = 99999999
 		self.check = False
 
+		# --- audio ---
+		self.audio = ALProxy("ALAudioDevice", address, port)
+		self.audio.setClientPreferences(self.getName(), 48000, [1,1,1,1], 0, 0)
+
+		# --- speech recognition ---
+		self.asr = ALProxy("ALSpeechRecognition", address, port)
+		self.asr.setLanguage("English")
+
 		self.yes_no_vocab = {
 			"yes": ["yes", "ya", "sure", "definitely"],
 			"no": ["no", "nope", "nah"]
@@ -59,20 +67,49 @@ class Robot(ALModule):
 			"scissors": ["scissors"]
 		}
 
-		self.audio = ALProxy("ALAudioDevice", address, port)
-		self.audio.setClientPreferences(self.getName(), 48000, [1,1,1,1], 0, 0)
-
-		self.asr = ALProxy("ALSpeechRecognition", address, port)
-		self.asr.setLanguage("English")
 		self.asr.setVocabulary([j for i in self.yes_no_vocab.values() for j in i], False)
 
+		# --- text to speech ---
 		self.tts = ALProxy("ALTextToSpeech", address, port)
+
+		# --- memory ---
 		self.mem = ALProxy("ALMemory", address, port)
+
+		# --- robot movement ---
 		self.motion = ALProxy("ALMotion", address, port)
 		self.pose = ALProxy("ALRobotPosture", address, port)
+
+		self.motion.stiffnessInterpolation("Body", 1.0, 1.0)
+		self.pose.goToPosture("Crouch", 0.2)
+
+		# --- face tracking ---
 		self.track = ALProxy("ALFaceTracker", address, port)
+		
+		face_tracker.setWholeBodyOn(False)
+
+		# --- gaze analysis ---
 		self.gaze = ALProxy("ALGazeAnalysis", address, port)
+
+		# --- camera ---
 		self.cam = ALProxy("ALVideoDevice", address, port)
+
+		# --- leds ---
+		self.leds = ALProxy("ALLeds", address, port)
+
+    	self.colors = {
+    		"pink": 0x00FF00A2
+    		"red": 0x00FF0000
+    		"orange": 0x00FF7300
+    		"yellow": 0x00FFFB00
+    		"green": 0x000DFF00
+    		"blue": 0x000D00FF
+    		"purple": 0x009D00FF
+    	}
+
+    	# --- sound detection ---
+    	self.sound = ALProxy("ALSoundDetection", address, port)
+
+    	self.sound.setParameter("Sensibility", 0.95)
 
 	def __del__(self):
 		print "End Robot Class"
@@ -194,13 +231,6 @@ class Robot(ALModule):
 			# exit(0)
 			return raw_input("What object were you thinking of?")
 
-	def stiffen(self, body_part = "Body"):
-		"""
-		Turns stiffnesses of specified robot body part completely on over 1 second
-		"""
-
-		self.motion.stiffnessInterpolation(body_part, 1.0, 1.0)
-
 	def rest(self):
 		"""
 		Goes to Crouch position and turns robot stiffnesses off
@@ -280,7 +310,40 @@ class Robot(ALModule):
             return [person_gaze_yaw, person_gaze_pitch]
 
 
+    def colorEyes(self, color, fade_duration = 0.2):
+    	"""
+    	Fades eye LEDs to specified color over the given duration.
+    	"Color" argument should be either in hex format (e.g. 0x0063e6c0) or one of the following 
+    	strings: pink, red, orange, yellow, green, blue, purple
+    	"""
 
+    	if color in self.colors:
+    		color = colors[color]
+
+    	self.leds.fadeRGB("FaceLeds", color, fade_duration)
+
+    def resetEyes(self):
+    	"""
+    	Turns eye LEDs white.
+    	"""
+
+    	self.leds.on("FaceLeds")
+
+    def waitForSound(self, time_limit = 7):
+    	"""
+    	Waits until either a sound is detected or until the given time limit expires.
+       	"""
+
+    	self.sound.subscribe("sound_detection_client")
+
+    	# give waiting a 7-second time limit
+    	timeout = time.time() + 7
+
+    	# check for new sounds every 0.2 seconds
+    	while (self.mem.getData("SoundDetected")[0] != 1) and (time.time() < timeout:)
+    		time.sleep(0.2)
+
+    	self.sound.unsubscribe("sound_detection_client")
 
 #------------------------Main------------------------#
 if __name__ == "__main__":
