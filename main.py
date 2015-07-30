@@ -3,13 +3,6 @@ import time
 import logging as log
 import argparse
 
-from game import Game
-import models
-import questions
-import database as db
-import robot
-import interface
-
 config = None
 
 class Main:
@@ -20,7 +13,6 @@ class Main:
 		"""
 
 		global config
-		config = self._config()
 
 		self.number_of_objects = 17 # placeholder until Jacob implements his image segmentation stuff
 		self.use_image_models = config.args.imagemodels # whether or not to use the image models
@@ -137,43 +129,50 @@ class Main:
 
 		log.info('\n'*8 + '='*31 + '| NEW SIMULATION |' + '='*31 + '\n')
 
-	def _config(self):
-		"""
-		Imports config.py or generates a default one if it doesn't exist
-		Also parses command line arguments
-		"""
-		# FIXME: doesn't currently make the config file???
 
-		try:
-			import config
-		except ImportError:
-			f = open('config.py', 'w')
-			f.write("db = {\n\t'address': 'localhost',\n\t'username': 'root',\n\t'password': 'root',\n\t'database': 'iSpy_features',\n\t'socket': '/var/run/mysqld/mysqld.sock'\n}\n\nrobot = {\n\t'address': 'bobby.local'\n}")
-			f.close()
-			import config
+def _config():
+	"""
+	Imports config.py or generates a default one if it doesn't exist
+	Also parses command line arguments
+	"""
 
-		# you can set the defaults by changing the config file or specify a temporary change using command line flags
-		parser = argparse.ArgumentParser()
-		parser.add_argument("-i", "--imagemodels", action="store_true", help="use image models")
-		parser.add_argument("-s", "--setup", action="store_true", help="run setup")
-		parser.add_argument("-n", "--notsimulated", action="store_true", help="user provides responses")
-		parser.add_argument("-u", "--username", help="database username", default=config.db["username"])
-		parser.add_argument("-p", "--password", help="database password", default=config.db["password"])
-		parser.add_argument("-d", "--database", help="choose which database to use", default=config.db["database"])
-		parser.add_argument("-a", "--dbaddress", help="address of MySQL server", default=config.db["address"])
-		parser.add_argument("-t", "--socket", help="path to MySQL socket", default=config.db["socket"])
-		parser.add_argument("-r", "--robot", action="store_true", help="runs code using robot")
-		parser.add_argument("--address", help="the robot's ip address", default=config.robot["address"])
+	try:
+		import config
+	except ImportError:
+		f = open('config.py', 'w')
+		f.write("db = {\n\t'address': 'localhost',\n\t'username': 'root',\n\t'password': 'root',\n\t'database': 'iSpy_features',\n\t'socket': '/var/run/mysqld/mysqld.sock'\n}\n\nrobot = {\n\t'address': 'bobby.local'\n}")
+		f.close()
+		import config
 
-		args = parser.parse_args()
+	# you can set the defaults by changing the config file or specify a temporary change using command line flags
+	parser = argparse.ArgumentParser()
+	parser.add_argument("-i", "--imagemodels", action="store_true", help="use image models")
+	parser.add_argument("-s", "--setup", action="store_true", help="run setup")
+	parser.add_argument("-n", "--notsimulated", action="store_true", help="user provides responses")
+	parser.add_argument("-u", "--username", help="database username", default=config.db["username"])
+	parser.add_argument("-p", "--password", help="database password", default=config.db["password"])
+	parser.add_argument("-d", "--database", help="choose which database to use", default=config.db["database"])
+	parser.add_argument("-a", "--dbaddress", help="address of MySQL server", default=config.db["address"])
+	parser.add_argument("-t", "--socket", help="path to MySQL socket", default=config.db["socket"])
+	parser.add_argument("-r", "--robot", action="store_true", help="runs code using robot")
+	parser.add_argument("--address", help="the robot's ip address", default=config.robot["address"])
 
-		if args.robot:
-			#if you're using the robot then by default you have to provide the answers
-			args.notsimulated = True
+	args = parser.parse_args()
 
-		config.args = args
+	if args.robot:
+		#if you're using the robot then by default you have to provide the answers
+		args.notsimulated = True
 
-		return config
+	config.args = args
+
+	return config
 
 if __name__ == '__main__':
+	config = _config()
+	from game import Game
+	import models
+	import questions
+	import database as db
+	import robot
+	import interface
 	Main()
