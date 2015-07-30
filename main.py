@@ -1,7 +1,6 @@
 import os
 import time
 import logging as log
-import getpass
 import argparse
 
 from game import Game
@@ -23,8 +22,9 @@ class Main:
 		global config
 		config = self._config()
 
-		self.number_of_objects = 17 #will eventually be adding unknown objects, so this will change based on the number of objects in the field
-		self.use_image_models = config.args.imagemodels
+		self.number_of_objects = 17 # placeholder until Jacob implements his image segmentation stuff
+		self.use_image_models = config.args.imagemodels # whether or not to use the image models
+		# using the image models takes a really long time but improves accuracy from 69% to (INSERT PERCENT HERE)
 
 		if config.args.robot:
 			robot.connect(config.args.address)
@@ -34,9 +34,14 @@ class Main:
 		db.init_driver()
 		db.connect(config.args.dbaddress, config.args.username, config.args.password, config.args.database, unix_socket=config.args.socket)
 
+		# TODO: recognize which objects are new vs. old, categorize using classifiers,
+		# ask for the new objects' names (probably extracted with Natalie's code),
+		# and insert them into the database
+
 		if config.args.setup:
 			self.setup()
 
+		# runtime does not include the time it took to run setup since it should only be run once
 		start = time.time()
 		self.simulate()
 		end = time.time()
@@ -53,9 +58,6 @@ class Main:
 
 		games_folder = os.getcwd() + '/Human_Games'
 
-		sim = config.args.notsimulated
-		using_robot = config.args.robot
-
 		wins = 0
 		losses = 0
 		num_questions = 0
@@ -64,14 +66,19 @@ class Main:
 		questions_asked = {}
 		question_answers = {}
 
+		# TODO: Noelle - calibrate your gaze tracker here, unless it's better to do it at the beginning of every game/round
+
 		for number in range(16, 31):
+			# TODO: make the number of games configurable??
 			game = Game(number)
 
 			game_wins, game_losses, game_num_questions, game_win_avg, game_lose_avg, game_answers, game_questions = game.playGame(self.number_of_objects)
 
+			# dictionaries with complete list of questions asked and the corresponding answers
 			questions_asked[game.id] = game_questions
 			question_answers[game.id] = game_answers
 
+			# averages will be computed at the end of the program; for now these are just sums
 			wins += game_wins
 			losses += game_losses
 			num_questions += game_num_questions
@@ -79,8 +86,10 @@ class Main:
 			avg_lose += game_lose_avg
 
 			if self.use_image_models:
+				# image models are built after every single game
 				models.build(game, 3, self.number_of_objects, questions_asked, question_answers)
-			if sim:
+
+			if config.args.notsimulated:
 				quit = interface.ask("Would you like to stop playing completely? \nThere are %d games left. " % (30 - number))
 				if quit == "yes":
 					break
@@ -93,11 +102,13 @@ class Main:
 			log.info("Average number of questions for a loss: %.2f", float(avg_lose)/losses)
 
 		if config.args.robot:
+			# TODO: remove this when we fix the robot class
 			robot.broker.shutdown()
 
 	def setup(self):
 		"""
-		Perform optional pre-simulation tasks
+		Perform optional pre-simulation tasks, should only have to be run once
+		as long as you setup with the image models the first time
 		"""
 
 		log.info('Performing setup')
@@ -131,6 +142,7 @@ class Main:
 		Imports config.py or generates a default one if it doesn't exist
 		Also parses command line arguments
 		"""
+		# FIXME: doesn't currently make the config file???
 
 		try:
 			import config
@@ -140,6 +152,7 @@ class Main:
 			f.close()
 			import config
 
+		# you can set the defaults by changing the config file or specify a temporary change using command line flags
 		parser = argparse.ArgumentParser()
 		parser.add_argument("-i", "--imagemodels", action="store_true", help="use image models")
 		parser.add_argument("-s", "--setup", action="store_true", help="run setup")
@@ -155,6 +168,7 @@ class Main:
 		args = parser.parse_args()
 
 		if args.robot:
+			#if you're using the robot then by default you have to provide the answers
 			args.notsimulated = True
 
 		config.args = args
