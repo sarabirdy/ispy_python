@@ -6,6 +6,8 @@ This code simulates a game of I Spy between two players, who in this case are bo
 
 A (very) rough description of how the simulation works can be found [here](http://hilt.cse.unt.edu/static/images/projects/ispy/SUREPoster2014.pdf). Another description is [here](http://www.aaai.org/ocs/index.php/WS/AAAIW15/paper/viewFile/10074/10210) if you feel like reading a conference paper. The version from the paper is not automated like the version in this repository and the formulas are different, but the concept and goals are similar.
 
+If you intend to play the game with a NAO robot, you must install some custom modules. You can find the modules and the installation process in the repo: https://github.com/jacobbrunson/ispy_robot
+
 Setup:
 
 1. Create a database 'iSpy_features' and upload the dump.sql into it
