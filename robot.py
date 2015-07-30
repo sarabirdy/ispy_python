@@ -110,6 +110,7 @@ class Robot(ALModule):
     	self.sound = ALProxy("ALSoundDetection", address, port)
 
     	self.sound.setParameter("Sensibility", 0.95)
+    }
 
 	def __del__(self):
 		print "End Robot Class"
