@@ -11,272 +11,272 @@ snd = None
 #broker = None
 
 def connect(address="bobby.local", port=9559, name="r", brokername="broker"):
-	global broker
-	broker = ALBroker("broker", "0.0.0.0", 0, address, 9559)
-	global r
-	r = Robot(name, address, 9559)
+    global broker
+    broker = ALBroker("broker", "0.0.0.0", 0, address, 9559)
+    global r
+    r = Robot(name, address, 9559)
 
 def robot():
-	global r
-	return r
+    global r
+    return r
 
 def broker():
-	global broker
-	if not broker:
-		broker = ALBroker("broker", "0.0.0.0", 0, "bobby.local", 9559)
-	return broker
+    global broker
+    if not broker:
+        broker = ALBroker("broker", "0.0.0.0", 0, "bobby.local", 9559)
+    return broker
 
 class Robot(ALModule):
-	def __init__( self, strName, address = "bobby.local", port = 9559):
-		ALModule.__init__( self, strName )
-		self.outfile = None
-		self.outfiles = [None]*(3)
-		self.count = 99999999
-		self.check = False
+    def __init__( self, strName, address = "bobby.local", port = 9559):
+        ALModule.__init__( self, strName )
+        self.outfile = None
+        self.outfiles = [None]*(3)
+        self.count = 99999999
+        self.check = False
 
-		# --- audio ---
-		self.audio = ALProxy("ALAudioDevice", address, port)
-		self.audio.setClientPreferences(self.getName(), 48000, [1,1,1,1], 0, 0)
+        # --- audio ---
+        self.audio = ALProxy("ALAudioDevice", address, port)
+        self.audio.setClientPreferences(self.getName(), 48000, [1,1,1,1], 0, 0)
 
-		# --- speech recognition ---
-		self.asr = ALProxy("ALSpeechRecognition", address, port)
-		self.asr.setLanguage("English")
+        # --- speech recognition ---
+        self.asr = ALProxy("ALSpeechRecognition", address, port)
+        self.asr.setLanguage("English")
 
-		self.yes_no_vocab = {
-			"yes": ["yes", "ya", "sure", "definitely"],
-			"no": ["no", "nope", "nah"]
-		}
+        self.yes_no_vocab = {
+            "yes": ["yes", "ya", "sure", "definitely"],
+            "no": ["no", "nope", "nah"]
+        }
 
-		self.object_vocab = {
-			"digital_clock": ["digital clock", "blue clock", "black alarm clock"],
-			"analog_clock": ["analog clock", "black clock", "black alarm clock"],
-			"red_soccer_ball": ["red soccer ball", "red ball"],
-			"basketball": ["basketball", "orange ball"],
-			"football": ["football"],
-			"yellow_book": ["yellow book"],
-			"yellow_flashlight": ["yellow flashlight"],
-			"blue_soccer_ball": ["blue soccer ball", "blue ball"],
-			"apple": ["apple"],
-			"black_mug": ["black mug"],
-			"blue_book": ["blue book"],
-			"blue_flashlight": ["blue flashlight"],
-			"cardboard_box": ["cardboard box"],
-			"pepper": ["pepper", "jalapeno"],
-			"green_mug": ["green mug"],
-			"polka_dot_box": ["polka dot box"],
-			"scissors": ["scissors"]
-		}
+        self.object_vocab = {
+            "digital_clock": ["digital clock", "blue clock", "black alarm clock"],
+            "analog_clock": ["analog clock", "black clock", "black alarm clock"],
+            "red_soccer_ball": ["red soccer ball", "red ball"],
+            "basketball": ["basketball", "orange ball"],
+            "football": ["football"],
+            "yellow_book": ["yellow book"],
+            "yellow_flashlight": ["yellow flashlight"],
+            "blue_soccer_ball": ["blue soccer ball", "blue ball"],
+            "apple": ["apple"],
+            "black_mug": ["black mug"],
+            "blue_book": ["blue book"],
+            "blue_flashlight": ["blue flashlight"],
+            "cardboard_box": ["cardboard box"],
+            "pepper": ["pepper", "jalapeno"],
+            "green_mug": ["green mug"],
+            "polka_dot_box": ["polka dot box"],
+            "scissors": ["scissors"]
+        }
 
-		self.asr.setVocabulary([j for i in self.yes_no_vocab.values() for j in i], False)
+        self.asr.setVocabulary([j for i in self.yes_no_vocab.values() for j in i], False)
 
-		# --- text to speech ---
-		self.tts = ALProxy("ALTextToSpeech", address, port)
+        # --- text to speech ---
+        self.tts = ALProxy("ALTextToSpeech", address, port)
 
-		# --- memory ---
-		self.mem = ALProxy("ALMemory", address, port)
+        # --- memory ---
+        self.mem = ALProxy("ALMemory", address, port)
 
-		# --- robot movement ---
-		self.motion = ALProxy("ALMotion", address, port)
-		self.pose = ALProxy("ALRobotPosture", address, port)
+        # --- robot movement ---
+        self.motion = ALProxy("ALMotion", address, port)
+        self.pose = ALProxy("ALRobotPosture", address, port)
 
-		self.motion.stiffnessInterpolation("Body", 1.0, 1.0)
-		self.pose.goToPosture("Crouch", 0.2)
+        self.motion.stiffnessInterpolation("Body", 1.0, 1.0)
+        self.pose.goToPosture("Crouch", 0.2)
 
-		# --- face tracking ---
-		self.track = ALProxy("ALFaceTracker", address, port)
-		
-		face_tracker.setWholeBodyOn(False)
+        # --- face tracking ---
+        self.track = ALProxy("ALFaceTracker", address, port)
+        
+        face_tracker.setWholeBodyOn(False)
 
-		# --- gaze analysis ---
-		self.gaze = ALProxy("ALGazeAnalysis", address, port)
+        # --- gaze analysis ---
+        self.gaze = ALProxy("ALGazeAnalysis", address, port)
 
-		# --- camera ---
-		self.cam = ALProxy("ALVideoDevice", address, port)
+        # --- camera ---
+        self.cam = ALProxy("ALVideoDevice", address, port)
 
-		# --- leds ---
-		self.leds = ALProxy("ALLeds", address, port)
+        # --- leds ---
+        self.leds = ALProxy("ALLeds", address, port)
 
-    	self.colors = {
-    		"pink": 0x00FF00A2
-    		"red": 0x00FF0000
-    		"orange": 0x00FF7300
-    		"yellow": 0x00FFFB00
-    		"green": 0x000DFF00
-    		"blue": 0x000D00FF
-    		"purple": 0x009D00FF
-    	}
+        self.colors = {
+            "pink": 0x00FF00A2
+            "red": 0x00FF0000
+            "orange": 0x00FF7300
+            "yellow": 0x00FFFB00
+            "green": 0x000DFF00
+            "blue": 0x000D00FF
+            "purple": 0x009D00FF
+        }
 
-    	# --- sound detection ---
-    	self.sound = ALProxy("ALSoundDetection", address, port)
+        # --- sound detection ---
+        self.sound = ALProxy("ALSoundDetection", address, port)
 
-    	self.sound.setParameter("Sensibility", 0.95)
+        self.sound.setParameter("Sensibility", 0.95)
     }
 
-	def __del__(self):
-		print "End Robot Class"
+    def __del__(self):
+        print "End Robot Class"
 
-	def start(self):
-		print "Starting Transcriber"
-		self.audio.subscribe(self.getName())
+    def start(self):
+        print "Starting Transcriber"
+        self.audio.subscribe(self.getName())
 
-	def stop(self):
-		print "Stopping Transcriber"
-		self.audio.unsubscribe(self.getName())
-		if self.outfile != None:
-			self.outfile.close()
+    def stop(self):
+        print "Stopping Transcriber"
+        self.audio.unsubscribe(self.getName())
+        if self.outfile != None:
+            self.outfile.close()
 
-	def processRemote(self, input_channels, input_samples, timestamp, input_buffer):
-		print "listening"
-		sound_data_interlaced = np.fromstring(str(input_buffer), dtype=np.int16)
-		sound_data = np.reshape(sound_data_interlaced, (input_channels, input_samples), 'F')
-		peak_value = np.max(sound_data)
-		print "got peak value"
-		if peak_value > 7500:
-			print "Peak:", peak_value
-			self.count = 30
-		print "subtracting count"
-		self.count -= 1
-		if self.count == 0:
-			print "STOP"*50
-			self.check = True
-		print "checked"
-		if self.outfile == None:
-			print "outfile was none"
-			filename = "output.raw"
-			self.outfile = open(filename, "wb")
-		if self.outfile.closed:
-			print "outfile was closed"
-			filename = "output.raw"
-			self.outfile = open(filename, "wb")
-		print self.outfile
-		sound_data[0].tofile(self.outfile)
-		print "sent data to outfile"
+    def processRemote(self, input_channels, input_samples, timestamp, input_buffer):
+        print "listening"
+        sound_data_interlaced = np.fromstring(str(input_buffer), dtype=np.int16)
+        sound_data = np.reshape(sound_data_interlaced, (input_channels, input_samples), 'F')
+        peak_value = np.max(sound_data)
+        print "got peak value"
+        if peak_value > 7500:
+            print "Peak:", peak_value
+            self.count = 30
+        print "subtracting count"
+        self.count -= 1
+        if self.count == 0:
+            print "STOP"*50
+            self.check = True
+        print "checked"
+        if self.outfile == None:
+            print "outfile was none"
+            filename = "output.raw"
+            self.outfile = open(filename, "wb")
+        if self.outfile.closed:
+            print "outfile was closed"
+            filename = "output.raw"
+            self.outfile = open(filename, "wb")
+        print self.outfile
+        sound_data[0].tofile(self.outfile)
+        print "sent data to outfile"
 
-	def say(self, text, block = True):
-		"""
-		Uses ALTextToSpeech to vocalize the given string.
-		If "block" argument is False, makes call asynchronous.
-		"""
+    def say(self, text, block = True):
+        """
+        Uses ALTextToSpeech to vocalize the given string.
+        If "block" argument is False, makes call asynchronous.
+        """
 
-		if block:
-			self.tts.say(text)
+        if block:
+            self.tts.say(text)
 
-		else:
-			self.tts.post.say(text)
+        else:
+            self.tts.post.say(text)
 
-	def ask(self, question):
-		"""
-		Has the robot ask a question and returns the answer
-		"""
-		global count
-		print question
-		count += 1
-		if count == 1:
-			return "no"
-		elif count == 2:
-			return "yes"
-		elif count == 3:
-			return "yes"
-		elif count == 4:
-			return "yes"
-		elif count == 5:
-			return "no"
-		elif count == 6 or count == 7:
-			return "yes"
+    def ask(self, question):
+        """
+        Has the robot ask a question and returns the answer
+        """
+        global count
+        print question
+        count += 1
+        if count == 1:
+            return "no"
+        elif count == 2:
+            return "yes"
+        elif count == 3:
+            return "yes"
+        elif count == 4:
+            return "yes"
+        elif count == 5:
+            return "no"
+        elif count == 6 or count == 7:
+            return "yes"
 
-		# self.say(question)
-		# self.asr.subscribe("TEST_ASR")
-		# data = (None, 0)
-		# while not data[0]:
-		# 	data = self.mem.getData("WordRecognized")
-		# self.asr.unsubscribe("TEST_ASR")
-		#
-		# print data
-		#
-		# for word in self.yes_no_vocab:
-		# 	for syn in self.yes_no_vocab[word]:
-		# 		if data[0] == syn:
-		# 			return word
+        # self.say(question)
+        # self.asr.subscribe("TEST_ASR")
+        # data = (None, 0)
+        # while not data[0]:
+        #     data = self.mem.getData("WordRecognized")
+        # self.asr.unsubscribe("TEST_ASR")
+        #
+        # print data
+        #
+        # for word in self.yes_no_vocab:
+        #     for syn in self.yes_no_vocab[word]:
+        #         if data[0] == syn:
+        #             return word
 
-	def ask_object(self):
-		self.start()
-		print "asking object"
-		while True:
-			if self.check:
-				break
-			time.sleep(1)
-		self.stop()
-		os.system("sox -r 48000 -e signed -b 16 -c 1 output.raw speech.wav")
+    def ask_object(self):
+        self.start()
+        print "asking object"
+        while True:
+            if self.check:
+                break
+            time.sleep(1)
+        self.stop()
+        os.system("sox -r 48000 -e signed -b 16 -c 1 output.raw speech.wav")
 
-		r = sr.Recognizer()
-		with sr.WavFile("speech.wav") as source:
-			speech = r.record(source)
-		try:
-			possibilities = r.recognize(speech, True)
-			print possibilities
-			for possibility in possibilities:
-				for word in self.object_vocab:
-					for syn in self.object_vocab[word]:
-						if possibility["text"] == syn:
-							# global broker
-							# broker.shutdown()
-							# exit(0)
-							return possibility
-			raise LookupError
-		except LookupError:
-			self.say("I couldn't understand what you said. Please go to the computer and type the name of your object.")
-			print "Type the name of your object exactly as you see here."
-			print self.object_vocab.keys()
-			# global broker
-			# broker.shutdown()
-			# exit(0)
-			return raw_input("What object were you thinking of?")
+        r = sr.Recognizer()
+        with sr.WavFile("speech.wav") as source:
+            speech = r.record(source)
+        try:
+            possibilities = r.recognize(speech, True)
+            print possibilities
+            for possibility in possibilities:
+                for word in self.object_vocab:
+                    for syn in self.object_vocab[word]:
+                        if possibility["text"] == syn:
+                            # global broker
+                            # broker.shutdown()
+                            # exit(0)
+                            return possibility
+            raise LookupError
+        except LookupError:
+            self.say("I couldn't understand what you said. Please go to the computer and type the name of your object.")
+            print "Type the name of your object exactly as you see here."
+            print self.object_vocab.keys()
+            # global broker
+            # broker.shutdown()
+            # exit(0)
+            return raw_input("What object were you thinking of?")
 
-	def rest(self):
-		"""
-		Goes to Crouch position and turns robot stiffnesses off
-		"""
+    def rest(self):
+        """
+        Goes to Crouch position and turns robot stiffnesses off
+        """
 
-		self.motion.rest()
+        self.motion.rest()
 
-	def turnHead(yaw = None, pitch = None, speed = 0.3):
-		"""
-		Turns robot head to the specified yaw and/or pitch in radians at the given speed.
-		Yaw can range from 119.5 deg (left) to -119.5 deg (right) and pitch can range from 38.5 deg (up) to -29.5 deg (down).
-		"""
+    def turnHead(yaw = None, pitch = None, speed = 0.3):
+        """
+        Turns robot head to the specified yaw and/or pitch in radians at the given speed.
+        Yaw can range from 119.5 deg (left) to -119.5 deg (right) and pitch can range from 38.5 deg (up) to -29.5 deg (down).
+        """
 
-		if not yaw is None:
-       		self.motion.setAngles("HeadYaw", yaw, speed)
-       	if not pitch is None:
-       		self.motion.setAngles("HeadPitch", pitch, speed)
+        if not yaw is None:
+               self.motion.setAngles("HeadYaw", yaw, speed)
+           if not pitch is None:
+               self.motion.setAngles("HeadPitch", pitch, speed)
 
     def trackFace():
-    	"""
-    	Sets face tracker to just head and starts.
-    	"""
+        """
+        Sets face tracker to just head and starts.
+        """
 
-		# start face tracker
-		self.track.setWholeBodyOn(False)
-		self.track.startTracker()
+        # start face tracker
+        self.track.setWholeBodyOn(False)
+        self.track.startTracker()
 
-	def subscribeGaze():
-		"""
-		Subscribes to gaze analysis module so that robot starts writing gaze data to memory.
-		Also sets the highest tolerance for determining if people are looking at the robot because those people's IDs are the only ones stored.
-		"""
+    def subscribeGaze():
+        """
+        Subscribes to gaze analysis module so that robot starts writing gaze data to memory.
+        Also sets the highest tolerance for determining if people are looking at the robot because those people's IDs are the only ones stored.
+        """
 
         self.gaze.subscribe("_")
         self.gaze.setTolerance(1)
 
     def getPeopleIDs():
-    	"""
-    	Retrieves people IDs from robot memory. If list of IDs was empty, return None.
-    	"""
+        """
+        Retrieves people IDs from robot memory. If list of IDs was empty, return None.
+        """
 
         people_ids = self.mem.getData("GazeAnalysis/PeopleLookingAtRobot")
 
         if len(people_ids) == 0:
-        	return None
+            return None
 
         return people_ids
 
@@ -312,47 +312,47 @@ class Robot(ALModule):
 
 
     def colorEyes(self, color, fade_duration = 0.2):
-    	"""
-    	Fades eye LEDs to specified color over the given duration.
-    	"Color" argument should be either in hex format (e.g. 0x0063e6c0) or one of the following 
-    	strings: pink, red, orange, yellow, green, blue, purple
-    	"""
+        """
+        Fades eye LEDs to specified color over the given duration.
+        "Color" argument should be either in hex format (e.g. 0x0063e6c0) or one of the following 
+        strings: pink, red, orange, yellow, green, blue, purple
+        """
 
-    	if color in self.colors:
-    		color = colors[color]
+        if color in self.colors:
+            color = colors[color]
 
-    	self.leds.fadeRGB("FaceLeds", color, fade_duration)
+        self.leds.fadeRGB("FaceLeds", color, fade_duration)
 
     def resetEyes(self):
-    	"""
-    	Turns eye LEDs white.
-    	"""
+        """
+        Turns eye LEDs white.
+        """
 
-    	self.leds.on("FaceLeds")
+        self.leds.on("FaceLeds")
 
     def waitForSound(self, time_limit = 7):
-    	"""
-    	Waits until either a sound is detected or until the given time limit expires.
-       	"""
+        """
+        Waits until either a sound is detected or until the given time limit expires.
+           """
 
-    	self.sound.subscribe("sound_detection_client")
+        self.sound.subscribe("sound_detection_client")
 
-    	# give waiting a 7-second time limit
-    	timeout = time.time() + 7
+        # give waiting a 7-second time limit
+        timeout = time.time() + 7
 
-    	# check for new sounds every 0.2 seconds
-    	while (self.mem.getData("SoundDetected")[0] != 1) and (time.time() < timeout:)
-    		time.sleep(0.2)
+        # check for new sounds every 0.2 seconds
+        while (self.mem.getData("SoundDetected")[0] != 1) and (time.time() < timeout:)
+            time.sleep(0.2)
 
-    	self.sound.unsubscribe("sound_detection_client")
+        self.sound.unsubscribe("sound_detection_client")
 
 #------------------------Main------------------------#
 if __name__ == "__main__":
-	print "#----------Audio Script----------#"
+    print "#----------Audio Script----------#"
 
-	connect("bobby.local")
-	obj_name = r.ask_object()
-	print obj_name
+    connect("bobby.local")
+    obj_name = r.ask_object()
+    print obj_name
 
-	broker.shutdown()
-	exit(0)
+    broker.shutdown()
+    exit(0)
