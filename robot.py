@@ -97,12 +97,12 @@ class Robot(ALModule):
 		self.leds = ALProxy("ALLeds", address, port)
 
 		self.colors = {
-			"pink": 0x00FF00A2
-			"red": 0x00FF0000
-			"orange": 0x00FF7300
-			"yellow": 0x00FFFB00
-			"green": 0x000DFF00
-			"blue": 0x000D00FF
+			"pink": 0x00FF00A2,
+			"red": 0x00FF0000,
+			"orange": 0x00FF7300,
+			"yellow": 0x00FFFB00,
+			"green": 0x000DFF00,
+			"blue": 0x000D00FF,
 			"purple": 0x009D00FF
 		}
 
@@ -110,7 +110,6 @@ class Robot(ALModule):
 		self.sound = ALProxy("ALSoundDetection", address, port)
 
 		self.sound.setParameter("Sensibility", 0.95)
-	}
 
 	def __del__(self):
 		print "End Robot Class"
@@ -244,9 +243,9 @@ class Robot(ALModule):
 		"""
 
 		if not yaw is None:
-			   self.motion.setAngles("HeadYaw", yaw, speed)
-		   if not pitch is None:
-			   self.motion.setAngles("HeadPitch", pitch, speed)
+			self.motion.setAngles("HeadYaw", yaw, speed)
+		if not pitch is None:
+			self.motion.setAngles("HeadPitch", pitch, speed)
 
 	def trackFace():
 		"""
@@ -331,7 +330,7 @@ class Robot(ALModule):
 	def waitForSound(self, time_limit = 7):
 		"""
 		Waits until either a sound is detected or until the given time limit expires.
-		   """
+		"""
 
 		self.sound.subscribe("sound_detection_client")
 
@@ -339,7 +338,7 @@ class Robot(ALModule):
 		timeout = time.time() + 7
 
 		# check for new sounds every 0.2 seconds
-		while (self.mem.getData("SoundDetected")[0] != 1) and (time.time() < timeout:)
+		while (self.mem.getData("SoundDetected")[0] != 1) and (time.time() < timeout):
 			time.sleep(0.2)
 
 		self.sound.unsubscribe("sound_detection_client")
